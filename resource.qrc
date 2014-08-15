@@ -1,0 +1,23 @@
+<RCC>
+    <qresource prefix="/">
+        <file>qml/main.qml</file>
+        <file>qml/components/Event.qml</file>
+        <file>qml/components/TrackSwitcher.qml</file>
+        <file>qml/components/Track.qml</file>
+        <file>qml/components/ConferenceHeader.qml</file>
+        <file>qml/components/ListItem.qml</file>
+        <file>qml/components/DropDownMenu.qml</file>
+        <file>qml/components/TrackHeader.qml</file>
+        <file>qml/components/DaySwitcher.qml</file>
+        <file>qml/components/SubTitle.qml</file>
+        <file>qml/components/FavouritesView.qml</file>
+        <file>qml/components/common.js</file>
+        <file>qml/components/functions.js</file>
+        <file>qml/components/EventsList.qml</file>
+    </qresource>
+    <qresource prefix="/image">
+        <file alias="collide">images/index.png</file>
+        <file alias="valittu">images/star_ei_valittu.svg</file>
+        <file alias="ei_valittu">images/star_valittu.svg</file>
+    </qresource>
+</RCC>
