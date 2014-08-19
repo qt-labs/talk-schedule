@@ -17,7 +17,5 @@
     </qresource>
     <qresource prefix="/image">
         <file alias="collide">images/index.png</file>
-        <file alias="valittu">images/star_ei_valittu.svg</file>
-        <file alias="ei_valittu">images/star_valittu.svg</file>
     </qresource>
 </RCC>
