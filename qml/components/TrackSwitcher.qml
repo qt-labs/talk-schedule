@@ -43,7 +43,6 @@ import QtQuick.Controls 1.1
 import QtQuick.Layouts 1.1
 import qt.conclave.models 1.0
 
-import "common.js" as Common
 import "functions.js" as Functions
 
 Item {
