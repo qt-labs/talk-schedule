@@ -39,7 +39,7 @@
 ****************************************************************************/
 
 import QtQuick 2.0
-import qt.conclave.models 1.0
+import TalkSchedule 1.0
 import QtQuick.Layouts 1.1
 import QtQuick.Controls 1.1
 

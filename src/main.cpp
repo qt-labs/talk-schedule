@@ -63,13 +63,15 @@ int main(int argc, char *argv[])
 
     engine.rootContext()->setContextProperty("backId", "539fc807e5bde548e000597c");
 
-    app.setApplicationName("conclave");
+    app.setApplicationName("TalkSchedule");
     app.setOrganizationName("Qt.Digia");
 
-    qmlRegisterSingletonType<Theme>("qt.conclave.theme", 1, 0, "Theme", systeminfo_provider);
-    qmlRegisterType<Model>("qt.conclave.models", 1, 0, "Model");
-    qmlRegisterType<SortFilterModel>("qt.conclave.models", 1, 0, "SortFilterModel");
-    qmlRegisterType<FileIO>("FileIO", 1, 0, "FileIO");
+    const char *uri = "TalkSchedule";
+    // @uri TalkSchedule
+    qmlRegisterSingletonType<Theme>(uri, 1, 0, "Theme", systeminfo_provider);
+    qmlRegisterType<Model>(uri, 1, 0, "Model");
+    qmlRegisterType<SortFilterModel>(uri, 1, 0, "SortFilterModel");
+    qmlRegisterType<FileIO>(uri, 1, 0, "FileIO");
 
     QQmlComponent component(&engine);
     component.loadUrl(QUrl("qrc:/qml/main.qml"));
