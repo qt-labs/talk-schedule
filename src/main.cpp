@@ -61,6 +61,8 @@ int main(int argc, char *argv[])
     QGuiApplication app(argc, argv);
     QQmlEngine engine;
 
+    engine.rootContext()->setContextProperty("backId", "539fc807e5bde548e000597c");
+
     app.setApplicationName("conclave");
     app.setOrganizationName("Qt.Digia");
 

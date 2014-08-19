@@ -59,7 +59,6 @@ ApplicationWindow {
     property variant updateFavoriteEvent: { 'event': '', 'added': false }
     property var eventModel: eventModel
     property var favoriteModel: favoriteModel
-    property string backendId: "539fc807e5bde548e000597c"
 
     signal updateFavoriteSignal(string event, bool added)
 
@@ -87,7 +86,7 @@ ApplicationWindow {
 
     EnginioClient {
         id: client
-        backendId: window.backendId
+        backendId: backId
 
         Component.onCompleted:{
             if (userId.length === 0)
@@ -237,7 +236,7 @@ ApplicationWindow {
     /******Models used by views**************/
     Model {
         id: eventModel
-        backendId: window.backendId
+        backendId: backId
         onDataReady: getFavoriteIds()
     }
     function getFavoriteIds()
@@ -265,7 +264,7 @@ ApplicationWindow {
 
     Model {
         id: favoriteModel;
-        backendId: window.backendId
+        backendId: backId
         Component.onCompleted: queryfavorites()
     }
 

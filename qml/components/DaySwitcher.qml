@@ -143,7 +143,7 @@ Rectangle {
 
         Model {
             id: day
-            backendId: "539fc807e5bde548e000597c"
+            backendId: backId
             onDataReady: {
                 dayModel.model = day
                 dayLabel.text = Qt.formatDate(dayModel.get(0,"date"), "dddd d.M.yyyy")

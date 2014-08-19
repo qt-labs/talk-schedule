@@ -92,7 +92,7 @@ ListView {
     }
     Model {
         id: locationModel;
-        backendId: "539fc807e5bde548e000597c"
+        backendId: backId
         onDataReady:tmp.model = locationModel
     }
 
