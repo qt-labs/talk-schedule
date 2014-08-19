@@ -45,139 +45,133 @@ import qt.conclave.models 1.0
 import Enginio 1.0
 import "functions.js" as Functions
 
-    ListView {
-        id: trackList
-        interactive: false
+ListView {
+    id: trackList
 
-        height: trackHeight
-        currentIndex: 0
-        property string trackId: id
-        orientation: ListView.Horizontal
-        clip: false
+    property string trackId: id
 
-        delegate: Item {
-            id: delegateItem
+    interactive: false
+    height: trackHeight
+    currentIndex: 0
+    orientation: ListView.Horizontal
+    clip: false
+
+    delegate: Item {
+        id: delegateItem
+        height: trackList.height
+        property bool isSelected: false
+        property int trackWidth: Functions.countTrackWidth(start, end)
+
+        Item {
+            id: item
             height: trackList.height
-            property bool isSelected: false
-            property int trackWidth: Functions.countTrackWidth(start, end)
+            width: trackWidth
+            x: Functions.countTrackPosition(start, topic)
 
+            Rectangle {
+                id: colorBackground
+                anchors { fill: parent;  bottomMargin: 10; leftMargin: 10;}
+                color: Qt.rgba(255,255,255)
+            }
             Item {
-                id: item
-                height: trackList.height
-                width: trackWidth
-                x: Functions.countTrackPosition(start, topic)
+                // Add this imageArea to make it easier to click the image
+                id: imageArea
+                anchors.bottom: colorBackground.bottom
+                anchors.right: colorBackground.right
+                width: 80
+                height: 80
+                Image {
+                    id: favoriteImage
+                    anchors.bottom: imageArea.bottom
+                    anchors.right: imageArea.right
+                    source: favorite ? window.favoriteImage : window.notFavoriteImage
+                }
+                MouseArea {
+                    anchors.fill: parent
+                    onClicked:{
+                        if (favorite)
+                            window.removeFavorite(id)
+                        else
+                            window.saveFavorite(id)
+                    }
+                }
+            }
 
-                Rectangle {
-                    id: colorBackground
-                    anchors { fill: parent;  bottomMargin: 10; leftMargin: 10;}
-                    color: Qt.rgba(255,255,255)
+            // For some reason text wrap does not work as expected
+            // if Text items are not placed inside Item.
+            ColumnLayout {
+                id: columnLayout
+                anchors.fill: colorBackground
+                height: trackList.height
+                anchors.leftMargin: 10
+                anchors.rightMargin: 10
+                Item {
+                    width: columnLayout.width
+                    height: 50
+                    Text {
+                        text: topic
+                        color: "black"
+                        width: columnLayout.width
+                        font.family: "Open Sans"
+                        font.pixelSize: 25
+                        maximumLineCount: 2
+                        wrapMode: Text.Wrap
+                        elide: Text.ElideRight
+                    }
+                }
+                Text {
+                    text: performer
+                    color: "#666666"
+                    width: colorBackground.width - 20
+                    font.family: "Open Sans"
+                    font.pixelSize: 14
+                    font.capitalization: Font.AllUppercase
+                    maximumLineCount: 1
                 }
                 Item {
-                    //Add this imageArea to make it easier to click the image
-                    id: imageArea
-                    anchors.bottom: colorBackground.bottom
-                    anchors.right: colorBackground.right
-                    width: 80
-                    height: 80
-                    Image {
-                        id: favoriteImage
-                        anchors.bottom: imageArea.bottom
-                        anchors.right: imageArea.right
-                        source: favorite ? window.favoriteImage : window.notFavoriteImage
-                    }
-                    MouseArea {
-                        anchors.fill: parent
-                        onClicked:{
-                            if (favorite) {
-                                window.removeFavorite(id)
-                            }
-                            else {
-                                window.saveFavorite(id)
-                            }
-                        }
-                    }
-                }
-
-                //For some reason text wrap does not work as expected
-                //if Text items are not placed inside Item.
-                ColumnLayout {
-                    id: columnLayout
-                    anchors.fill: colorBackground
-                    height: trackList.height
-                    anchors.leftMargin: 10
-                    anchors.rightMargin: 10
-                    Item {
-                        width: columnLayout.width
-                        height: 50
-                        Text {
-                            text: topic
-                            color: "black"
-                            width: columnLayout.width
-                            font.family: "Open Sans"
-                            font.pixelSize: 25
-                            maximumLineCount: 2
-                            wrapMode: Text.Wrap
-                            elide: Text.ElideRight
-                        }
-                    }
+                    width: columnLayout.width
+                    height: 50
                     Text {
-                        text: performer
+                        width: columnLayout.width
+                        text: Qt.formatTime(start, "h:mm") + " - " + Qt.formatTime(end, "h:mm") + " I " + location
                         color: "#666666"
-                        width: colorBackground.width - 20
                         font.family: "Open Sans"
                         font.pixelSize: 14
                         font.capitalization: Font.AllUppercase
-                        maximumLineCount: 1
-
-                    }
-                    Item {
-                        width: columnLayout.width
-                        height: 50
-                        Text {
-                            width: columnLayout.width
-                            text: Qt.formatTime(start, "h:mm") + " - " + Qt.formatTime(end, "h:mm")+
-                                  " I " +location
-                            color: "#666666"
-                            font.family: "Open Sans"
-                            font.pixelSize: 14
-                            font.capitalization: Font.AllUppercase
-                            maximumLineCount: 3
-                            wrapMode: Text.WordWrap
-                        }
-                    }
-                }
-
-                MouseArea {
-                    anchors {
-                        top: parent.top
-                        bottom: parent.bottom
-                        left: parent.left
-                        right: imageArea.left
-                    }
-                    onClicked: {
-                        stack.push({"item" : Qt.resolvedUrl("Event.qml"), "properties" : {"eventId" : id}})
+                        maximumLineCount: 3
+                        wrapMode: Text.WordWrap
                     }
                 }
             }
-       }
 
-        model: SortFilterModel {
-            id:tmp;  sortRole: "start"
-            filterRole: "track"
-            filterRegExp: new RegExp(id)
-            model: window.eventModel
-        }
-
-        Connections {
-            target: window
-            ignoreUnknownSignals: true
-            onUpdateFavoriteSignal:{
-                tmp.model = window.eventModel
+            MouseArea {
+                anchors {
+                    top: parent.top
+                    bottom: parent.bottom
+                    left: parent.left
+                    right: imageArea.left
+                }
+                onClicked: stack.push({"item" : Qt.resolvedUrl("Event.qml"), "properties" : {"eventId" : id}})
             }
-        }
-
-        EnginioClient {
-            id: client
-            backendId: "539fc807e5bde548e000597c"
         }
     }
+
+    model: SortFilterModel {
+        id:tmp;
+        sortRole: "start"
+        filterRole: "track"
+        filterRegExp: new RegExp(id)
+        model: window.eventModel
+    }
+
+    Connections {
+        target: window
+        ignoreUnknownSignals: true
+        onUpdateFavoriteSignal: tmp.model = window.eventModel
+    }
+
+    EnginioClient {
+        id: client
+        backendId: "539fc807e5bde548e000597c"
+    }
+}

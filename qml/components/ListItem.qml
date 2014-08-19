@@ -55,6 +55,6 @@ Item {
         anchors.fill: parent
         color: mouseArea.pressed ? "cyan" :"black"
         opacity: 0.7
-        Behavior on color { ColorAnimation {  easing.type: Easing.InOutQuad; duration: 150 } }
+        Behavior on color { ColorAnimation { easing.type: Easing.InOutQuad; duration: 150 } }
     }
 }

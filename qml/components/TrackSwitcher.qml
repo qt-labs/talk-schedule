@@ -53,17 +53,13 @@ Item {
     anchors.fill: parent
 
     property int timeColumnWidth: 200
-
     property int minTrackHeight: 130
     property int maxTrackHeight: 200
-
     property int trackHeight: Math.max(minTrackHeight, Math.min(maxTrackHeight, Math.floor((window.height - header.height - timeColumn.height - daysWitcher.height)/5)));
-
     property bool isViewScrolling: false
-
     property string confId: window.conferenceId
 
-    DaySwitcher{
+    DaySwitcher {
         id: daysWitcher
         anchors.top: parent.top
         anchors.left: parent.left
@@ -78,7 +74,7 @@ Item {
         anchors.left: parent.left
         anchors.right: parent.right
         Column{
-            //Add this empty item so track won't overlap with time line
+            // Add this empty item so track won't overlap with time line
             Item {
                 height: timeColumn.height
                 width: 100
@@ -93,135 +89,121 @@ Item {
             height: rowLayout.height
             width: root.width
             clip: true
-            contentWidth: timeColumn.width//contentItem.childrenRect.width
+            contentWidth: timeColumn.width // contentItem.childrenRect.width
             flickableDirection: Flickable.HorizontalFlick
-                Column {
-                    anchors.fill: parent
+            Column {
+                anchors.fill: parent
 
-                    Row{
-                        id: timeColumn
-                        property var timeList: []
-                        height: 35
-                        Repeater{
-                            id: timeColumnList
+                Row {
+                    id: timeColumn
+                    property var timeList: []
+                    height: 35
+                    Repeater {
+                        id: timeColumnList
 
-                            model: timeColumn.timeList
+                        model: timeColumn.timeList
 
-                            delegate: Item{
-                                width: timeColumnWidth
-                                height: timeColumn.height
-                                Text {
-                                    id: repeaterText;
-                                    anchors.verticalCenter: parent.verticalCenter
-                                    anchors.left: parent.left
-                                    anchors.leftMargin: 10
-                                    font.family: "Open Sans"
-                                    font.pixelSize: 25
-                                    text: Qt.formatTime(timeColumn.timeList[index], "h:mm")}
-                            }
+                        delegate: Item {
+                            width: timeColumnWidth
+                            height: timeColumn.height
+                            Text {
+                                id: repeaterText;
+                                anchors.verticalCenter: parent.verticalCenter
+                                anchors.left: parent.left
+                                anchors.leftMargin: 10
+                                font.family: "Open Sans"
+                                font.pixelSize: 25
+                                text: Qt.formatTime(timeColumn.timeList[index], "h:mm")}
                         }
-                        SortFilterModel {
-                            id:tmp;
-                            onModelChanged: {
-                                if (tmp.rowCount() > 0) {
-                                    var earliestTime = tmp.get(0, "start")
-                                    var latestTime = tmp.get(0, "end")//earliestTime
-                                    var time
+                    }
+                    SortFilterModel {
+                        id: tmp;
+                        onModelChanged: {
+                            if (tmp.rowCount() > 0) {
+                                var earliestTime = tmp.get(0, "start")
+                                var latestTime = tmp.get(0, "end") // earliestTime
+                                var time
 
-                                    var timeHours
-                                    var earliestHours = Functions.getHour(earliestTime)
-                                    var latestHours = Functions.getHour(latestTime)
+                                var timeHours
+                                var earliestHours = Functions.getHour(earliestTime)
+                                var latestHours = Functions.getHour(latestTime)
 
-                                    //Count here what is the first hour and last hour that needs to be shown in time listView
-                                    //for example 10.00 11.00 12.00 ... or 08.00 09.00 10.00
-                                    for (var i = 0; i < tmp.rowCount(); i++) {
+                                // Count here what is the first hour and last hour that needs to be shown in time listView
+                                // for example 10.00 11.00 12.00 ... or 08.00 09.00 10.00
+                                for (var i = 0; i < tmp.rowCount(); i++) {
 
-                                        time = tmp.get(i, "start")
-                                        timeHours = Functions.getHour(time)
-                                        earliestHours = Functions.getHour(earliestTime)
+                                    time = tmp.get(i, "start")
+                                    timeHours = Functions.getHour(time)
+                                    earliestHours = Functions.getHour(earliestTime)
 
-                                        if (timeHours < earliestHours ) {
-                                            earliestTime = time
-                                        }
+                                    if (timeHours < earliestHours )
+                                        earliestTime = time
 
-                                        time = tmp.get(i, "end")
-                                        timeHours = Functions.getHour(time)
-                                        latestHours = Functions.getHour(latestTime)
-                                        if (timeHours > latestHours) {
-                                            latestTime = time
-                                        }
-                                    }
-                                    var temp = []
-                                    var timeCount = Functions.getHour(latestTime) - Functions.getHour(earliestTime)
-
-
-                                    var hours = Functions.getHour(earliestTime)
-
-                                    for (var j = 0; j <= timeCount; j++) {
-                                        var date = new Date
-
-                                        date.setHours(hours + j)
-                                        //HACK, ISOString ignores timezone offset, so add it to date
-                                        date.setHours(date.getHours()+ date.getHours() - date.getUTCHours())
-                                        date.setMinutes(0)
-                                        temp.push(date.toISOString())
-                                        }
-                                        timeColumn.timeList = temp
-                                    }
+                                    time = tmp.get(i, "end")
+                                    timeHours = Functions.getHour(time)
+                                    latestHours = Functions.getHour(latestTime)
+                                    if (timeHours > latestHours)
+                                        latestTime = time
                                 }
-                            }
 
-                            Model { id: timeListModel;
-                                backendId: "539fc807e5bde548e000597c"
-                                Component.onCompleted: {
-                                    timeListModel.query({ "objectType": "objects.Event" ,
-                                          "sort" : [{"sortBy": "start", "direction": "asc"}]});
+                                var temp = []
+                                var timeCount = Functions.getHour(latestTime) - Functions.getHour(earliestTime)
+                                var hours = Functions.getHour(earliestTime)
 
+                                for (var j = 0; j <= timeCount; j++) {
+                                    var date = new Date
+                                    date.setHours(hours + j)
+                                    // HACK, ISOString ignores timezone offset, so add it to date
+                                    date.setHours(date.getHours()+ date.getHours() - date.getUTCHours())
+                                    date.setMinutes(0)
+                                    temp.push(date.toISOString())
                                 }
-                                onDataReady: {
-                                    tmp.model = timeListModel
-                                }
+                                timeColumn.timeList = temp
                             }
-                   }
-                    ListView {
-
-                        id: listView
-                        height: root.height - daysWitcher.height - timeColumn.height - 70
-                        width: parent.width
-                        interactive: true
-
-                        clip: true
-                        boundsBehavior: Flickable.StopAtBounds
-                        delegate: Track {
                         }
+                    }
 
-                        model: SortFilterModel {
-                            id: tracks
-                            filterRole: "day"
-                            filterRegExp: new RegExp(daysWitcher.dayId)
-                        }
+                    Model {
+                        id: timeListModel;
+                        backendId: "539fc807e5bde548e000597c"
+                        Component.onCompleted: timeListModel.query({ "objectType": "objects.Event" ,
+                                                                       "sort" : [{"sortBy": "start", "direction": "asc"}]});
+                        onDataReady: tmp.model = timeListModel
+                    }
+                }
+                ListView {
+                    id: listView
+                    height: root.height - daysWitcher.height - timeColumn.height - 70
+                    width: parent.width
+                    interactive: true
+                    clip: true
+                    boundsBehavior: Flickable.StopAtBounds
+                    delegate: Track {}
 
-                        Model {
-                            id: trackModel;
-                            backendId: "539fc807e5bde548e000597c"
-                            onDataReady: tracks.model = trackModel
-                        }
+                    model: SortFilterModel {
+                        id: tracks
+                        filterRole: "day"
+                        filterRegExp: new RegExp(daysWitcher.dayId)
+                    }
 
-                        onContentYChanged: {
-                            if (isViewScrolling === false){
-                                isViewScrolling = true;
-                                trackHeader.contentY = listView.contentY
-                                isViewScrolling = false;
-                            }
+                    Model {
+                        id: trackModel;
+                        backendId: "539fc807e5bde548e000597c"
+                        onDataReady: tracks.model = trackModel
+                    }
+
+                    onContentYChanged: {
+                        if (isViewScrolling === false) {
+                            isViewScrolling = true;
+                            trackHeader.contentY = listView.contentY
+                            isViewScrolling = false;
                         }
                     }
                 }
             }
+        }
     }
 
-    onConfIdChanged: {
-        trackModel.query({"objectType": "objects.Track",
-                             "query": { "conference": { "id": confId,"objectType": "objects.Conference" } }});
-    }
-
+    onConfIdChanged: trackModel.query({"objectType": "objects.Track",
+                                          "query": { "conference": { "id": confId,"objectType": "objects.Conference" } }});
 }

@@ -49,14 +49,13 @@ Item {
     id: conferenceHeader
     property string conferenceId: event.id
     property var event
-
     property string favoriteImage
     property string notFavoriteImage
 
     anchors { top: parent.top; left: parent.left; right: parent.right }
     height: 70
 
-    Item{
+    Item {
         id: topicRect
         anchors { left: parent.left; right: parent.right; top: parent.top }
         height: 70
@@ -78,7 +77,7 @@ Item {
                     anchors.fill: parent
                     onClicked: {
                         //TODO
-                       stack.pop()
+                        stack.pop()
                     }
                 }
             }
@@ -112,9 +111,9 @@ Item {
                         var item = Qt.resolvedUrl("EventsList.qml")
                         stack.push({"item" : item})
                     }
-                    //View can be changed also with back button. So currentIndex does
-                    //not necessarily change view as index is not changed.
-                    //This is why currentIndex is changed to -1 after opening view
+                    // View can be changed also with back button. So currentIndex does
+                    // not necessarily change view as index is not changed.
+                    // This is why currentIndex is changed to -1 after opening view
                     currentIndex = -1
                 }
             }
@@ -133,13 +132,13 @@ Item {
         backendId: "539fc807e5bde548e000597c"
 
         onError: console.log("Enginio error " + reply.errorCode + ": " + reply.errorString)
-        Component.onCompleted:{
+        Component.onCompleted: {
             var eventQuery = query({ "objectType": "objects.Conference"})
 
-            eventQuery.finished.connect(function(){
+            eventQuery.finished.connect(function() {
                 event = eventQuery.data.results[0]
 
-                //After id is fetched, download also images
+                // After id is fetched, download also images
                 var downloadLogo = {
                     "id": event.logo.id,
                 }
@@ -183,7 +182,7 @@ Item {
                 })
                 replyFavoriteImage.finished.connect(function() {
                     if ( replyFavoriteImage.data.expiringUrl) {
-                       favoriteImage = replyFavoriteImage.data.expiringUrl
+                        favoriteImage = replyFavoriteImage.data.expiringUrl
                     }
                 })
             })

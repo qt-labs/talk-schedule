@@ -53,41 +53,41 @@ FileIO::FileIO(QObject *parent) :
 
 QString FileIO::read()
 {
-    if (mSource.isEmpty()){
+    if (mSource.isEmpty()) {
         emit error("source is empty");
         return QString();
     }
 
     QFile file(mSource);
     QString fileContent;
-    if ( file.open(QIODevice::ReadOnly) ) {
+    if (file.open(QIODevice::ReadOnly)) {
         QString line;
-        QTextStream t( &file );
+        QTextStream t(&file);
         do {
             line = t.readLine();
             fileContent += line;
-         } while (!line.isNull());
+        } while (!line.isNull());
 
         file.close();
     } else {
         emit error("Unable to open the file");
-        qDebug()<<"unable to openfile "<<mSource;
+        qDebug() << "unable to openfile " << mSource;
         return QString();
     }
     return fileContent;
 }
 
-bool FileIO::write(const QString& data)
+bool FileIO::write(const QString &data)
 {
     QFile file(mSource);
     if (!file.open(QFile::WriteOnly | QFile::Truncate)) {
-        qDebug()<<"chould not open file";
+        qDebug() << "chould not open file";
         return false;
     }
 
     QTextStream out(&file);
     out << data;
-    qDebug()<<"data writed "<<data;
+    qDebug() << "data writed " << data;
     file.close();
 
     return true;

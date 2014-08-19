@@ -45,7 +45,6 @@ import qt.conclave.models 1.0
 
 
 Rectangle {
-
     property string confId: window.conferenceId
     property string dayId
 
@@ -68,20 +67,19 @@ Rectangle {
                 font.pixelSize: 22
                 font.bold: true
                 font.capitalization: Font.AllUppercase
-                    MouseArea  {
-                        anchors.fill: parent
-                        onClicked: {
-                            dayId = dayModel.get(0,"id")
-                            dayLabel.color = "black"
-                            dayLabel.font.bold = true
-                            dayLabel2.color = "grey"
-                            dayLabel2.font.bold = false
-                        }
+                MouseArea  {
+                    anchors.fill: parent
+                    onClicked: {
+                        dayId = dayModel.get(0,"id")
+                        dayLabel.color = "black"
+                        dayLabel.font.bold = true
+                        dayLabel2.color = "grey"
+                        dayLabel2.font.bold = false
                     }
+                }
             }
             Label {
                 id: divider
-
                 color: "lightgray"
                 font.family: "Open Sans"
                 font.pixelSize: 22
@@ -94,24 +92,23 @@ Rectangle {
                 font.family: "Open Sans"
                 font.pixelSize: 22
                 font.capitalization: Font.AllUppercase
-                    MouseArea  {
-                        anchors.fill: parent
-                        onClicked: {
-                            if (dayModel.rowCount() > 1 ) {
-                                dayId = dayModel.get(1,"id")
-                                dayLabel.color = "grey"
-                                dayLabel.font.bold = false
-                                dayLabel2.color = "black"
-                                dayLabel2.font.bold = true
-                            }
+                MouseArea  {
+                    anchors.fill: parent
+                    onClicked: {
+                        if (dayModel.rowCount() > 1 ) {
+                            dayId = dayModel.get(1,"id")
+                            dayLabel.color = "grey"
+                            dayLabel.font.bold = false
+                            dayLabel2.color = "black"
+                            dayLabel2.font.bold = true
                         }
                     }
+                }
             }
         }
-
     }
 
-    //TODO if there are more than two days, show rest of the days in dropdown list
+    // TODO if there are more than two days, show rest of the days in dropdown list
     DropDownMenu {
         id: dropMenu
         anchors {
@@ -156,16 +153,15 @@ Rectangle {
             }
         }
         width: Math.min(window.width * 0.6, 400)
-
-
     }
+
     onConfIdChanged: {
         day.query({ "objectType": "objects.Day",
-                                         "query": {
-                                             "conference": {
-                                                 "id": confId, "objectType": "objects.Conference"
-                                             }
-                                         }
-                                     })
+                      "query": {
+                          "conference": {
+                              "id": confId, "objectType": "objects.Conference"
+                          }
+                      }
+                  })
     }
 }

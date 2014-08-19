@@ -51,7 +51,8 @@ SortFilterModel::SortFilterModel(QObject *parent)
 void SortFilterModel::setModel(QObject *model)
 {
     QAbstractItemModel* tmpModel = qobject_cast<QAbstractItemModel*>(model);
-    if (tmpModel == NULL) return;
+    if (tmpModel == NULL)
+        return;
     setSourceModel(tmpModel);
 
     setSortRole(m_sortRole);

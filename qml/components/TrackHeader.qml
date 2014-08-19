@@ -44,19 +44,18 @@ import QtQuick.Controls 1.1
 import QtQuick.Window 2.1
 import QtQuick.Layouts 1.1
 import qt.conclave.models 1.0
-
 import Enginio 1.0
 
 ListView {
     id: trackHeaderListView
+
     height: rowLayout.height
     width: 100
-    clip: true
 
     property string confId: window.conferenceId
-
     property string trackId: id
 
+    clip: true
     boundsBehavior: Flickable.StopAtBounds
 
     EnginioModel {
@@ -69,7 +68,7 @@ ListView {
         width: 100
         Rectangle {
             id: trackHeader
-            anchors {fill: parent; bottomMargin: 10; }
+            anchors { fill: parent; bottomMargin: 10; }
             color: backgroundColor
 
             Text {
@@ -86,7 +85,8 @@ ListView {
     }
 
     model: SortFilterModel {
-        id: tmp; sortRole: "start"
+        id: tmp;
+        sortRole: "start"
         filterRole: "day"
         filterRegExp: new RegExp(daysWitcher.dayId)
     }
@@ -96,14 +96,14 @@ ListView {
         onDataReady:tmp.model = locationModel
     }
 
-   onConfIdChanged:  locationModel.query({ "objectType": "objects.Track",
-                                                  "query": {
-                                                      "conference": {
-                                                          "id": confId, "objectType": "objects.Conference"
-                                                      }
-                                                  }});
+    onConfIdChanged: locationModel.query({ "objectType": "objects.Track",
+                                             "query": {
+                                                 "conference": {
+                                                     "id": confId, "objectType": "objects.Conference"
+                                                 }
+                                             }});
     onContentYChanged: {
-        if (isViewScrolling === false){
+        if (isViewScrolling === false) {
             isViewScrolling = true;
             listView.contentY = trackHeaderListView.contentY
             isViewScrolling = false;

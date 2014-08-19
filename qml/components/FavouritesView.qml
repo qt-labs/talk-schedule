@@ -53,6 +53,7 @@ Item {
     property int maxTrackHeight: 200
 
     property int trackHeight: Math.max(minTrackHeight, Math.min(maxTrackHeight, Math.floor((window.height - header.height - subTitle.height)/5)));
+
     SubTitle {
         id: subTitle
         titleText: "OMAT SUOSIKIT"
@@ -63,11 +64,10 @@ Item {
         interactive: true
         anchors.top: subTitle.bottom
         anchors.topMargin: 5
-        height: parent.height - subTitle.height - 75 //header height
+        height: parent.height - subTitle.height - 75 // header height
         width: parent.width
         property string trackId: id
         clip: true
-
 
         delegate: Item {
             property bool isDayLabelVisible:  itemHeight()
@@ -84,7 +84,6 @@ Item {
                 font.family: "Open Sans"
                 font.pixelSize: 20
                 font.capitalization: Font.AllUppercase
-
             }
             RowLayout {
                 id: rowLayout
@@ -121,8 +120,8 @@ Item {
                         anchors.fill: parent
                         anchors.margins: 20
 
-                        //For some reason word wrap does not work correctly
-                        //if Text not inside Item
+                        // For some reason word wrap does not work correctly
+                        // if Text not inside Item
                         Item {
                             width: parent.width - 20
                             height: 50
@@ -162,7 +161,6 @@ Item {
                                 font.pixelSize: 14
                                 font.capitalization: Font.AllUppercase
                             }
-
                             Text {
                                 text: events_tracks.location
                                 Layout.fillWidth: true
@@ -175,12 +173,12 @@ Item {
                                 elide: Text.ElideRight
                             }
                         }
-                        }
+                    }
                 }
             }
 
             Item {
-                //Add this imageArea to make it easier to click the image
+                // Add this imageArea to make it easier to click the image
                 id: imageArea
                 anchors.bottom: rowLayout.bottom
                 anchors.right: rowLayout.right
@@ -190,11 +188,11 @@ Item {
                     id: favoriteImage
                     anchors.bottom: imageArea.bottom
                     anchors.right: imageArea.right
-                    source:  window.favoriteImage
+                    source: window.favoriteImage
                 }
                 MouseArea {
                     anchors.fill: parent
-                    onClicked:{
+                    onClicked: {
                         console.log("start to remove favorite.."+events_id)
                         window.removeFavorite(events_id)
                     }
@@ -204,35 +202,37 @@ Item {
                 id: collideImage
                 anchors.top: rowLayout.top
                 anchors.right: rowLayout.right
-                source: isColliding()?"qrc:/image/collide" : ""
+                source: isColliding() ? "qrc:/image/collide" : ""
             }
 
-            function isColliding() {
+            function isColliding()
+            {
                 var currentTimeEnd = new Date(events_end)
                 var currentTimeStart = new Date(events_start)
                 if (sortModel.rowCount() > index+1) {
                     var nextTimeStart = new Date(sortModel.get((index + 1), "events_start"))
-                //    console.log("nextTimeStart "+nextTimeStart)
+                    //    console.log("nextTimeStart "+nextTimeStart)
                     if (currentTimeEnd > nextTimeStart) {
-                    //    console.log("time collide with previous item\n")
+                        //    console.log("time collide with previous item\n")
                         return true
                     }
                 }
 
                 if (index - 1 >= 0) {
                     var earlierTimeEnd = new Date(sortModel.get(index - 1, "events_end"))
-                //    console.log("erlier event ends "+earlierTimeEnd)
+                    //    console.log("erlier event ends "+earlierTimeEnd)
                     if (earlierTimeEnd > currentTimeStart) {
-                  //      console.log("time collide with next item\n")
+                        //      console.log("time collide with next item\n")
                         return true
                     }
                 }
                 return false
             }
 
-            function itemHeight() {
+            function itemHeight()
+            {
                 if (index === 0) {
-                 //   console.log("first item, sow date")
+                    //   console.log("first item, sow date")
                     return true
                 }
                 else if (index > 0) {
@@ -261,14 +261,15 @@ Item {
         }
 
         model: SortFilterModel {
-            id:sortModel;  sortRole: "events_start"
+            id:sortModel;
+            sortRole: "events_start"
             model: window.favoriteModel
         }
 
         Connections {
             target: window
             ignoreUnknownSignals: true
-            onUpdateFavoriteSignal:{
+            onUpdateFavoriteSignal: {
                 sortModel.model = window.favoriteModel
             }
         }

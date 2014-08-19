@@ -68,7 +68,6 @@ Item {
         property string trackId: id
         clip: true
 
-
         delegate: Item {
             property bool isDayLabelVisible:  itemHeight()
             property int labelHeight: isDayLabelVisible ? 35 : 5
@@ -84,7 +83,6 @@ Item {
                 font.family: "Open Sans"
                 font.pixelSize: 20
                 font.capitalization: Font.AllUppercase
-
             }
             RowLayout {
                 id: rowLayout
@@ -96,7 +94,7 @@ Item {
                     id: trackHeader
                     height: parent.height
                     width: 100
-                    color:tracks.backgroundColor
+                    color: tracks.backgroundColor
 
                     Text {
                         anchors { fill: parent;  margins: 10 }
@@ -121,8 +119,8 @@ Item {
                         anchors.fill: parent
                         anchors.margins: 20
 
-                        //For some reason word wrap does not work correctly
-                        //if Text not inside Item
+                        // For some reason word wrap does not work correctly
+                        // if Text not inside Item
                         Item {
                             width: parent.width - 20
                             height: 50
@@ -146,7 +144,7 @@ Item {
                             font.capitalization: Font.AllUppercase
                             maximumLineCount: 1
                         }
-                        RowLayout{
+                        RowLayout {
                             anchors.left: parent.left
                             anchors.right: parent.right
                             Text {
@@ -161,7 +159,6 @@ Item {
                                 font.pixelSize: 14
                                 font.capitalization: Font.AllUppercase
                             }
-
                             Text {
                                 text: tracks.location
                                 Layout.fillWidth: true
@@ -174,12 +171,12 @@ Item {
                                 elide: Text.ElideRight
                             }
                         }
-                        }
+                    }
                 }
             }
 
             Item {
-                //Add this imageArea to make it easier to click the image
+                // Add this imageArea to make it easier to click the image
                 id: imageArea
                 anchors.bottom: rowLayout.bottom
                 anchors.right: rowLayout.right
@@ -193,32 +190,28 @@ Item {
                 }
                 MouseArea {
                     anchors.fill: parent
-                    onClicked:{
-                        if (favorite) {
+                    onClicked: {
+                        if (favorite)
                             window.removeFavorite(id)
-                        }
-                        else {
+                        else
                             window.saveFavorite(id)
-                        }
                     }
                 }
             }
 
-            function itemHeight() {
+            function itemHeight()
+            {
                 if (index === 0) {
-                 //   console.log("first item, sow date")
+                    //    console.log("first item, sow date")
                     return true
                 }
                 else if (index > 0) {
                     var date = Qt.formatDate(start, "dddd d.M.yyyy")
-
                     var date2 = Qt.formatDate(sortModel.get(index - 1, "start"), "dddd d.M.yyyy")
-                    if (date2 != date ) {
+                    if (date2 != date )
                         return true
-                    }
-                    else{
+                    else
                         return false
-                    }
                 }
                 return false
             }
@@ -235,7 +228,8 @@ Item {
         }
 
         model: SortFilterModel {
-            id:sortModel;  sortRole: "start"
+            id: sortModel;
+            sortRole: "start"
             model: window.eventModel
         }
     }
@@ -243,8 +237,6 @@ Item {
     Connections {
         target: window
         ignoreUnknownSignals: true
-        onUpdateFavoriteSignal:{
-            sortModel.model = window.eventModel
-        }
+        onUpdateFavoriteSignal: sortModel.model = window.eventModel
     }
 }

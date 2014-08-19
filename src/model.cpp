@@ -59,13 +59,13 @@ Model::Model(QObject *parent)
 }
 
 
-int Model::rowCount(const QModelIndex & parent) const
+int Model::rowCount(const QModelIndex &parent) const
 {
     Q_UNUSED(parent);
     return m_data.count();
 }
 
-QVariant Model::data(const QModelIndex & index, int role) const
+QVariant Model::data(const QModelIndex &index, int role) const
 {
     QVariant variant = m_data.at(index.row()).value(m_roleNames.value(role));
     // Hack to make it possible to filter by reference
@@ -80,12 +80,11 @@ QVariant Model::data(const QModelIndex & index, int role) const
 
 void Model::addFavorite( const QString &data)
 {
-
     QMap<QString, QVariant> temp;
     for (int i = 0; i < m_data.count(); i++) {
         temp = m_data.at(i);
         QString key = temp.key(data);
-        if (key == "id"){
+        if (key == "id") {
             temp["favorite"] = true;
             m_data.replace(i, temp);
             break;
@@ -93,7 +92,6 @@ void Model::addFavorite( const QString &data)
     }
 
     Q_EMIT dataChanged(this->index(0,0), this->index(5,5));
-
 }
 
 void Model::removeFavorite(const QString &data)
@@ -106,7 +104,7 @@ void Model::removeFavorite(const QString &data)
         while (iter.hasNext()) {
             iter.next();
 
-            if (iter.key() == "id" && iter.value() == data){
+            if (iter.key() == "id" && iter.value() == data) {
                 temp["favorite"] = false;
                 m_data.replace(i, temp);
                 break;
@@ -124,9 +122,8 @@ void Model::addRow(const QJsonObject &data)
 
 void Model::removeRow(int index)
 {
-    if (m_data.count()> index) {
+    if (m_data.count()> index)
         m_data.removeAt(index);
-    }
     Q_EMIT dataChanged(this->index(0), this->index(index));
 }
 
@@ -168,16 +165,15 @@ void Model::query(const QJSValue &query)
     QJsonObject queryObject;
     queryObject["objectType"] = query.property("objectType").toString();
 
-    if (query.hasProperty("query")) {
+    if (query.hasProperty("query"))
         queryObject["query"] = QJsonObject::fromVariantMap(query.property("query").toVariant().toMap());
-    }
 
-    if (query.hasProperty("sort")) {
+    if (query.hasProperty("sort"))
         queryObject["sort"] = QJsonObject::fromVariantMap(query.property("sort").toVariant().toMap());
-    }
-    if (query.hasProperty("include")) {
+
+    if (query.hasProperty("include"))
         queryObject["include"] = QJsonObject::fromVariantMap(query.property("include").toVariant().toMap());
-    }
+
     m_client->query(queryObject);
 }
 
@@ -245,9 +241,9 @@ void Model::parse(const QJsonObject &object)
 
     QJsonArray array = object.value("results").toArray();
     if (array.count() > 0) {
-        //go through the keys in array to find out all the key values
-        //If all values has no content in cloud, that key might sometimes be missing
-        //so you cannot take keys from arbitrary place from array
+        // Go through the keys in array to find out all the key values
+        // If all values has no content in cloud, that key might sometimes be missing
+        // so you cannot take keys from arbitrary place from array
         int previousCount = 0;
         int arrayIndex = 0;
         for (int i = 0; i < array.count(); i++) {
@@ -258,18 +254,17 @@ void Model::parse(const QJsonObject &object)
             }
         }
         QStringList keys = array.at(arrayIndex).toVariant().toMap().keys();
-        for (int index = 0; index < keys.count(); ++index) {
+        for (int index = 0; index < keys.count(); ++index)
             m_roleNames.insert(Qt::UserRole + index, keys.at(index).toLatin1());
-        }
 
-        //Hack, insert favorites as those will be created in application
+        // Hack, insert favorites as those will be created in application
         m_roleNames.insert(2002, "favorite");
         beginInsertRows(QModelIndex(), m_data.count(), m_data.count() + array.count() - 1);
         foreach (QJsonValue value, array) {
             QJsonObject temp;
             if (value.isObject()) {
 
-                //Hack to make it possible to sort by reference
+                // Hack to make it possible to sort by reference
                 QVariant var = value.toVariant().toMap().value("events");
                 if (var.isValid()) {
 
@@ -280,7 +275,7 @@ void Model::parse(const QJsonObject &object)
                         if (i.key() == "events") {
                             QJsonObject eventObject = i.value().toObject();
                             for (QJsonObject::const_iterator i2 = eventObject.constBegin(); i2 != eventObject.constEnd();
-                        ++i2) {
+                                 ++i2) {
                                 QString key = "events_"+i2.key();
                                 temp[key] = i2.value();
                                 m_roleNames.insert(Qt::UserRole + 400+ind, key.toLatin1());
@@ -291,14 +286,10 @@ void Model::parse(const QJsonObject &object)
                     }
 
                     m_data.append(temp.toVariantMap());
-                }
-                else {
+                } else {
                     m_data.append(value.toVariant().toMap());
                 }
-
-
-            }
-            else {
+            } else {
 
                 m_data.append(value.toVariant().toMap());
             }

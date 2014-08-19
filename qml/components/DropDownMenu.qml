@@ -49,12 +49,14 @@ Item {
     property alias model: list.model
     property alias delegate: list.delegate
 
-    function show() {
+    function show()
+    {
         opacity = 1.0
         height = Math.min(list.count * delegateHeight, maxHeight)
     }
 
-    function close() {
+    function close()
+    {
         opacity = 0.0
         height = 0
     }

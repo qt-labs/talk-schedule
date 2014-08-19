@@ -71,13 +71,13 @@ int main(int argc, char *argv[])
 
     QQmlComponent component(&engine);
     component.loadUrl(QUrl("qrc:/qml/main.qml"));
-    if ( !component.isReady() ) {
+    if (!component.isReady()) {
         qWarning("%s", qPrintable(component.errorString()));
         return -1;
     }
     QObject *topLevel = component.create();
     QQuickWindow *window = qobject_cast<QQuickWindow *>(topLevel);
-    if ( !window ) {
+    if (!window) {
         qWarning("Error: Your root item has to be a Window.");
         return -1;
     }

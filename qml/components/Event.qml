@@ -45,16 +45,12 @@ import Enginio 1.0
 import qt.conclave.models 1.0
 
 Item {
-
     id: eventView
-
     property string eventId
     property var track
-
     property bool isSelected: false
-
-    signal selectFavorite(bool favorite)
     property var favorite
+    signal selectFavorite(bool favorite)
 
     height: window.height
     width: window.width
@@ -78,7 +74,7 @@ Item {
         contentHeight: columnLayout.height +  statusBar.height
         flickableDirection: Flickable.VerticalFlick
         clip: true
-        Column{
+        Column {
             id: columnLayout
             anchors.left: parent.left
             anchors.right: parent.right
@@ -129,14 +125,11 @@ Item {
     }
 
     Rectangle{
-
         color: Qt.rgba(0,242,242)
-
         anchors.bottom: flickable.bottom
         anchors.left: flickable.left
         anchors.right: flickable.right
         height: 80
-
 
         RowLayout {
             id: statusBar
@@ -145,27 +138,26 @@ Item {
             anchors.rightMargin: 20
             Rectangle {
                 id: trackSquare
-
                 width: statusBar.height - 10
                 height: statusBar.height - 10
                 radius: 5
                 color: track.backgroundColor
                 Text {
                     anchors.centerIn: parent
-                    text: "Track \n"+"0"+track.trackNumber
+                    text: "Track \n" + "0" + track.trackNumber
                     color: track.fontColor
                     font.family: "Open Sans"
                     font.pixelSize: 20
                 }
             }
-            Label{
+            Label {
                 height: parent.height
-                text: Qt.formatTime(model.get(0, "start"), "hmm")+">"+Qt.formatTime(model.get(0, "end"), "hmm")
+                text: Qt.formatTime(model.get(0, "start"), "hmm") + ">" + Qt.formatTime(model.get(0, "end"), "hmm")
                 color: "#666666"
                 font.family: "Open Sans"
                 font.pixelSize: 20
             }
-            Label{
+            Label {
                 text: track.location
                 height: parent.height
                 color: "#666666"
@@ -181,22 +173,19 @@ Item {
                     anchors.centerIn: parent
                     source: favorite ? window.favoriteImage : window.notFavoriteImage
                 }
-
                 MouseArea {
                     anchors.fill: parent
-                    onClicked: {
-                        favorite ? window.removeFavorite(eventId) : window.saveFavorite(eventId)
-                    }
+                    onClicked: favorite ? window.removeFavorite(eventId) : window.saveFavorite(eventId)
                 }
             }
         }
     }
     SortFilterModel {
-        id:model;
+        id: model;
         filterRole: "id"
         filterRegExp: new RegExp(eventId)
         model: window.eventModel
-        Component.onCompleted:{
+        Component.onCompleted: {
             track = model.get(0, "tracks")
             favorite = model.get(0, "favorite")
         }
@@ -204,14 +193,11 @@ Item {
     Connections {
         target: window
         ignoreUnknownSignals: true
-        onUpdateFavoriteSignal:{
-            if (added === true) {
+        onUpdateFavoriteSignal: {
+            if (added === true)
                 favorite = true
-            }
-            else {
-               favorite = false
-            }
+            else
+                favorite = false
         }
     }
-
 }

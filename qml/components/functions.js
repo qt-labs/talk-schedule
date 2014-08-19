@@ -59,7 +59,7 @@ function countTrackPosition(start, topic) {
         var startHour = getHour(start);
         if (modelHour === startHour) {
             var tmp = parseInt(timeColumnWidth*i);
-            //Add minutes too
+            // Add minutes too
             var startMinute = getMinutes(start);
             tmp += startMinute*timeColumnWidth/60;
             return tmp;
