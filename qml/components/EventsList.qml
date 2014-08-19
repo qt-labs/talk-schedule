@@ -43,8 +43,6 @@ import qt.conclave.models 1.0
 import QtQuick.Layouts 1.1
 import QtQuick.Controls 1.1
 
-import Enginio 1.0
-
 Item {
     width: root.width
     height: root.height
@@ -65,7 +63,6 @@ Item {
         anchors.topMargin: 5
         height: parent.height - subTitle.height - 75 //header height
         width: parent.width
-        property string trackId: id
         clip: true
 
         delegate: Item {

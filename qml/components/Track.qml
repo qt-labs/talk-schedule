@@ -42,13 +42,10 @@ import QtQuick 2.0
 import QtQuick.Controls 1.1
 import QtQuick.Layouts 1.1
 import qt.conclave.models 1.0
-import Enginio 1.0
 import "functions.js" as Functions
 
 ListView {
     id: trackList
-
-    property string trackId: id
 
     interactive: false
     height: trackHeight
@@ -168,10 +165,5 @@ ListView {
         target: window
         ignoreUnknownSignals: true
         onUpdateFavoriteSignal: tmp.model = window.eventModel
-    }
-
-    EnginioClient {
-        id: client
-        backendId: backId
     }
 }

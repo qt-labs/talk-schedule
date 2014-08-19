@@ -44,7 +44,6 @@ import QtQuick.Controls 1.1
 import QtQuick.Window 2.1
 import QtQuick.Layouts 1.1
 import qt.conclave.models 1.0
-import Enginio 1.0
 
 ListView {
     id: trackHeaderListView
@@ -53,15 +52,10 @@ ListView {
     width: 100
 
     property string confId: window.conferenceId
-    property string trackId: id
 
     clip: true
     boundsBehavior: Flickable.StopAtBounds
 
-    EnginioModel {
-        id: enginioModel
-        client: client
-    }
     delegate: Item {
         id: delegateItem
         height: trackHeight
