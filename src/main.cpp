@@ -39,7 +39,6 @@
 ****************************************************************************/
 
 #include <QtQml>
-#include <QtQuick/QQuickView>
 #include <QtCore/QString>
 #include <QtGui/QGuiApplication>
 
@@ -47,7 +46,6 @@
 #include "model.h"
 #include "sortfiltermodel.h"
 #include "fileio.h"
-#include <QSslSocket>
 
 static QObject *systeminfo_provider(QQmlEngine *engine, QJSEngine *scriptEngine)
 {
@@ -59,12 +57,11 @@ static QObject *systeminfo_provider(QQmlEngine *engine, QJSEngine *scriptEngine)
 int main(int argc, char *argv[])
 {
     QGuiApplication app(argc, argv);
-    QQmlEngine engine;
-
-    engine.rootContext()->setContextProperty("backId", "539fc807e5bde548e000597c");
-
     app.setApplicationName("TalkSchedule");
     app.setOrganizationName("Qt.Digia");
+
+    QQmlApplicationEngine engine;
+    engine.rootContext()->setContextProperty("backId", "539fc807e5bde548e000597c");
 
     const char *uri = "TalkSchedule";
     // @uri TalkSchedule
@@ -73,19 +70,6 @@ int main(int argc, char *argv[])
     qmlRegisterType<SortFilterModel>(uri, 1, 0, "SortFilterModel");
     qmlRegisterType<FileIO>(uri, 1, 0, "FileIO");
 
-    QQmlComponent component(&engine);
-    component.loadUrl(QUrl("qrc:/qml/main.qml"));
-    if (!component.isReady()) {
-        qWarning("%s", qPrintable(component.errorString()));
-        return -1;
-    }
-    QObject *topLevel = component.create();
-    QQuickWindow *window = qobject_cast<QQuickWindow *>(topLevel);
-    if (!window) {
-        qWarning("Error: Your root item has to be a Window.");
-        return -1;
-    }
-    QObject::connect(&engine, SIGNAL(quit()), &app, SLOT(quit()));
-    window->show();
+    engine.load(QUrl("qrc:/qml/main.qml"));
     return app.exec();
 }

@@ -46,6 +46,7 @@ import "components"
 
 ApplicationWindow {
     id: window
+    visible: true
     height: 620
     width: 420
     property string conferenceId: header.conferenceId
