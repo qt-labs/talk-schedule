@@ -42,19 +42,23 @@
 #define APPLICATIONINFO_H
 
 #include <QtCore/QObject>
+#include <QtQml/QQmlPropertyMap>
 
 class Theme : public QObject
 {
     Q_OBJECT
     Q_PROPERTY(int trackWidthDivider READ trackWidthDivider CONSTANT)
+    Q_PROPERTY(QObject *text READ text CONSTANT)
 
 public:
     explicit Theme(QObject *parent = 0);
 
     int trackWidthDivider() const;
+    QQmlPropertyMap *text() const { return m_text; }
 
 private:
     int m_trackWidthDivider;
+    QQmlPropertyMap *m_text;
 };
 
 #endif // APPLICATIONINFO_H

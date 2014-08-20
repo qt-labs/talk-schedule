@@ -56,7 +56,7 @@ Item {
 
     SubTitle {
         id: subTitle
-        titleText: "esitykset"
+        titleText: Theme.text.talks
     }
     Rectangle {
         color: "white"

@@ -53,7 +53,7 @@ Item {
     property int trackHeight: Math.max(minTrackHeight, Math.min(maxTrackHeight, Math.floor((window.height - header.height - subTitle.height)/5)));
     SubTitle {
         id: subTitle
-        titleText: "ESITYKSET"
+        titleText: Theme.text.talks
     }
 
     ListView {

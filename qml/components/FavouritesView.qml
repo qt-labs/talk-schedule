@@ -54,7 +54,7 @@ Item {
 
     SubTitle {
         id: subTitle
-        titleText: "OMAT SUOSIKIT"
+        titleText: Theme.text.favorites
     }
 
     ListView {

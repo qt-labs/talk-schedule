@@ -43,6 +43,7 @@ import QtQuick.Controls 1.1
 import QtQuick.Controls.Styles 1.1
 import QtQuick.Layouts 1.1
 import Enginio 1.0
+import TalkSchedule 1.0
 
 Item {
     id: conferenceHeader
@@ -121,9 +122,11 @@ Item {
 
     ListModel {
         id: choices
-        ListElement { text: "Aikataulu" }
-        ListElement { text: "Suosikit" }
-        ListElement { text: "Esitykset" }
+        Component.onCompleted: {
+            choices.append({text: Theme.text.schedule})
+            choices.append({text: Theme.text.favorites})
+            choices.append({text: Theme.text.talks})
+        }
     }
 
     EnginioClient {
