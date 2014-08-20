@@ -46,13 +46,14 @@
 class SortFilterModel : public QSortFilterProxyModel
 {
     Q_OBJECT
-    Q_PROPERTY(QObject *model READ sourceModel WRITE setModel NOTIFY modelChanged)
+    Q_PROPERTY(QObject *model READ model WRITE setModel NOTIFY modelChanged)
     Q_PROPERTY(QString sortRole READ sortRole WRITE setSortRole NOTIFY sortRoleChanged)
     Q_PROPERTY(QString filterRole READ filterRole WRITE setFilterRole NOTIFY filterRoleChanged)
 
 public:
     explicit SortFilterModel(QObject *parent = 0);
     void setModel(QObject *model);
+    QObject *model() const { return QSortFilterProxyModel::sourceModel(); }
 
     QString sortRole() const;
     void setSortRole(const QString &role);
