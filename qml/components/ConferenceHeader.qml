@@ -47,7 +47,7 @@ import TalkSchedule 1.0
 
 Item {
     id: conferenceHeader
-    property string conferenceId: event.id
+    property string conferenceId
     property var event
     property string favoriteImage
     property string notFavoriteImage
@@ -139,6 +139,7 @@ Item {
 
             eventQuery.finished.connect(function() {
                 event = eventQuery.data.results[0]
+                conferenceId = event.id
 
                 // After id is fetched, download also images
                 var downloadLogo = {
