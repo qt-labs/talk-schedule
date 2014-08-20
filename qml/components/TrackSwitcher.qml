@@ -59,7 +59,6 @@ Item {
     DaySwitcher {
         id: daysWitcher
         anchors.top: parent.top
-        anchors.left: parent.left
         width: parent.width
         height: 60
     }

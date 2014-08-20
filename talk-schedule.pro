@@ -21,7 +21,6 @@ OTHER_FILES += \
     qml/components/TrackSwitcher.qml \
     qml/components/Track.qml \
     qml/components/ConferenceHeader.qml \
-    qml/components/DropDownMenu.qml \
     qml/components/ListItem.qml \
     qml/components/TrackHeader.qml \
     qml/components/DaySwitcher.qml \

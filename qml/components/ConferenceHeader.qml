@@ -51,6 +51,7 @@ Item {
     property var event
     property string favoriteImage
     property string notFavoriteImage
+    property string location
 
     anchors { top: parent.top; left: parent.left; right: parent.right }
     height: 70
@@ -139,7 +140,9 @@ Item {
 
             eventQuery.finished.connect(function() {
                 event = eventQuery.data.results[0]
+
                 conferenceId = event.id
+                location = event.location
 
                 // After id is fetched, download also images
                 var downloadLogo = {

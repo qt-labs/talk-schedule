@@ -42,116 +42,85 @@ import QtQuick 2.0
 import QtQuick.Controls 1.1
 import QtQuick.Layouts 1.1
 import TalkSchedule 1.0
+import "functions.js" as Functions
 
 Rectangle {
+    id: topSwitcher
     property string confId: window.conferenceId
+    property string confLocation: window.location
     property string dayId
-
+    property int daysCount: 0
+    property int dayWidth: 150 // TODO
+    property int margins: 30
     color: "white"
 
-    Rectangle {
-        id: daySwitcher
+    GridLayout {
+        id: dayRow
         anchors.fill: parent
-        color: "white"
-        RowLayout {
-            id: dayLayout
-            anchors.verticalCenter: parent.verticalCenter
-            anchors.horizontalCenter: parent.horizontalCenter
-            anchors.margins: 20
-            Label {
-                id: dayLabel
-                width: parent.width/2
-                color: "black"
-                font.family: "Open Sans"
-                font.pixelSize: 22
-                font.bold: true
-                font.capitalization: Font.AllUppercase
-                MouseArea  {
-                    anchors.fill: parent
-                    onClicked: {
-                        dayId = dayModel.get(0,"id")
-                        dayLabel.color = "black"
-                        dayLabel.font.bold = true
-                        dayLabel2.color = "grey"
-                        dayLabel2.font.bold = false
-                    }
-                }
-            }
-            Label {
-                id: divider
-                color: "lightgray"
-                font.family: "Open Sans"
-                font.pixelSize: 22
-                text: "|"
-            }
-            Label {
-                id: dayLabel2
-                width: parent.width/2
-                color: "grey"
-                font.family: "Open Sans"
-                font.pixelSize: 22
-                font.capitalization: Font.AllUppercase
-                MouseArea  {
-                    anchors.fill: parent
-                    onClicked: {
-                        if (dayModel.rowCount() > 1 ) {
-                            dayId = dayModel.get(1,"id")
-                            dayLabel.color = "grey"
-                            dayLabel.font.bold = false
-                            dayLabel2.color = "black"
-                            dayLabel2.font.bold = true
-                        }
-                    }
-                }
-            }
+        anchors.leftMargin: margins
+        anchors.rightMargin: margins
+        columns: daysCount * 2 + 3
+        rows: 2
+        Item { Layout.fillWidth: true; width: 5; Layout.preferredHeight: 1 }
+        Label {
+            id: locationLabel
+            text: topSwitcher.confLocation
+            verticalAlignment: Text.AlignVCenter
+            horizontalAlignment: Text.AlignHCenter
+            font.pixelSize: 22
+            color: "black"
+            Layout.fillWidth: false
+            Layout.alignment: Text.AlignVCenter | Text.AlignHCenter
         }
-    }
-
-    // TODO if there are more than two days, show rest of the days in dropdown list
-    DropDownMenu {
-        id: dropMenu
-        anchors {
-            top: parent.bottom
-            horizontalCenter: parent.horizontalCenter
-        }
-
-        delegate: ListItem {
-            height: dropMenu.delegateHeight
-            width: dropMenu.width
+        Repeater {
+            model: daysCount * 2
             Label {
                 id: label
-                anchors { fill: parent; margins: 3 }
-                color: "white"
-                font.family: "Open Sans"
-                fontSizeMode: Text.Fit
-                font.pixelSize: parent.height
-                horizontalAlignment: Text.AlignHCenter
+                property bool isDivider: Functions.isEvenNumber(index)
+                property string currentDayId: isDivider ? "invalid" : dayModel.get((index-1)/2, "id")
+                font.pixelSize: 22
+                text: isDivider ? "|" : Qt.formatDate(dayModel.get((index-1)/2, "date"), "ddd dd.MM")
+                font.capitalization: Font.AllUppercase
+                height: topSwitcher.height
+                color: isDivider ? "gray" : dayId === currentDayId ? "blue" : "black"
                 verticalAlignment: Text.AlignVCenter
-                text: Qt.formatDate(date, "ddd d.M.yyyy")
-            }
-            onClicked: {
-                dayLabel.text = Qt.formatDate(date, "dddd d.M.yyyy")
-                dayId = id
-                dropMenu.close()
+                horizontalAlignment: Text.AlignHCenter
+                Layout.fillWidth: false
+                MouseArea  {
+                    enabled: !label.isDivider
+                    anchors.fill: parent
+                    onClicked: if (!label.isDivider) dayId = currentDayId
+                }
+                Layout.alignment: Text.AlignVCenter | Text.AlignHCenter
             }
         }
-        model: SortFilterModel {
-            id: dayModel;
-            sortRole: "date"
+        Item { Layout.fillWidth: true; width: 5; Layout.preferredHeight: 1 }
+        Item { Layout.fillWidth: true; width: 5; Layout.preferredHeight: 1 }
+        Repeater {
+            model: daysCount * 2 + 1
+            Item {
+                property bool isDivider: !Functions.isEvenNumber(index)
+                property real expectedWidth: topSwitcher.dayWidth
+                Layout.preferredWidth: isDivider ? 5 : (index === 0 ) ?  expectedWidth/2 : expectedWidth
+                Layout.preferredHeight: 1
+            }
         }
+        Item { Layout.fillWidth: true; width: 5; Layout.preferredHeight: 1 }
+    }
 
-        Model {
-            id: day
-            backendId: backId
-            onDataReady: {
-                dayModel.model = day
-                dayLabel.text = Qt.formatDate(dayModel.get(0,"date"), "dddd d.M.yyyy")
-                if (day.rowCount() > 1 )
-                    dayLabel2.text = Qt.formatDate(dayModel.get(1,"date"), "dddd d.M.yyyy")
-                dayId = dayModel.get(0,"id")
-            }
+    SortFilterModel {
+        id: dayModel;
+        sortRole: "date"
+    }
+
+    Model {
+        id: day
+        backendId: backId
+        onDataReady: {
+            dayModel.model = day
+            dayId = dayModel.get(0,"id")
+            daysCount = dayModel.rowCount()
         }
-        width: Math.min(window.width * 0.6, 400)
     }
 
     onConfIdChanged: {

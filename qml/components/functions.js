@@ -81,4 +81,9 @@ function getMinutes(time) {
     return minutePart;
 }
 
+function isEvenNumber(Nb)
+{
+   return Nb/2 === Math.round(Nb/2)
+}
+
 

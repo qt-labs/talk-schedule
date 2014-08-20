@@ -57,6 +57,7 @@ ApplicationWindow {
     property variant updateFavoriteEvent: { 'event': '', 'added': false }
     property var eventModel: eventModel
     property var favoriteModel: favoriteModel
+    property var location: header.location
 
     signal updateFavoriteSignal(string event, bool added)
 
