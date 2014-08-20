@@ -77,10 +77,6 @@ ApplicationWindow {
             {"height" : window.height - header.height, "width": "540"}}
 
     }
-    Item {
-        id: menuParent
-        anchors.fill: parent
-    }
 
     EnginioClient {
         id: client
