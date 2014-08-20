@@ -47,6 +47,10 @@
 #include "sortfiltermodel.h"
 #include "fileio.h"
 
+#define QUOTE_(x) #x
+#define QUOTE(x) QUOTE_(x)
+#define BACKEND_ID QUOTE(TALK_SCHEDULE_BACKEND_ID)
+
 static QObject *systeminfo_provider(QQmlEngine *engine, QJSEngine *scriptEngine)
 {
     Q_UNUSED(engine)
@@ -61,7 +65,7 @@ int main(int argc, char *argv[])
     app.setOrganizationName("Qt.Digia");
 
     QQmlApplicationEngine engine;
-    engine.rootContext()->setContextProperty("backId", "539fc807e5bde548e000597c");
+    engine.rootContext()->setContextProperty("backId", QString(BACKEND_ID));
 
     const char *uri = "TalkSchedule";
     // @uri TalkSchedule

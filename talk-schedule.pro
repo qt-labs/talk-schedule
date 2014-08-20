@@ -4,6 +4,8 @@
 #
 #-------------------------------------------------
 
+TALK_SCHEDULE_BACKEND_ID = 53eb4610e5bde51bac007bb1
+
 QT += qml quick enginio svg
 TARGET = talk-schedule
 TEMPLATE = app
@@ -35,3 +37,6 @@ HEADERS += \
     src/model.h \
     src/sortfiltermodel.h \
     src/fileio.h
+
+DEFINES += \
+    TALK_SCHEDULE_BACKEND_ID=$$TALK_SCHEDULE_BACKEND_ID
