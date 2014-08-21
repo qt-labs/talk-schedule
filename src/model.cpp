@@ -201,13 +201,13 @@ bool Model::save(const QJsonObject &object)
     QString path = QStandardPaths::writableLocation(QStandardPaths::DataLocation);
     QDir dir(path);
     if (!dir.exists() && !dir.mkpath(path)) {
-        qWarning("Could not create dir");
+        qWarning() << "Could not create dir" << path;
         return false;
     }
 
     QFile file(QString("%1/%2").arg(path).arg(fileName));
     if (!file.open(QIODevice::WriteOnly | QIODevice::Truncate)) {
-        qWarning("On save couldn't open file.");
+        qWarning() << "On save couldn't open file" << file.fileName();
         return false;
     }
 
@@ -222,7 +222,7 @@ bool Model::load(const QString &objectType)
     QString path = QStandardPaths::writableLocation(QStandardPaths::DataLocation);
     QFile file(QString("%1/%2").arg(path).arg(objectType));
     if (!file.open(QIODevice::ReadOnly)) {
-        qWarning("On load couldn't open file.");
+        qWarning() << "On load couldn't open file" << file.fileName();
         return false;
     }
 
