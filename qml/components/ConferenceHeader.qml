@@ -145,52 +145,61 @@ Item {
                 location = event.location
 
                 // After id is fetched, download also images
-                var downloadLogo = {
-                    "id": event.logo.id,
-                }
-                var downloadBackImage = {
-                    "id": event.backImage.id,
-                }
-                var downloaMenuImage = {
-                    "id": event.menuImage.id,
-                }
-                var downloaFavoriteNotSelectedImage = {
-                    "id": event.favoriteNotSelectedImage.id,
-                }
-                var downloaFavoriteSelectedImage = {
-                    "id": event.favoriteSelectedImage.id,
-                }
-                var replyLogo = client.downloadUrl(downloadLogo)
-                var replyBackImage = client.downloadUrl(downloadBackImage)
-                var replyMenuImage = client.downloadUrl(downloaMenuImage)
-                var replyFavoriteNotImage = client.downloadUrl(downloaFavoriteNotSelectedImage)
-                var replyFavoriteImage = client.downloadUrl(downloaFavoriteSelectedImage)
-
-                replyLogo.finished.connect(function() {
-                    if (header && replyLogo.data.expiringUrl) {
-                        header.source = replyLogo.data.expiringUrl
+                if (!!event.logo) {
+                    var downloadLogo = {
+                        "id": event.logo.id,
                     }
-                })
-                replyBackImage.finished.connect(function() {
-                    if (backButton && replyBackImage.data.expiringUrl) {
-                        backButton.source = replyBackImage.data.expiringUrl
+                    var replyLogo = client.downloadUrl(downloadLogo)
+                    replyLogo.finished.connect(function() {
+                        if (header && replyLogo.data.expiringUrl) {
+                            header.source = replyLogo.data.expiringUrl
+                        }
+                    })
+                }
+                if (!!event.backImage) {
+                    var downloadBackImage = {
+                        "id": event.backImage.id,
                     }
-                })
-                replyMenuImage.finished.connect(function() {
-                    if ( replyMenuImage.data.expiringUrl) {
-                        dropMenu.menuImage = replyMenuImage.data.expiringUrl
+                    var replyBackImage = client.downloadUrl(downloadBackImage)
+                    replyBackImage.finished.connect(function() {
+                        if (backButton && replyBackImage.data.expiringUrl) {
+                            backButton.source = replyBackImage.data.expiringUrl
+                        }
+                    })
+                }
+                if (!!event.menuImage) {
+                    var downloaMenuImage = {
+                        "id": event.menuImage.id,
                     }
-                })
-                replyFavoriteNotImage.finished.connect(function() {
-                    if ( replyFavoriteNotImage.data.expiringUrl) {
-                        notFavoriteImage = replyFavoriteNotImage.data.expiringUrl
+                    var replyMenuImage = client.downloadUrl(downloaMenuImage)
+                    replyMenuImage.finished.connect(function() {
+                        if ( replyMenuImage.data.expiringUrl) {
+                            dropMenu.menuImage = replyMenuImage.data.expiringUrl
+                        }
+                    })
+                }
+                if (!!event.favoriteNotSelectedImage) {
+                    var downloaFavoriteNotSelectedImage = {
+                        "id": event.favoriteNotSelectedImage.id,
                     }
-                })
-                replyFavoriteImage.finished.connect(function() {
-                    if ( replyFavoriteImage.data.expiringUrl) {
-                        favoriteImage = replyFavoriteImage.data.expiringUrl
+                    var replyFavoriteNotImage = client.downloadUrl(downloaFavoriteNotSelectedImage)
+                    replyFavoriteNotImage.finished.connect(function() {
+                        if ( replyFavoriteNotImage.data.expiringUrl) {
+                            notFavoriteImage = replyFavoriteNotImage.data.expiringUrl
+                        }
+                    })
+                }
+                if (!!event.favoriteSelectedImage) {
+                    var downloaFavoriteSelectedImage = {
+                        "id": event.favoriteSelectedImage.id,
                     }
-                })
+                    var replyFavoriteImage = client.downloadUrl(downloaFavoriteSelectedImage)
+                    replyFavoriteImage.finished.connect(function() {
+                        if ( replyFavoriteImage.data.expiringUrl) {
+                            favoriteImage = replyFavoriteImage.data.expiringUrl
+                        }
+                    })
+                }
             })
         }
     }
