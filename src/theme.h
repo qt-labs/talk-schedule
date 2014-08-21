@@ -49,16 +49,19 @@ class Theme : public QObject
     Q_OBJECT
     Q_PROPERTY(int trackWidthDivider READ trackWidthDivider CONSTANT)
     Q_PROPERTY(QObject *text READ text CONSTANT)
+    Q_PROPERTY(QObject *colors READ colors CONSTANT)
 
 public:
     explicit Theme(QObject *parent = 0);
 
     int trackWidthDivider() const;
     QQmlPropertyMap *text() const { return m_text; }
+    QQmlPropertyMap *colors() const { return m_colors; }
 
 private:
     int m_trackWidthDivider;
     QQmlPropertyMap *m_text;
+    QQmlPropertyMap *m_colors;
 };
 
 #endif // APPLICATIONINFO_H

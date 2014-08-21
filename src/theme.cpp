@@ -51,6 +51,15 @@ Theme::Theme(QObject *parent)
     m_text->insert(QLatin1String("talks"), tr("Talks"));
     m_text->insert(QLatin1String("favorites"), tr("Favorites"));
     m_text->insert(QLatin1String("schedule"), tr("Schedule"));
+
+    m_colors = new QQmlPropertyMap(this);
+    m_colors->insert(QLatin1String("white"), QVariant("#ffffff"));
+    m_colors->insert(QLatin1String("smokewhite"), QVariant("#f2f2f2"));
+    m_colors->insert(QLatin1String("gray"), QVariant("#808080"));
+    m_colors->insert(QLatin1String("darkgray"), QVariant("#333333"));
+    m_colors->insert(QLatin1String("blue"), QVariant("#14aaff"));
+    m_colors->insert(QLatin1String("green"), QVariant("#328930"));
+    m_colors->insert(QLatin1String("black"), QVariant("#000000"));
 }
 
 int Theme::trackWidthDivider() const

@@ -59,7 +59,7 @@ Item {
         titleText: Theme.text.talks
     }
     Rectangle {
-        color: "white"
+        color: Theme.colors.white
         anchors.fill: flickable
     }
 
@@ -81,7 +81,7 @@ Item {
             spacing: 20
             Text {
                 text: model.get(0, "topic")
-                color: "black"
+                color: Theme.colors.black
                 width: columnLayout.width
                 font.family: "Open Sans"
                 font.pixelSize: 32
@@ -95,7 +95,7 @@ Item {
                 font.family: "Open Sans"
                 font.pixelSize: 20
                 font.capitalization: Font.AllUppercase
-                color: "#666666"
+                color: Theme.colors.gray
             }
             Label {
                 id: eventIntro
@@ -105,14 +105,14 @@ Item {
                 width: parent.width
                 wrapMode: Text.WordWrap
                 elide: Text.ElideRight
-                color: "#666666"
+                color: Theme.colors.gray
             }
             Label {
                 id: eventTags
                 text: model.get(0, "tags")
                 font.family: "Open Sans"
                 font.pixelSize: 19
-                color: "#ff00ff"
+                color: Theme.colors.green
             }
         }
 
@@ -124,7 +124,8 @@ Item {
     }
 
     Rectangle{
-        color: Qt.rgba(0,242,242)
+        color: Theme.colors.smokewhite
+
         anchors.bottom: flickable.bottom
         anchors.left: flickable.left
         anchors.right: flickable.right
@@ -152,14 +153,14 @@ Item {
             Label {
                 height: parent.height
                 text: Qt.formatTime(model.get(0, "start"), "hmm") + ">" + Qt.formatTime(model.get(0, "end"), "hmm")
-                color: "#666666"
+                color: Theme.colors.gray
                 font.family: "Open Sans"
                 font.pixelSize: 20
             }
             Label {
                 text: track.location
                 height: parent.height
-                color: "#666666"
+                color: Theme.colors.darkgray
                 font.family: "Open Sans"
                 font.pixelSize: 20
             }

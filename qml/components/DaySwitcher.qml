@@ -52,7 +52,7 @@ Rectangle {
     property int daysCount: 0
     property int dayWidth: 150 // TODO
     property int margins: 30
-    color: "white"
+    color: Theme.colors.white
 
     GridLayout {
         id: dayRow
@@ -68,7 +68,7 @@ Rectangle {
             verticalAlignment: Text.AlignVCenter
             horizontalAlignment: Text.AlignHCenter
             font.pixelSize: 22
-            color: "black"
+            color: Theme.colors.black
             Layout.fillWidth: false
             Layout.alignment: Text.AlignVCenter | Text.AlignHCenter
         }
@@ -82,7 +82,8 @@ Rectangle {
                 text: isDivider ? "|" : Qt.formatDate(dayModel.get((index-1)/2, "date"), "ddd dd.MM")
                 font.capitalization: Font.AllUppercase
                 height: topSwitcher.height
-                color: isDivider ? "gray" : dayId === currentDayId ? "blue" : "black"
+                color: isDivider ? Theme.colors.gray :
+                                   dayId === currentDayId ? Theme.colors.blue : Theme.colors.black
                 verticalAlignment: Text.AlignVCenter
                 horizontalAlignment: Text.AlignHCenter
                 Layout.fillWidth: false
