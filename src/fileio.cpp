@@ -71,7 +71,7 @@ QString FileIO::read()
         file.close();
     } else {
         emit error("Unable to open the file");
-        qDebug() << "unable to openfile " << mSource;
+        qDebug() << "unable to open file " << mSource;
         return QString();
     }
     return fileContent;
@@ -81,13 +81,13 @@ bool FileIO::write(const QString &data)
 {
     QFile file(mSource);
     if (!file.open(QFile::WriteOnly | QFile::Truncate)) {
-        qDebug() << "chould not open file";
+        qDebug() << "could not open file";
         return false;
     }
 
     QTextStream out(&file);
     out << data;
-    qDebug() << "data writed " << data;
+    qDebug() << "data written " << data;
     file.close();
 
     return true;
