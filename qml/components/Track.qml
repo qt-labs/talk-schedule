@@ -129,7 +129,7 @@ ListView {
                     width: columnLayout.width
                     height: 50
                     Text {
-                        width: columnLayout.width
+                        width: columnLayout.width - favoriteImage.width
                         text: Qt.formatTime(start, "h:mm") + " - " + Qt.formatTime(end, "h:mm") + " I " + location
                         color: "#666666"
                         font.family: "Open Sans"
