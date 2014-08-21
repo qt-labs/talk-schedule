@@ -38,7 +38,7 @@
 **
 ****************************************************************************/
 
-import QtQuick 2.0
+import QtQuick 2.2
 import QtQuick.Controls 1.1
 import Enginio 1.0
 import TalkSchedule 1.0
@@ -57,11 +57,11 @@ ApplicationWindow {
     property variant updateFavoriteEvent: { 'event': '', 'added': false }
     property var eventModel: eventModel
     property var favoriteModel: favoriteModel
-    property var location: header.location
+    property string location: header.location
 
     signal updateFavoriteSignal(string event, bool added)
 
-    color:"#F2F2F2"
+    color: Theme.colors.smokewhite
 
     FileIO {
         id: userIdFile
@@ -74,9 +74,13 @@ ApplicationWindow {
     StackView {
         id: stack
         anchors { top: header.bottom }
-        initialItem: {"item" : Qt.resolvedUrl("components/TrackSwitcher.qml"), "properties" :
-            {"height" : window.height - header.height, "width": "540"}}
-
+        initialItem: {
+            "item" : Qt.resolvedUrl("components/TrackSwitcher.qml"),
+            "properties" : {
+                "height" : window.height - header.height,
+                "width": "540"
+            }
+        }
     }
 
     EnginioClient {
