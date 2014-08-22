@@ -44,190 +44,31 @@ import QtQuick.Layouts 1.1
 import QtQuick.Controls 1.1
 
 Item {
-    width: root.width
-    height: root.height
-
+    id: eventsList
+    property bool isFavoriteView: false
     property int minTrackHeight: 120
     property int maxTrackHeight: 200
-
     property int trackHeight: Math.max(minTrackHeight, Math.min(maxTrackHeight, Math.floor((window.height - header.height - subTitle.height)/5)));
+
     SubTitle {
         id: subTitle
-        titleText: Theme.text.talks
+        titleText: isFavoriteView ? Theme.text.favorites : Theme.text.talks
     }
 
     ListView {
-        id: favoriteList
+        id: eventsListView
         interactive: true
         anchors.top: subTitle.bottom
         anchors.topMargin: 5
         height: parent.height - subTitle.height - 75 //header height
         width: parent.width
         clip: true
-
-        delegate: Item {
-            property bool isDayLabelVisible:  itemHeight()
-            property int labelHeight: isDayLabelVisible ? 35 : 5
-
-            height: trackHeight + labelHeight
-            width: parent.width
-            Label {
-                id: dayLabel
-                height: labelHeight
-                width: parent.width
-                anchors.leftMargin: 10
-                text: isDayLabelVisible ? Qt.formatDate(start, "dddd d.M.yyyy") : ""
-                font.family: "Open Sans"
-                font.pixelSize: 20
-                font.capitalization: Font.AllUppercase
-            }
-            RowLayout {
-                id: rowLayout
-                height: trackHeight
-                width: parent.width
-                anchors.top: dayLabel.bottom
-                //anchors.margins: 10
-                Rectangle {
-                    id: trackHeader
-                    height: parent.height
-                    width: 100
-                    color: tracks.backgroundColor
-
-                    Text {
-                        anchors { fill: parent;  margins: 10 }
-                        text: tracks.name
-                        color: tracks.fontColor
-                        font.family: "Open Sans"
-                        fontSizeMode: Text.Fit
-                        font.pixelSize: 20
-                        horizontalAlignment: Text.AlignRight
-                        verticalAlignment: Text.AlignVCenter
-                        wrapMode: Text.WordWrap
-                    }
-                }
-                Rectangle {
-                    Layout.fillWidth: true
-                    color: Qt.rgba(255,255,255)
-                    height: parent.height
-                    width: parent.width
-
-                    ColumnLayout {
-                        id: eventColumn
-                        anchors.fill: parent
-                        anchors.margins: 20
-
-                        // For some reason word wrap does not work correctly
-                        // if Text not inside Item
-                        Item {
-                            width: parent.width - 20
-                            height: 50
-                            Text {
-                                text: topic
-                                color: "black"
-                                width: parent.width
-                                font.family: "Open Sans"
-                                font.pixelSize: 25
-                                maximumLineCount: 2
-                                elide: Text.ElideRight
-                                wrapMode: Text.WordWrap
-                            }
-                        }
-                        Text {
-                            text: performer
-                            color: "#666666"
-                            width: parent.width - 20
-                            font.family: "Open Sans"
-                            font.pixelSize: 14
-                            font.capitalization: Font.AllUppercase
-                            maximumLineCount: 1
-                        }
-                        RowLayout {
-                            anchors.left: parent.left
-                            anchors.right: parent.right
-                            Text {
-                                text: Qt.formatTime(start, "h:mm") + " - " + Qt.formatTime(end, "h:mm")
-                                color: "#666666"
-                                font.pixelSize: 14
-                            }
-                            Text {
-                                text: " I "
-                                color: "#666666"
-                                font.family: "Open Sans"
-                                font.pixelSize: 14
-                                font.capitalization: Font.AllUppercase
-                            }
-                            Text {
-                                text: tracks.location
-                                Layout.fillWidth: true
-                                color: "#666666"
-                                font.family: "Open Sans"
-                                font.pixelSize: 14
-                                font.capitalization: Font.AllUppercase
-                                maximumLineCount: 1
-                                wrapMode: Text.WrapAnywhere
-                                elide: Text.ElideRight
-                            }
-                        }
-                    }
-                }
-            }
-
-            Item {
-                // Add this imageArea to make it easier to click the image
-                id: imageArea
-                anchors.bottom: rowLayout.bottom
-                anchors.right: rowLayout.right
-                width: 80
-                height: 80
-                Image {
-                    id: favoriteImage
-                    anchors.bottom: imageArea.bottom
-                    anchors.right: imageArea.right
-                    source: favorite ? window.favoriteImage : window.notFavoriteImage
-                }
-                MouseArea {
-                    anchors.fill: parent
-                    onClicked: {
-                        if (favorite)
-                            ModelsSingleton.removeFavorite(id)
-                        else
-                            ModelsSingleton.saveFavorite(id)
-                    }
-                }
-            }
-
-            function itemHeight()
-            {
-                if (index === 0) {
-                    //    console.log("first item, sow date")
-                    return true
-                }
-                else if (index > 0) {
-                    var date = Qt.formatDate(start, "dddd d.M.yyyy")
-                    var date2 = Qt.formatDate(sortModel.get(index - 1, "start"), "dddd d.M.yyyy")
-                    if (date2 != date )
-                        return true
-                    else
-                        return false
-                }
-                return false
-            }
-
-            MouseArea {
-                anchors {
-                    top: parent.top
-                    bottom: parent.bottom
-                    left: parent.left
-                    right: imageArea.left
-                }
-                onClicked: stack.push({"item" : Qt.resolvedUrl("Event.qml"), "properties" : {"eventId" : id}})
-            }
-        }
-
         model: SortFilterModel {
-            id: sortModel;
-            sortRole: "start"
-            model: ModelsSingleton.eventModel
-        }
+                           sortRole: "start"
+                           filterRole: "favorite"
+                           filterRegExp: eventsList.isFavoriteView ? new RegExp("true") : new RegExp()
+                           model: ModelsSingleton.eventModel
+                       }
+        delegate: EventsListDelegate {}
     }
 }

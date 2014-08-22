@@ -171,7 +171,7 @@ Item {
                     font.pixelSize: 20
                 }
                 Label {
-                    text: track.location
+                    text: "name room" // TODO track.location
                     height: parent.height
                     color: Theme.colors.darkgray
                     font.family: "Open Sans"

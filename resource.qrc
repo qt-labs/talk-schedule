@@ -9,9 +9,9 @@
         <file>qml/components/TrackHeader.qml</file>
         <file>qml/components/DaySwitcher.qml</file>
         <file>qml/components/SubTitle.qml</file>
-        <file>qml/components/FavouritesView.qml</file>
         <file>qml/components/functions.js</file>
         <file>qml/components/EventsList.qml</file>
         <file>qml/components/ModelsSingleton.qml</file>
+        <file>qml/components/EventsListDelegate.qml</file>
     </qresource>
 </RCC>

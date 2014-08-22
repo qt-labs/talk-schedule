@@ -103,13 +103,23 @@ Item {
                     if (currentIndex === 0) {
                         var item = Qt.resolvedUrl("TrackSwitcher.qml")
                         stack.pop(stack.find(function(item){}))
-                    }
-                    else if (currentIndex === 1) {
-                        stack.push({"item" : Qt.resolvedUrl("FavouritesView.qml")})
-                    }
-                    else if (currentIndex === 2) {
-                        var item = Qt.resolvedUrl("EventsList.qml")
-                        stack.push({"item" : item})
+                    } else if (currentIndex === 1) {
+                        var itemF = Qt.resolvedUrl("EventsList.qml")
+                        var loadedFav = stack.find(function(itemF){ return (itemF.isFavoriteView === true)})
+                        if (loadedFav !== null)
+                            stack.pop(loadedFav)
+                        else
+                            stack.push({
+                                           "item" : itemF,
+                                           "properties" : { "isFavoriteView" : true }
+                                       })
+                    } else if (currentIndex === 2) {
+                        var itemE = Qt.resolvedUrl("EventsList.qml")
+                        var loadedEv = stack.find(function(itemE){ return (itemE.isFavoriteView === false)})
+                        if (loadedEv !== null)
+                            stack.pop(loadedEv)
+                        else
+                            stack.push(itemE)
                     }
                     // View can be changed also with back button. So currentIndex does
                     // not necessarily change view as index is not changed.
@@ -203,4 +213,3 @@ Item {
         }
     }
 }
-
