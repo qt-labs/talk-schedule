@@ -47,7 +47,6 @@ import "functions.js" as Functions
 
 Item {
     id: root
-    anchors.fill: parent
 
     property int timeColumnWidth: 200
     property int minTrackHeight: 130
