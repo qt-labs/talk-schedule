@@ -73,12 +73,24 @@ ApplicationWindow {
 
     StackView {
         id: stack
+        focus: true
+
         anchors { top: header.bottom }
         initialItem: {
             "item" : Qt.resolvedUrl("components/TrackSwitcher.qml"),
             "properties" : {
                 "height" : window.height - header.height,
                 "width": "540"
+            }
+        }
+
+        // capture Android back key
+        Keys.onReleased: {
+            if (event.key === Qt.Key_Back) {
+                if (stack.depth > 1) {
+                    event.accepted = true
+                    stack.pop()
+                }
             }
         }
     }
