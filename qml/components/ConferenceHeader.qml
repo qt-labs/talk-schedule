@@ -49,9 +49,10 @@ Item {
     id: conferenceHeader
     property var event
 
-    Item {
+    Rectangle {
         id: topicRect
         anchors.fill: parent
+        color: Theme.colors.white
 
         RowLayout {
             id: texts
@@ -86,6 +87,7 @@ Item {
                 sourceSize.height: Theme.sizes.logoHeight
                 sourceSize.width: Theme.sizes.logoWidth
                 source: Theme.images.logo
+                fillMode: Image.PreserveAspectFit
             }
             Item {
                 Layout.alignment: Qt.AlignRight

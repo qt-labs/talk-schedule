@@ -89,34 +89,47 @@ Rectangle {
                 onVisibleChanged: sortModel.filter()
                 delegate: ColumnLayout {
                     width: parent.width
+                    spacing: Theme.margins.five
                     RowLayout {
                         Layout.fillWidth: true
                         Layout.preferredHeight: Theme.sizes.upcomingEventHeight
-                        Text {
-                            text: Qt.formatDate(start, "ddd") + " " + Qt.formatTime(start, "hh:mm")
+                        Rectangle {
+                            color: tracks.backgroundColor
                             Layout.fillHeight: true
                             Layout.preferredWidth: Theme.sizes.upcomingEventTimeWidth
-                            verticalAlignment: Text.AlignVCenter
-                            horizontalAlignment: Text.AlignLeft
-                            font.pointSize: Theme.fonts.seven_pt
+
+                            Text {
+                                anchors.fill: parent
+                                anchors.leftMargin: Theme.margins.five
+                                text: Qt.formatDate(start, "ddd") + " " + Qt.formatTime(start, "h:mm")
+                                verticalAlignment: Text.AlignVCenter
+                                horizontalAlignment: Text.AlignLeft
+                                font.pointSize: Theme.fonts.seven_pt
+                            }
                         }
-                        Text {
-                            text: topic + " in " + location
+                        Rectangle {
                             Layout.fillHeight: true
                             Layout.fillWidth: true
-                            verticalAlignment: Text.AlignVCenter
-                            font.pointSize: Theme.fonts.seven_pt
-                            elide: Text.ElideRight
-                            MouseArea {
+
+                            Text {
                                 anchors.fill: parent
-                                onClicked: stack.push({"item" : Qt.resolvedUrl("Event.qml"), "properties" : {"eventId" : id}})
+                                anchors.leftMargin: Theme.margins.five
+                                text: "<b>" + topic + "</b><br />by " + performer + " in " + location
+                                verticalAlignment: Text.AlignVCenter
+                                elide: Text.ElideRight
+                                wrapMode: Text.Wrap
+                                MouseArea {
+                                    anchors.fill: parent
+                                    onClicked: stack.push({
+                                        "item" : Qt.resolvedUrl("Event.qml"),
+                                        "properties" : {"eventId" : id}
+                                    })
+                                }
                             }
                         }
                     }
                     Rectangle {
-                        Layout.fillWidth: true
                         Layout.preferredHeight: 1
-                        color: Theme.colors.darkgray
                     }
                 }
             }
@@ -133,6 +146,7 @@ Rectangle {
 
                 XmlRole { name: "title"; query: "title/string()" }
                 XmlRole { name: "description"; query: "description/string()" }
+                XmlRole { name: "pubDate"; query: "pubDate/string()" }
             }
 
             Text {
@@ -160,13 +174,42 @@ Rectangle {
                 anchors.margins: Theme.margins.ten
                 model: rssXmlModel
                 clip: true
-                delegate: Text {
-                    width: window.width - Theme.margins.twenty
-                    text: "<b>" + title + "</b>" + "\n" + description
-                    textFormat: Text.StyledText
-                    wrapMode: Text.Wrap
-                    onLinkActivated: Qt.openUrlExternally(link)
-                    font.pointSize: Theme.fonts.seven_pt
+                spacing: Theme.margins.ten
+                delegate: Rectangle {
+                    color: Theme.colors.smokewhite
+                    height: childrenRect.height
+                    width: parent.width
+                    Text {
+                        id: newsTitle
+                        anchors.left: parent.left
+                        anchors.top: parent.top
+                        anchors.leftMargin: Theme.margins.ten
+                        anchors.topMargin: Theme.margins.five
+                        width: contentWidth
+                        text: "<b>" + title + "</b>"
+                        textFormat: Text.StyledText
+                        font.pointSize: Theme.fonts.seven_pt
+                    }
+                    Text {
+                        anchors.right: parent.right
+                        anchors.top: parent.top
+                        anchors.rightMargin: Theme.margins.ten
+                        width: contentWidth
+                        text: pubDate
+                        textFormat: Text.StyledText
+                        font.pointSize: Theme.fonts.seven_pt
+                    }
+                    Text {
+                        anchors.top: newsTitle.bottom
+                        anchors.left: parent.left
+                        anchors.right: parent.right
+                        anchors.margins: Theme.margins.ten
+                        text: description
+                        textFormat: Text.StyledText
+                        wrapMode: Text.Wrap
+                        font.pointSize: Theme.fonts.seven_pt
+                        onLinkActivated: Qt.openUrlExternally(link)
+                    }
                 }
             }
         }
@@ -200,7 +243,12 @@ Rectangle {
                 anchors.margins: Theme.margins.ten
                 textFormat: Text.StyledText
                 font.pointSize: Theme.fonts.seven_pt
-                text: "<a href='https://www.qtdeveloperdays.com/europe/europe-exhibit-hall-info'><b>Venue, Accommodation and Useful Info</b></a>"
+                text: "<a href='http://www.qtdeveloperdays.com/sites/default/files/files/bcc_map.pdf'>
+                        Venue map</a><br />
+                       <a href='http://www.qtdeveloperdays.com/sites/default/files/files/bcc_hotels.pdf'>
+                        Recommended hotels</a><br />
+                       <a href='https://www.qtdeveloperdays.com/sites/default/files/files/BerlinAlexanderplatzRestaurants_1.pdf'>
+                        Restaurants in the vicinity</a>"
                 onLinkActivated: Qt.openUrlExternally(link)
             }
         }
