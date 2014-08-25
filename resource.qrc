@@ -13,7 +13,4 @@
         <file>qml/components/functions.js</file>
         <file>qml/components/EventsList.qml</file>
     </qresource>
-    <qresource prefix="/image">
-        <file alias="collide">images/index.png</file>
-    </qresource>
 </RCC>

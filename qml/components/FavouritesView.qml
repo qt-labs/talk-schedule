@@ -69,7 +69,6 @@ Item {
         delegate: Item {
             property bool isDayLabelVisible:  itemHeight()
             property int labelHeight: isDayLabelVisible ? 35 : 5
-            property bool colliding: isColliding()
             height: trackHeight + labelHeight
             width: parent.width
             Label {
@@ -147,9 +146,9 @@ Item {
                             anchors.right: parent.right
                             Text {
                                 text: Qt.formatTime(events_start, "h:mm") + " - " + Qt.formatTime(events_end, "h:mm")
-                                color: colliding ? "#ff00ff" : "#666666"
+                                color: "#666666"
                                 font.pixelSize: 14
-                                font.underline: colliding ? true : false
+                                font.underline: false
                             }
                             Text {
                                 text: " I "
@@ -194,36 +193,6 @@ Item {
                         window.removeFavorite(events_id)
                     }
                 }
-            }
-            Image {
-                id: collideImage
-                anchors.top: rowLayout.top
-                anchors.right: rowLayout.right
-                source: isColliding() ? "qrc:/image/collide" : ""
-            }
-
-            function isColliding()
-            {
-                var currentTimeEnd = new Date(events_end)
-                var currentTimeStart = new Date(events_start)
-                if (sortModel.rowCount() > index+1) {
-                    var nextTimeStart = new Date(sortModel.get((index + 1), "events_start"))
-                    //    console.log("nextTimeStart "+nextTimeStart)
-                    if (currentTimeEnd > nextTimeStart) {
-                        //    console.log("time collide with previous item\n")
-                        return true
-                    }
-                }
-
-                if (index - 1 >= 0) {
-                    var earlierTimeEnd = new Date(sortModel.get(index - 1, "events_end"))
-                    //    console.log("erlier event ends "+earlierTimeEnd)
-                    if (earlierTimeEnd > currentTimeStart) {
-                        //      console.log("time collide with next item\n")
-                        return true
-                    }
-                }
-                return false
             }
 
             function itemHeight()
