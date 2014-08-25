@@ -38,8 +38,8 @@
 **
 ****************************************************************************/
 
-import QtQuick 2.0
-import QtQuick.Controls 1.1
+import QtQuick 2.2
+import QtQuick.Controls 1.2
 import QtQuick.Layouts 1.1
 import TalkSchedule 1.0
 import "functions.js" as Functions
@@ -65,7 +65,8 @@ Rectangle {
             text: topSwitcher.confLocation
             verticalAlignment: Text.AlignVCenter
             horizontalAlignment: Text.AlignHCenter
-            font.pixelSize: 22
+            font.pointSize: 14
+            font.capitalization: Font.AllUppercase
             color: Theme.colors.black
             Layout.fillWidth: false
             Layout.alignment: Text.AlignVCenter | Text.AlignHCenter
@@ -76,10 +77,10 @@ Rectangle {
                 id: label
                 property bool isDivider: Functions.isEvenNumber(index)
                 property string currentDayId: isDivider ? "invalid" : dayModel.get((index-1)/2, "id")
-                font.pixelSize: 22
+                font.pointSize: 14
                 text: isDivider ? "|" : Qt.formatDate(dayModel.get((index-1)/2, "date"), "ddd dd.MM")
                 font.capitalization: Font.AllUppercase
-                font.weight: Font.DemiBold
+                font.weight: dayId === currentDayId ? Font.DemiBold : Font.Normal
                 height: topSwitcher.height
                 color: isDivider ? Theme.colors.gray :
                                    dayId === currentDayId ? Theme.colors.blue : Theme.colors.black
