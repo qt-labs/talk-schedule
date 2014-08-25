@@ -189,9 +189,9 @@ Item {
                     anchors.fill: parent
                     onClicked: {
                         if (favorite)
-                            window.removeFavorite(id)
+                            ModelsSingleton.removeFavorite(id)
                         else
-                            window.saveFavorite(id)
+                            ModelsSingleton.saveFavorite(id)
                     }
                 }
             }
@@ -227,13 +227,7 @@ Item {
         model: SortFilterModel {
             id: sortModel;
             sortRole: "start"
-            model: window.eventModel
+            model: ModelsSingleton.eventModel
         }
-    }
-
-    Connections {
-        target: window
-        ignoreUnknownSignals: true
-        onUpdateFavoriteSignal: sortModel.model = window.eventModel
     }
 }

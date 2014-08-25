@@ -47,7 +47,6 @@ import TalkSchedule 1.0
 
 Item {
     id: conferenceHeader
-    property string conferenceId
     property var event
     property string favoriteImage
     property string notFavoriteImage
@@ -141,7 +140,7 @@ Item {
             eventQuery.finished.connect(function() {
                 event = eventQuery.data.results[0]
 
-                conferenceId = event.id
+                ModelsSingleton.conferenceId = event.id
                 location = event.location
 
                 // After id is fetched, download also images

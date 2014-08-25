@@ -26,7 +26,8 @@ OTHER_FILES += \
     qml/components/DaySwitcher.qml \
     qml/components/SubTitle.qml \
     qml/components/FavouritesView.qml \
-    qml/components/EventsList.qml
+    qml/components/EventsList.qml \
+    qml/components/ModelsSingleton.qml
 
 RESOURCES += \
     resource.qrc

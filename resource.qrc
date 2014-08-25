@@ -12,5 +12,6 @@
         <file>qml/components/FavouritesView.qml</file>
         <file>qml/components/functions.js</file>
         <file>qml/components/EventsList.qml</file>
+        <file>qml/components/ModelsSingleton.qml</file>
     </qresource>
 </RCC>

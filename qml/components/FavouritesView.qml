@@ -190,7 +190,7 @@ Item {
                     anchors.fill: parent
                     onClicked: {
                         console.log("start to remove favorite.."+events_id)
-                        window.removeFavorite(events_id)
+                        ModelsSingleton.removeFavorite(events_id)
                     }
                 }
             }
@@ -229,15 +229,7 @@ Item {
         model: SortFilterModel {
             id:sortModel;
             sortRole: "events_start"
-            model: window.favoriteModel
-        }
-
-        Connections {
-            target: window
-            ignoreUnknownSignals: true
-            onUpdateFavoriteSignal: {
-                sortModel.model = window.favoriteModel
-            }
+            model: ModelsSingleton.favoriteModel
         }
     }
 }

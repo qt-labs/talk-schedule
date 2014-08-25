@@ -85,13 +85,14 @@ void Model::addFavorite( const QString &data)
         temp = m_data.at(i);
         QString key = temp.key(data);
         if (key == "id") {
-            temp["favorite"] = true;
-            m_data.replace(i, temp);
+            if (!temp["favorite"].toBool()) {
+                temp["favorite"] = true;
+                m_data.replace(i, temp);
+                Q_EMIT dataChanged(this->index(i), this->index(i));
+            }
             break;
         }
     }
-
-    Q_EMIT dataChanged(this->index(0,0), this->index(5,5));
 }
 
 void Model::removeFavorite(const QString &data)
@@ -103,28 +104,32 @@ void Model::removeFavorite(const QString &data)
         QMapIterator<QString, QVariant> iter(temp);
         while (iter.hasNext()) {
             iter.next();
-
             if (iter.key() == "id" && iter.value() == data) {
-                temp["favorite"] = false;
-                m_data.replace(i, temp);
+                if (temp["favorite"].toBool()) {
+                    temp["favorite"] = false;
+                    m_data.replace(i, temp);
+                    Q_EMIT dataChanged(this->index(i), this->index(i));
+                }
                 break;
             }
         }
     }
-
-    Q_EMIT dataChanged(this->index(0), this->index(5));
 }
 
 void Model::addRow(const QJsonObject &data)
 {
+    beginInsertRows(QModelIndex(), m_data.count(), m_data.count());
     m_data.append(data.toVariantMap());
+    endInsertRows();
 }
 
 void Model::removeRow(int index)
 {
-    if (m_data.count()> index)
+    if (m_data.count() > index) {
+        beginRemoveRows(QModelIndex(), index, index);
         m_data.removeAt(index);
-    Q_EMIT dataChanged(this->index(0), this->index(index));
+        endRemoveRows();
+    }
 }
 
 QVariant Model::indexOf(const QString &role, QVariant value)

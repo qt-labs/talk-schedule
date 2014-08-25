@@ -53,7 +53,6 @@ Item {
     property int maxTrackHeight: 200
     property int trackHeight: Math.max(minTrackHeight, Math.min(maxTrackHeight, Math.floor((window.height - header.height - timeColumn.height - daysWitcher.height)/5)));
     property bool isViewScrolling: false
-    property string confId: window.conferenceId
 
     DaySwitcher {
         id: daysWitcher
@@ -181,10 +180,9 @@ Item {
                         filterRegExp: new RegExp(daysWitcher.dayId)
                     }
 
-                    Model {
-                        id: trackModel;
-                        backendId: backId
-                        onDataReady: tracks.model = trackModel
+                    Connections {
+                        target: ModelsSingleton.trackModel
+                        onDataReady: tracks.model = ModelsSingleton.trackModel
                     }
 
                     onContentYChanged: {
@@ -198,7 +196,4 @@ Item {
             }
         }
     }
-
-    onConfIdChanged: trackModel.query({"objectType": "objects.Track",
-                                          "query": { "conference": { "id": confId,"objectType": "objects.Conference" } }});
 }

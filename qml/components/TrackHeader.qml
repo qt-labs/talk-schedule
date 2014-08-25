@@ -51,8 +51,6 @@ ListView {
     height: rowLayout.height
     width: 100
 
-    property string confId: window.conferenceId
-
     clip: true
     boundsBehavior: Flickable.StopAtBounds
 
@@ -84,18 +82,12 @@ ListView {
         filterRole: "day"
         filterRegExp: new RegExp(daysWitcher.dayId)
     }
-    Model {
-        id: locationModel;
-        backendId: backId
-        onDataReady:tmp.model = locationModel
+
+    Connections {
+        target: ModelsSingleton.locationModel
+        onDataReady: tmp.model = ModelsSingleton.locationModel
     }
 
-    onConfIdChanged: locationModel.query({ "objectType": "objects.Track",
-                                             "query": {
-                                                 "conference": {
-                                                     "id": confId, "objectType": "objects.Conference"
-                                                 }
-                                             }});
     onContentYChanged: {
         if (isViewScrolling === false) {
             isViewScrolling = true;

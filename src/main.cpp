@@ -73,6 +73,7 @@ int main(int argc, char *argv[])
     qmlRegisterType<Model>(uri, 1, 0, "Model");
     qmlRegisterType<SortFilterModel>(uri, 1, 0, "SortFilterModel");
     qmlRegisterType<FileIO>(uri, 1, 0, "FileIO");
+    qmlRegisterSingletonType(QUrl("qrc:/qml/components/ModelsSingleton.qml"), uri, 1, 0, "ModelsSingleton");
 
     engine.load(QUrl("qrc:/qml/main.qml"));
     return app.exec();

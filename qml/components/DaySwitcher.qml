@@ -46,7 +46,6 @@ import "functions.js" as Functions
 
 Rectangle {
     id: topSwitcher
-    property string confId: window.conferenceId
     property string confLocation: window.location
     property string dayId
     property int daysCount: 0
@@ -114,23 +113,12 @@ Rectangle {
         sortRole: "date"
     }
 
-    Model {
-        id: day
-        backendId: backId
+    Connections {
+        target: ModelsSingleton.day
         onDataReady: {
-            dayModel.model = day
+            dayModel.model = ModelsSingleton.day
             dayId = dayModel.get(0,"id")
             daysCount = dayModel.rowCount()
         }
-    }
-
-    onConfIdChanged: {
-        day.query({ "objectType": "objects.Day",
-                      "query": {
-                          "conference": {
-                              "id": confId, "objectType": "objects.Conference"
-                          }
-                      }
-                  })
     }
 }

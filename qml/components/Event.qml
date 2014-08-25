@@ -46,10 +46,18 @@ import TalkSchedule 1.0
 Item {
     id: eventView
     property string eventId
-    property var track
     property bool isSelected: false
-    property var favorite
     signal selectFavorite(bool favorite)
+
+    property var indexCurrentEvent: ModelsSingleton.eventModel.indexOf("id", eventId)
+    property var model: ModelsSingleton.eventModel
+    property var favorite: model.data(indexCurrentEvent, "favorite")
+    property var track: model.data(indexCurrentEvent, "tracks")
+
+    Connections {
+        target: ModelsSingleton.eventModel
+        onDataChanged: favorite = model.data(indexCurrentEvent, "favorite")
+    }
 
     height: window.height
     width: window.width
@@ -80,7 +88,7 @@ Item {
             anchors.margins: 15
             spacing: 20
             Text {
-                text: model.get(0, "topic")
+                text: model.data(indexCurrentEvent, "topic")
                 color: Theme.colors.black
                 width: columnLayout.width
                 font.family: "Open Sans"
@@ -91,7 +99,7 @@ Item {
             }
             Label {
                 id: eventPerformers
-                text: model.get(0, "performer")
+                text: model.data(indexCurrentEvent, "performer")
                 font.family: "Open Sans"
                 font.pixelSize: 20
                 font.capitalization: Font.AllUppercase
@@ -99,7 +107,7 @@ Item {
             }
             Label {
                 id: eventIntro
-                text: model.get(0, "intro")
+                text: model.data(indexCurrentEvent, "intro")
                 font.family: "Open Sans"
                 font.pixelSize: 19
                 width: parent.width
@@ -109,7 +117,7 @@ Item {
             }
             Label {
                 id: eventTags
-                text: model.get(0, "tags")
+                text: model.data(indexCurrentEvent, "tags")
                 font.family: "Open Sans"
                 font.pixelSize: 19
                 color: Theme.colors.green
@@ -139,7 +147,7 @@ Item {
             color: track.backgroundColor
             Text {
                 anchors.centerIn: parent
-                text: "Track \n" + "0" + track.trackNumber
+                text: track.name
                 color: track.fontColor
                 font.family: "Open Sans"
                 font.pixelSize: 20
@@ -157,7 +165,7 @@ Item {
                 anchors.leftMargin: 10
                 Label {
                     height: parent.height
-                    text: Qt.formatTime(model.get(0, "start"), "hmm") + "-" + Qt.formatTime(model.get(0, "end"), "hmm")
+                    text: Qt.formatTime(model.data(indexCurrentEvent, "start"), "hmm") + "-" + Qt.formatTime(model.data(indexCurrentEvent, "end"), "hmm")
                     color: Theme.colors.gray
                     font.family: "Open Sans"
                     font.pixelSize: 20
@@ -180,30 +188,10 @@ Item {
                     }
                     MouseArea {
                         anchors.fill: parent
-                        onClicked: favorite ? window.removeFavorite(eventId) : window.saveFavorite(eventId)
+                        onClicked: favorite ? ModelsSingleton.removeFavorite(eventId) : ModelsSingleton.saveFavorite(eventId)
                     }
                 }
             }
-        }
-    }
-    SortFilterModel {
-        id: model;
-        filterRole: "id"
-        filterRegExp: new RegExp(eventId)
-        model: window.eventModel
-        Component.onCompleted: {
-            track = model.get(0, "tracks")
-            favorite = model.get(0, "favorite")
-        }
-    }
-    Connections {
-        target: window
-        ignoreUnknownSignals: true
-        onUpdateFavoriteSignal: {
-            if (added === true)
-                favorite = true
-            else
-                favorite = false
         }
     }
 }

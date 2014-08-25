@@ -87,9 +87,9 @@ ListView {
                     anchors.fill: parent
                     onClicked:{
                         if (favorite)
-                            window.removeFavorite(id)
+                            ModelsSingleton.removeFavorite(id)
                         else
-                            window.saveFavorite(id)
+                            ModelsSingleton.saveFavorite(id)
                     }
                 }
             }
@@ -158,12 +158,6 @@ ListView {
         sortRole: "start"
         filterRole: "track"
         filterRegExp: new RegExp(id)
-        model: window.eventModel
-    }
-
-    Connections {
-        target: window
-        ignoreUnknownSignals: true
-        onUpdateFavoriteSignal: tmp.model = window.eventModel
+        model: ModelsSingleton.eventModel
     }
 }
