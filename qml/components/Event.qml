@@ -38,8 +38,8 @@
 **
 ****************************************************************************/
 
-import QtQuick 2.0
-import QtQuick.Controls 1.1
+import QtQuick 2.2
+import QtQuick.Controls 1.2
 import QtQuick.Layouts 1.1
 import TalkSchedule 1.0
 
@@ -69,7 +69,7 @@ Item {
         anchors.left: subTitle.left
         anchors.right: subTitle.right
         anchors.topMargin: 5
-        height: window.height - subTitle.height - statusBar.height
+        height: window.height - subTitle.height - statusBar.height - 30 // Todo: calculate this better
         contentHeight: columnLayout.height +  statusBar.height
         flickableDirection: Flickable.VerticalFlick
         clip: true
@@ -123,59 +123,65 @@ Item {
         }
     }
 
-    Rectangle{
-        color: Theme.colors.smokewhite
-
+    RowLayout {
+        id: statusBar
         anchors.bottom: flickable.bottom
         anchors.left: flickable.left
         anchors.right: flickable.right
         height: 80
+        anchors.leftMargin: 10
+        anchors.rightMargin: 10
+        Rectangle {
+            id: trackSquare
+            width: statusBar.height - 10
+            height: statusBar.height - 10
+            radius: 5
+            color: track.backgroundColor
+            Text {
+                anchors.centerIn: parent
+                text: "Track \n" + "0" + track.trackNumber
+                color: track.fontColor
+                font.family: "Open Sans"
+                font.pixelSize: 20
+            }
+        }
+        Rectangle {
+            Layout.fillWidth: true
+            color: Theme.colors.smokewhite
+            height: statusBar.height - 10
+            radius: 5
 
-        RowLayout {
-            id: statusBar
-            anchors.fill: parent
-            anchors.leftMargin: 10
-            anchors.rightMargin: 20
-            Rectangle {
-                id: trackSquare
-                width: statusBar.height - 10
-                height: statusBar.height - 10
-                radius: 5
-                color: track.backgroundColor
-                Text {
-                    anchors.centerIn: parent
-                    text: "Track \n" + "0" + track.trackNumber
-                    color: track.fontColor
+            RowLayout {
+                id: statusBar2
+                anchors.fill: parent
+                anchors.leftMargin: 10
+                Label {
+                    height: parent.height
+                    text: Qt.formatTime(model.get(0, "start"), "hmm") + "-" + Qt.formatTime(model.get(0, "end"), "hmm")
+                    color: Theme.colors.gray
                     font.family: "Open Sans"
                     font.pixelSize: 20
                 }
-            }
-            Label {
-                height: parent.height
-                text: Qt.formatTime(model.get(0, "start"), "hmm") + ">" + Qt.formatTime(model.get(0, "end"), "hmm")
-                color: Theme.colors.gray
-                font.family: "Open Sans"
-                font.pixelSize: 20
-            }
-            Label {
-                text: track.location
-                height: parent.height
-                color: Theme.colors.darkgray
-                font.family: "Open Sans"
-                font.pixelSize: 20
-            }
-            Item {
-                Layout.alignment: Qt.AlignRight
-                height: statusBar.height
-                width: 80
-                Image {
-                    id: favorImage
-                    anchors.centerIn: parent
-                    source: favorite ? window.favoriteImage : window.notFavoriteImage
+                Label {
+                    text: track.location
+                    height: parent.height
+                    color: Theme.colors.darkgray
+                    font.family: "Open Sans"
+                    font.pixelSize: 20
                 }
-                MouseArea {
-                    anchors.fill: parent
-                    onClicked: favorite ? window.removeFavorite(eventId) : window.saveFavorite(eventId)
+                Item {
+                    Layout.alignment: Qt.AlignRight
+                    height: statusBar.height
+                    width: 80
+                    Image {
+                        id: favorImage
+                        anchors.centerIn: parent
+                        source: favorite ? window.favoriteImage : window.notFavoriteImage
+                    }
+                    MouseArea {
+                        anchors.fill: parent
+                        onClicked: favorite ? window.removeFavorite(eventId) : window.saveFavorite(eventId)
+                    }
                 }
             }
         }

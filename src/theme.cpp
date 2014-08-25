@@ -48,7 +48,7 @@ Theme::Theme(QObject *parent)
     , m_trackWidthDivider(400)
 {
     m_text = new QQmlPropertyMap(this);
-    m_text->insert(QLatin1String("talks"), tr("Talks"));
+    m_text->insert(QLatin1String("talks"), tr("Presentations"));
     m_text->insert(QLatin1String("favorites"), tr("Favorites"));
     m_text->insert(QLatin1String("schedule"), tr("Schedule"));
 
