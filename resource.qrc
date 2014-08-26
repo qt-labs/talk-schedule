@@ -20,5 +20,7 @@
         <file alias="images/Menu.svg">qml/components/images/Menu.svg</file>
         <file alias="images/Star.svg">qml/components/images/Star.svg</file>
         <file alias="images/StarSelected.svg">qml/components/images/StarSelected.svg</file>
+        <file>qml/components/HomeScreen.qml</file>
+        <file>qml/components/Feedback.qml</file>
     </qresource>
 </RCC>

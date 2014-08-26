@@ -48,17 +48,25 @@ Theme::Theme(QObject *parent)
     , m_trackWidthDivider(400)
 {
     m_text = new QQmlPropertyMap(this);
+    m_text->insert(QLatin1String("home"), tr("Home"));
+    m_text->insert(QLatin1String("schedule"), tr("Schedule"));
     m_text->insert(QLatin1String("talks"), tr("Presentations"));
     m_text->insert(QLatin1String("favorites"), tr("Favorites"));
-    m_text->insert(QLatin1String("schedule"), tr("Schedule"));
+    m_text->insert(QLatin1String("feedback"), tr("Send Feedback"));
+    m_text->insert(QLatin1String("upcoming"), tr("Upcoming"));
+    m_text->insert(QLatin1String("news"), tr("News"));
+    m_text->insert(QLatin1String("info"), tr("Useful Information"));
+
 
     m_colors = new QQmlPropertyMap(this);
     m_colors->insert(QLatin1String("white"), QVariant("#ffffff"));
     m_colors->insert(QLatin1String("smokewhite"), QVariant("#f2f2f2"));
+    m_colors->insert(QLatin1String("lightgrey"), QVariant("#cccccc"));
     m_colors->insert(QLatin1String("gray"), QVariant("#808080"));
     m_colors->insert(QLatin1String("darkgray"), QVariant("#333333"));
     m_colors->insert(QLatin1String("blue"), QVariant("#14aaff"));
     m_colors->insert(QLatin1String("green"), QVariant("#328930"));
+    m_colors->insert(QLatin1String("qtgreen"), QVariant("#5caa15"));
     m_colors->insert(QLatin1String("black"), QVariant("#000000"));
 
     m_sizes = new QQmlPropertyMap(this);

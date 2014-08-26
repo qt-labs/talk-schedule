@@ -39,76 +39,73 @@
 ****************************************************************************/
 
 import QtQuick 2.2
-import QtQuick.Controls 1.2
-import Enginio 1.0
 import TalkSchedule 1.0
-import "components"
 
-ApplicationWindow {
-    id: window
-    visible: true
-    height: 800
-    width: 1080
-    property bool busy
+Rectangle {
+    id: homeScreenWindow
+    height: window.height - header.height
+    width: window.width
+    property int trackHeight: 150
 
-    color: Theme.colors.white
+    Column {
+        spacing: 2
 
-    FileIO {
-        id: userIdFile
-        Component.onCompleted: ModelsSingleton.retrieveUser(read())
-    }
+        Rectangle {
+            // upcoming
+            // Todo: List upcoming talks
+            width: homeScreenWindow.width
+            height: homeScreenWindow.height / 3
 
-    Connections {
-        target: ModelsSingleton
-        onWriteUserIdToFile: userIdFile.write(userId)
-    }
-
-    ConferenceHeader {
-        id: header
-        height: Theme.sizes.conferenceHeaderHeight
-        width: parent.width
-        opacity: stack.opacity
-        Behavior on opacity { PropertyAnimation{} }
-    }
-
-    StackView {
-        id: stack
-        focus: true
-        anchors.fill: parent
-        opacity: 1 - splashscreen.opacity
-        Behavior on opacity { PropertyAnimation{} }
-        // capture Android back key
-        Keys.onReleased: {
-            if (event.key === Qt.Key_Back) {
-                if (stack.depth > 1) {
-                    event.accepted = true
-                    stack.pop()
+            Text {
+                id: labelUpcoming
+                text: Theme.text.upcoming
+                width: parent.width
+                horizontalAlignment: Text.AlignHCenter
+                font.capitalization: Font.AllUppercase
+            }
+            ListView {
+                id: homeScreenListView
+                anchors.top: labelUpcoming.bottom
+                anchors.margins: 10
+                model: ModelsSingleton.eventModel
+                delegate: Text {
+                    text: "Topic: " + topic
                 }
             }
         }
-    }
-
-    Item {
-        id: splashscreen
-        anchors.fill: parent
-        Image {
-            id: splashlogo
-            anchors.centerIn: parent
-            source: Theme.images.logo
-            sourceSize.width: Theme.sizes.logoWidth * 2
-            sourceSize.height: Theme.sizes.logoHeight * 2
-            ParallelAnimation {
-                id: animation
-                running: false
-                PropertyAnimation {target: splashlogo; properties: "width"; from: 0; to: Theme.sizes.logoWidth * 2; duration: 1500}
-                PropertyAnimation {target: splashlogo; properties: "height"; from: 0; to: Theme.sizes.logoHeight * 2; duration: 1500}
-                onRunningChanged: if (!running) {
-                                      splashscreen.opacity = 0
-                                      toolBar = header
-                                      stack.push(Qt.resolvedUrl("components/HomeScreen.qml"))
-                                  }
+        Rectangle {
+            // news
+            // Todo: get RSS feed items
+            width: window.width
+            height:  window.height / 3
+            Text {
+                id: labelNews
+                text: Theme.text.news
+                width: parent.width
+                horizontalAlignment: Text.AlignHCenter
+                font.capitalization: Font.AllUppercase
             }
-            Component.onCompleted: animation.running = true
+            Text {
+                anchors.top: labelNews.bottom
+                text: "Lorem Ipsum"
+            }
+        }
+        Rectangle {
+            // useful info
+            // Todo: Content
+            width: window.width
+            height:  window.height / 3
+            Text {
+                id: labelInfo
+                text: Theme.text.info
+                width: parent.width
+                horizontalAlignment: Text.AlignHCenter
+                font.capitalization: Font.AllUppercase
+            }
+            Text {
+                anchors.top: labelInfo.bottom
+                text: "Lorem Ipsum"
+            }
         }
     }
 }

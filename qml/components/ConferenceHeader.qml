@@ -38,8 +38,8 @@
 **
 ****************************************************************************/
 
-import QtQuick 2.0
-import QtQuick.Controls 1.1
+import QtQuick 2.2
+import QtQuick.Controls 1.2
 import QtQuick.Controls.Styles 1.1
 import QtQuick.Layouts 1.1
 import Enginio 1.0
@@ -94,24 +94,21 @@ Item {
                 Menu {
                     id: menu
                     MenuItem {
-                        text: Theme.text.schedule
+                        text: Theme.text.home
                         onTriggered: {
-                            var item = Qt.resolvedUrl("TrackSwitcher.qml")
+                            var item = Qt.resolvedUrl("HomeScreen.qml")
                             stack.pop(stack.find(function(item){}))
                         }
                     }
                     MenuItem {
-                        text: Theme.text.favorites
+                        text: Theme.text.schedule
                         onTriggered: {
-                            var itemF = Qt.resolvedUrl("EventsList.qml")
-                            var loadedFav = stack.find(function(itemF){ return (itemF.isFavoriteView === true)})
-                            if (loadedFav !== null)
-                                stack.pop(loadedFav)
+                            var itemT = Qt.resolvedUrl("TrackSwitcher.qml")
+                            var loadedTr = stack.find(function(itemT){})
+                            if (loadedTr !== null)
+                                stack.pop(loadedTr)
                             else
-                                stack.push({
-                                               "item" : itemF,
-                                               "properties" : { "isFavoriteView" : true }
-                                           })
+                                stack.push(itemT)
                         }
                     }
                     MenuItem {
@@ -123,6 +120,32 @@ Item {
                                 stack.pop(loadedEv)
                             else
                                 stack.push(itemE)
+                        }
+                    }
+                    MenuItem {
+                        text: Theme.text.favorites
+                        onTriggered: {
+                            var itemFa = Qt.resolvedUrl("EventsList.qml")
+                            var loadedFav = stack.find(function(itemFa){ return (itemFa.isFavoriteView === true)})
+                            if (loadedFav !== null) {
+                                stack.pop(loadedFav)
+                            } else {
+                                stack.push({
+                                               "item" : itemFa,
+                                               "properties" : { "isFavoriteView" : true }
+                                           })
+                            }
+                        }
+                    }
+                    MenuItem {
+                        text: Theme.text.feedback
+                        onTriggered: {
+                            var itemFe = Qt.resolvedUrl("Feedback.qml")
+                            var loadedFe = stack.find(function(itemFe){})
+                            if (loadedFe !== null)
+                                stack.pop(loadedFe)
+                            else
+                                stack.push(itemFe)
                         }
                     }
                 }

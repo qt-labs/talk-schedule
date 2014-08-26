@@ -40,75 +40,76 @@
 
 import QtQuick 2.2
 import QtQuick.Controls 1.2
+import QtQuick.Controls.Styles 1.2
 import Enginio 1.0
 import TalkSchedule 1.0
-import "components"
 
-ApplicationWindow {
-    id: window
-    visible: true
-    height: 800
-    width: 1080
-    property bool busy
+Item {
+    height: window.height
+    width: window.width
+    anchors.margins: 10
 
-    color: Theme.colors.white
-
-    FileIO {
-        id: userIdFile
-        Component.onCompleted: ModelsSingleton.retrieveUser(read())
+    SubTitle {
+        id: subTitle
+        titleText: Theme.text.feedback
     }
 
-    Connections {
-        target: ModelsSingleton
-        onWriteUserIdToFile: userIdFile.write(userId)
-    }
+    Column {
+        anchors.top: subTitle.bottom
+        spacing: 2
 
-    ConferenceHeader {
-        id: header
-        height: Theme.sizes.conferenceHeaderHeight
-        width: parent.width
-        opacity: stack.opacity
-        Behavior on opacity { PropertyAnimation{} }
-    }
+        Rectangle {
+            height: window.height / 3
+            width: window.width
 
-    StackView {
-        id: stack
-        focus: true
-        anchors.fill: parent
-        opacity: 1 - splashscreen.opacity
-        Behavior on opacity { PropertyAnimation{} }
-        // capture Android back key
-        Keys.onReleased: {
-            if (event.key === Qt.Key_Back) {
-                if (stack.depth > 1) {
-                    event.accepted = true
-                    stack.pop()
-                }
+            TextEdit {
+                id: feedbackEdit
+                anchors.fill: parent
+                font.family: "OpenSans"
+                focus: true
+                text: "Write your comments here"
+                textMargin: 10
+                wrapMode: TextEdit.Wrap
             }
         }
-    }
 
-    Item {
-        id: splashscreen
-        anchors.fill: parent
-        Image {
-            id: splashlogo
-            anchors.centerIn: parent
-            source: Theme.images.logo
-            sourceSize.width: Theme.sizes.logoWidth * 2
-            sourceSize.height: Theme.sizes.logoHeight * 2
-            ParallelAnimation {
-                id: animation
-                running: false
-                PropertyAnimation {target: splashlogo; properties: "width"; from: 0; to: Theme.sizes.logoWidth * 2; duration: 1500}
-                PropertyAnimation {target: splashlogo; properties: "height"; from: 0; to: Theme.sizes.logoHeight * 2; duration: 1500}
-                onRunningChanged: if (!running) {
-                                      splashscreen.opacity = 0
-                                      toolBar = header
-                                      stack.push(Qt.resolvedUrl("components/HomeScreen.qml"))
-                                  }
+        Rectangle {
+            // separator line
+            width: parent.width
+            height: 2
+            color: Theme.colors.lightgrey
+        }
+
+        Row {
+            spacing: 10
+            Button {
+                text: "Clear"
+                onClicked: feedbackEdit.text = ""
+
+                style: ButtonStyle {
+                    background: Rectangle {
+                        border.width: 2
+                        border.color: Theme.colors.qtgreen
+                        color: Theme.colors.white
+                    }
+                }
             }
-            Component.onCompleted: animation.running = true
+
+            Button {
+                text: "Send"
+                onClicked: {
+                    text = "sending..."
+                    Qt.inputMethod.hide()
+                    ModelsSingleton.saveFeedback(feedbackEdit.text)
+                    stack.pop()
+                }
+
+                style: ButtonStyle {
+                    background: Rectangle {
+                        color: Theme.colors.qtgreen
+                    }
+                }
+            }
         }
     }
 }

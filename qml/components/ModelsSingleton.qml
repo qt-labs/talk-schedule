@@ -50,7 +50,7 @@ QtObject {
     property string conferenceLocation
     property var currentConferenceTracks: []
     property var currentConferenceEvents: []
-    property var busy: false
+    property bool busy: false
     property var client: EnginioClient {
         backendId: backId
         onError: console.log("Enginio error " + reply.errorCode + ": " + reply.errorString)
@@ -178,6 +178,22 @@ QtObject {
                 // User not found. Create new one
                 userIdFile.write("")
                 createUser()
+            }
+        })
+    }
+
+    function saveFeedback(fbtext)
+    {
+        console.log("saveFeedback")
+        var reply = client.create({
+               "objectType": "objects.Feedback",
+               "feedbackText": fbtext
+            })
+        reply.finished.connect(function() {
+            if (reply.errorType !== EnginioReply.NoError) {
+                console.log("Failed to save feedback.\n")
+            } else {
+                console.log("Successfully saved feedback.\n")
             }
         })
     }

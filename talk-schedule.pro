@@ -30,7 +30,9 @@ OTHER_FILES += \
     qml/components/EventsList.qml \
     fonts/OpenSans-Bold.ttf \
     fonts/OpenSans-Semibold.ttf \
-    fonts/OpenSans-Regular.ttf
+    fonts/OpenSans-Regular.ttf \
+    qml/components/HomeScreen.qml \
+    qml/components/Feedback.qml
 
 RESOURCES += \
     resource.qrc
