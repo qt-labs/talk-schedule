@@ -87,7 +87,7 @@ Item {
         }
         Rectangle {
             Layout.fillWidth: true
-            color: Qt.rgba(255,255,255)
+            color: Theme.colors.white
             height: parent.height
             width: parent.width
 
@@ -103,7 +103,7 @@ Item {
                     height: 50
                     Text {
                         text: topic
-                        color: "black"
+                        color: Theme.colors.black
                         width: parent.width
                         font.family: "Open Sans"
                         font.pixelSize: 25
@@ -114,7 +114,7 @@ Item {
                 }
                 Text {
                     text: performer
-                    color: "#666666"
+                    color: Theme.colors.gray
                     width: parent.width - 20
                     font.family: "Open Sans"
                     font.pixelSize: 14
@@ -126,12 +126,12 @@ Item {
                     anchors.right: parent.right
                     Text {
                         text: Qt.formatTime(start, "h:mm") + " - " + Qt.formatTime(end, "h:mm")
-                        color: "#666666"
+                        color: Theme.colors.gray
                         font.pixelSize: 14
                     }
                     Text {
                         text: " I "
-                        color: "#666666"
+                        color: Theme.colors.gray
                         font.family: "Open Sans"
                         font.pixelSize: 14
                         font.capitalization: Font.AllUppercase
@@ -139,7 +139,7 @@ Item {
                     Text {
                         text: "name room" // TODO tracks.location
                         Layout.fillWidth: true
-                        color: "#666666"
+                        color: Theme.colors.gray
                         font.family: "Open Sans"
                         font.pixelSize: 14
                         font.capitalization: Font.AllUppercase

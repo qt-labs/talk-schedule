@@ -68,7 +68,7 @@ ListView {
             Rectangle {
                 id: colorBackground
                 anchors { fill: parent;  bottomMargin: 10; leftMargin: 10;}
-                color: Qt.rgba(255,255,255)
+                color: Theme.colors.white
             }
             Item {
                 // Add this imageArea to make it easier to click the image
@@ -107,7 +107,7 @@ ListView {
                     height: 50
                     Text {
                         text: topic
-                        color: "black"
+                        color: Theme.colors.black
                         width: columnLayout.width
                         font.family: "Open Sans"
                         font.pixelSize: 25
@@ -118,7 +118,7 @@ ListView {
                 }
                 Text {
                     text: performer
-                    color: "#666666"
+                    color: Theme.colors.gray
                     width: colorBackground.width - 20
                     font.family: "Open Sans"
                     font.pixelSize: 14
@@ -131,7 +131,7 @@ ListView {
                     Text {
                         width: columnLayout.width - favoriteImage.width
                         text: Qt.formatTime(start, "h:mm") + " - " + Qt.formatTime(end, "h:mm") + " I " + "name room" // TODO tracks.location
-                        color: "#666666"
+                        color: Theme.colors.gray
                         font.family: "Open Sans"
                         font.pixelSize: 14
                         font.capitalization: Font.AllUppercase

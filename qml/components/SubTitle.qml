@@ -40,6 +40,7 @@
 
 import QtQuick 2.0
 import QtQuick.Controls 1.1
+import TalkSchedule 1.0
 
 Rectangle {
     id: subTitle
@@ -49,14 +50,15 @@ Rectangle {
     anchors.left: parent.left
     width: parent.width
     height: 50
-    color: "white"
+    color: Theme.colors.white
 
     Text {
+        id: text
         anchors.centerIn: parent
         text: titleText
         font.family: "Open Sans"
         font.pixelSize: 24
         font.capitalization: Font.AllUppercase
-        color: "#00ffff"
+        color: Theme.colors.black
     }
 }
