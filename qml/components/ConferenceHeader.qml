@@ -66,19 +66,16 @@ Item {
             anchors.right: parent.right
             height: topicRect.height
             anchors.margins: 10
-            Item {
+            MouseArea {
+                enabled: stack.depth > 1
                 height: parent.height
                 width: parent.height
+                onClicked: stack.pop()
                 Image {
                     id: backButton
                     anchors.centerIn: parent
-                }
-                MouseArea {
-                    anchors.fill: parent
-                    onClicked: {
-                        //TODO
-                        stack.pop()
-                    }
+                    opacity: stack.depth > 1 ? 1 : 0
+                    Behavior on opacity { PropertyAnimation{} }
                 }
             }
             Image {
