@@ -99,9 +99,10 @@ Item {
                 // For some reason word wrap does not work correctly
                 // if Text not inside Item
                 Item {
-                    width: parent.width - 20
+                    width: textTopic.implicitWidth
                     height: 50
                     Text {
+                        id: textTopic
                         text: topic
                         color: Theme.colors.black
                         width: parent.width
