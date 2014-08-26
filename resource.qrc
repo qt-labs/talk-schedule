@@ -5,7 +5,6 @@
         <file>qml/components/TrackSwitcher.qml</file>
         <file>qml/components/Track.qml</file>
         <file>qml/components/ConferenceHeader.qml</file>
-        <file>qml/components/ListItem.qml</file>
         <file>qml/components/TrackHeader.qml</file>
         <file>qml/components/DaySwitcher.qml</file>
         <file>qml/components/SubTitle.qml</file>
