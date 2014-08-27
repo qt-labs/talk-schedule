@@ -47,7 +47,6 @@ import "functions.js" as Functions
 
 Item {
     id: root
-
     property bool isViewScrolling: false
 
     DaySwitcher {
@@ -58,7 +57,7 @@ Item {
     }
 
     SortFilterModel{
-        id: tracksModel
+        id: currentDayTracksModel
         sortRole: "trackNumber"
         filterRole: "day"
         filterRegExp: new RegExp(daysWitcher.dayId)
@@ -68,7 +67,65 @@ Item {
     // Keep the connection in case the model would not be ready at startup
     Connections {
         target: ModelsSingleton.trackModel
-        onDataReady: tracksModel.model = ModelsSingleton.trackModel
+        onDataReady: currentDayTracksModel.model = ModelsSingleton.trackModel
+    }
+
+    Connections {
+        target: daysWitcher
+        onDayIdChanged: ModelsSingleton.timeListModel.tracksTodayModel = currentDayTracksModel
+    }
+
+    Connections {
+        target: ModelsSingleton.timeListModel
+        onDataReady: {
+            if (ModelsSingleton.timeListModel.rowCount() > 0) {
+                var earliestTime = ModelsSingleton.timeListModel.data(0, "start")
+                var latestTime = ModelsSingleton.timeListModel.data(0, "end") // earliestTime
+                var time
+
+                var timeHours
+                var earliestHours = Functions.getHour(earliestTime)
+                var latestHours = Functions.getHour(latestTime)
+
+                // Count here what is the first hour and last hour that needs to be shown in time listView
+                // for example 10.00 11.00 12.00 ... or 08.00 09.00 10.00
+                for (var i = 0; i < ModelsSingleton.timeListModel.rowCount(); i++) {
+
+                    time = ModelsSingleton.timeListModel.data(i, "start")
+                    timeHours = Functions.getHour(time)
+                    earliestHours = Functions.getHour(earliestTime)
+
+                    if (timeHours < earliestHours )
+                        earliestTime = time
+
+                    time = ModelsSingleton.timeListModel.data(i, "end")
+                    timeHours = Functions.getHour(time)
+                    var timeMinutes = Functions.getMinutes(time)
+                    if (timeMinutes > 0)
+                        timeHours = timeHours + 1
+                    latestHours = Functions.getHour(latestTime)
+                    if (timeHours > latestHours)
+                        latestTime = time
+                }
+
+                var temp = []
+                var timeCount = Functions.getHour(latestTime) - Functions.getHour(earliestTime)
+                timeMinutes = Functions.getMinutes(latestTime)
+                if (timeMinutes > 0)
+                    timeCount = timeCount + 1
+                var hours = Functions.getHour(earliestTime)
+
+                for (var j = 0; j <= timeCount; j++) {
+                    var date = new Date
+                    date.setHours(hours + j)
+                    // HACK, ISOString ignores timezone offset, so add it to date
+                    date.setHours(date.getHours()+ date.getHours() - date.getUTCHours())
+                    date.setMinutes(0)
+                    temp.push(date.toISOString())
+                }
+                timeColumn.timeList = temp
+            }
+        }
     }
 
     Row {
@@ -81,10 +138,10 @@ Item {
                 height: Theme.sizes.dayLabelHeight
                 width: 100
             }
-
             TrackHeader {
                 id: trackHeader
-                model: tracksModel
+                model: currentDayTracksModel
+                anchors.margins: 5
             }
         }
         Flickable {
@@ -92,10 +149,11 @@ Item {
             height: rowLayout.height
             width: root.width
             clip: true
-            contentWidth: timeColumn.width + Theme.sizes.timeColumnWidth/2 // add some extra space to be able to scroll to the end
+            contentWidth: timeColumn.width + Theme.sizes.timeColumnWidth/3 // add some extra space to be able to scroll to the end
             flickableDirection: Flickable.HorizontalFlick
             Column {
                 anchors.fill: parent
+                spacing: 0
                 Row {
                     id: timeColumn
                     property var timeList: []
@@ -112,64 +170,9 @@ Item {
                                 anchors.left: parent.left
                                 anchors.leftMargin: 10
                                 font.pixelSize: 25
-                                text: Qt.formatTime(timeColumn.timeList[index], "h:mm")}
-                        }
-                    }
-                    SortFilterModel {
-                        id: tmp;
-                        onModelChanged: {
-                            if (tmp.rowCount() > 0) {
-                                var earliestTime = tmp.get(0, "start")
-                                var latestTime = tmp.get(0, "end") // earliestTime
-                                var time
-
-                                var timeHours
-
-                                var isEndTime = true
-                                var earliestHours = Functions.getHour(earliestTime)
-                                var latestHours = Functions.getHour(latestTime, isEndTime)
-
-                                // Count here what is the first hour and last hour that needs to be shown in time listView
-                                // for example 10.00 11.00 12.00 ... or 08.00 09.00 10.00
-                                for (var i = 0; i < tmp.rowCount(); i++) {
-
-                                    time = tmp.get(i, "start")
-                                    timeHours = Functions.getHour(time)
-                                    earliestHours = Functions.getHour(earliestTime)
-
-                                    if (timeHours < earliestHours )
-                                        earliestTime = time
-
-                                    time = tmp.get(i, "end")
-                                    timeHours = Functions.getHour(time)
-                                    latestHours = Functions.getHour(latestTime, isEndTime)
-                                    if (timeHours > latestHours)
-                                        latestTime = time
-                                }
-
-                                var temp = []
-                                var timeCount = Functions.getHour(latestTime, isEndTime) - Functions.getHour(earliestTime)
-                                var hours = Functions.getHour(earliestTime)
-
-                                for (var j = 0; j <= timeCount; j++) {
-                                    var date = new Date
-                                    date.setHours(hours + j)
-                                    // HACK, ISOString ignores timezone offset, so add it to date
-                                    date.setHours(date.getHours()+ date.getHours() - date.getUTCHours())
-                                    date.setMinutes(0)
-                                    temp.push(date.toISOString())
-                                }
-                                timeColumn.timeList = temp
+                                text: Qt.formatTime(timeColumn.timeList[index], "h:mm")
                             }
                         }
-                    }
-
-                    Model {
-                        id: timeListModel;
-                        backendId: backId
-                        Component.onCompleted: timeListModel.query({ "objectType": "objects.Event" ,
-                                                                       "sort" : [{"sortBy": "start", "direction": "asc"}]});
-                        onDataReady: tmp.model = timeListModel
                     }
                 }
                 ListView {
@@ -180,9 +183,7 @@ Item {
                     clip: true
                     boundsBehavior: Flickable.StopAtBounds
                     delegate: Track {}
-
-                    model: tracksModel
-
+                    model: currentDayTracksModel
                     onContentYChanged: {
                         if (isViewScrolling === false) {
                             isViewScrolling = true;

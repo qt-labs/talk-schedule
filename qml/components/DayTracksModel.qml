@@ -39,59 +39,52 @@
 ****************************************************************************/
 
 import QtQuick 2.0
-
 import QtQuick.Controls 1.1
-import QtQuick.Window 2.1
 import QtQuick.Layouts 1.1
 import TalkSchedule 1.0
+import "functions.js" as Functions
 
-ListView {
-    id: trackHeaderListView
-    height: rowLayout.height
-    width: Theme.sizes.trackHeaderWidth
+QtObject {
+    id: dayTracksModel
+    property string dayId
+    property int numberCollidingEvents: 0
+    property var rowsArray: []
+    signal isReady
+    property bool isEmpty: false
 
-    clip: true
-    boundsBehavior: Flickable.StopAtBounds
-
-    delegate: Rectangle {
-        id: delegateItem
-        property int trackHeight: Theme.sizes.trackHeaderHeight
-        color: Theme.colors.white
-
-        DayTracksModel {
-            id: dayTracksModel
-            dayId: id
+    property var modelTracks: SortFilterModel {
+        property bool ready
+        sortRole: "start"
+        filterRole: "track"
+        filterRegExp: new RegExp(dayId)
+        model: ModelsSingleton.eventModel
+        Component.onCompleted: {
+            isEmpty = modelTracks.rowCount() === 0
+            ready = Qt.binding(function() {return modelTracks.rowCount() > 0})
         }
-
-        height: !dayTracksModel.isEmpty ? trackHeight * ( dayTracksModel.numberCollidingEvents + 1 ) : 0
-        width: Theme.sizes.trackHeaderWidth
-        visible: !dayTracksModel.isEmpty
-
-        Rectangle {
-            id: trackHeader
-            anchors.fill: parent
-            color: backgroundColor
-            anchors.rightMargin: 5
-            anchors.bottomMargin: 5
-            Text {
-                anchors.fill: parent
-                anchors.margins: 10
-                text: name
-                color: fontColor
-                font.pixelSize: 20
-                horizontalAlignment: Text.AlignLeft
-                verticalAlignment: Text.AlignVCenter
-                wrapMode: Text.WordWrap
-                font.capitalization: Font.AllUppercase
+        onReadyChanged: {
+            // calculate number of rows needed for the current track
+            numberCollidingEvents = 0
+            rowsArray = []
+            for (var i = 0; i < modelTracks.rowCount(); i++) {
+                var colliding = isCollidingWithPreviousEvents(i)
+                if (rowsArray[colliding] === undefined)
+                    rowsArray.push([])
+                var sizeArray = rowsArray[colliding].length
+                rowsArray[colliding].push(i)
+                numberCollidingEvents = Math.max(colliding, numberCollidingEvents)
             }
+            dayTracksModel.isReady()
+            //repeater1.model = trackDelegate.rowsArray.length
         }
-    }
-
-    onContentYChanged: {
-        if (isViewScrolling === false) {
-            isViewScrolling = true;
-            listView.contentY = trackHeaderListView.contentY
-            isViewScrolling = false;
+        function isCollidingWithPreviousEvents(index) {
+            var currentTimeStart = new Date(modelTracks.get(index, "start"))
+            for (var i = 0; i < index; i++) {
+                var previoustTimeEnd = new Date(modelTracks.get(i, "end"))
+                if (currentTimeStart < previoustTimeEnd)
+                    return (index - i)
+            }
+            return 0
         }
     }
 }

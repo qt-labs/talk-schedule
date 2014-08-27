@@ -135,7 +135,7 @@ void Model::removeRow(int index)
 QVariant Model::indexOf(const QString &role, QVariant value)
 {
     QModelIndexList result = match(index(0, 0), roleNames().key(role.toLatin1()), value);
-    return result.empty() ? 0 : result.at(0).row();
+    return result.empty() ? -1 : result.at(0).row();
 }
 
 QHash<int, QByteArray> Model::roleNames() const

@@ -98,6 +98,22 @@ QtObject {
         onDataReady: getFavoriteIds()
     }
 
+    property var timeListModel: Model {
+        backendId: backId
+        property var tracksTodayModel
+        onTracksTodayModelChanged: {
+            if (!!tracksTodayModel) {
+                var todaysTracks = []
+                for (var i = 0; i < tracksTodayModel.rowCount(); i++)
+                todaysTracks[i] = trackModel.data(i, "id")
+                timeListModel.query({ "objectType": "objects.Event",
+                                        "sort" : [{"sortBy": "start", "direction": "asc"}],
+                                        "track.id" : { "$in" : todaysTracks }
+                                    })
+            }
+        }
+    }
+
     function queryConferenceEvents()
     {
         eventModel.query({

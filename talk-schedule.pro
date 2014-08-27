@@ -32,7 +32,8 @@ OTHER_FILES += \
     fonts/OpenSans-Semibold.ttf \
     fonts/OpenSans-Regular.ttf \
     qml/components/HomeScreen.qml \
-    qml/components/Feedback.qml
+    qml/components/Feedback.qml \
+    qml/components/DayTracksModel.qml
 
 RESOURCES += \
     resource.qrc

@@ -22,5 +22,6 @@
         <file alias="images/StarSelected.svg">qml/components/images/StarSelected.svg</file>
         <file>qml/components/HomeScreen.qml</file>
         <file>qml/components/Feedback.qml</file>
+        <file>qml/components/DayTracksModel.qml</file>
     </qresource>
 </RCC>

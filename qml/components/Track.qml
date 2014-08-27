@@ -44,117 +44,135 @@ import QtQuick.Layouts 1.1
 import TalkSchedule 1.0
 import "functions.js" as Functions
 
-ListView {
-    id: trackList
+Row {
+    id: trackDelegate
+    property int trackHeight: Theme.sizes.trackHeaderHeight
+    height: !dayTracksModel.isEmpty ? trackHeight * (dayTracksModel.numberCollidingEvents + 1) : 0
+    width: parent.width
+    property string trackName: name
+    visible: !dayTracksModel.isEmpty
 
-    interactive: true
-    height: Theme.sizes.trackHeaderHeight
-    currentIndex: 0
-    orientation: ListView.Horizontal
-    clip: false
-
-    delegate: Item {
-        id: delegateItem
-        height: trackList.height
-        property bool isSelected: false
-
-        Item {
-            id: item
-            height: trackList.height
-            width: Functions.countTrackWidth(start, end)
-            x: Functions.countTrackPosition(start)
-
-            Rectangle {
-                id: colorBackground
-                anchors.fill: parent
-                anchors.margins: 5
-                color: Theme.colors.smokewhite
-            }
-            Item {
-                // Add this imageArea to make it easier to click the image
-                id: imageArea
-                anchors.bottom: colorBackground.bottom
-                anchors.right: colorBackground.right
-                width: Theme.sizes.favoriteImageWidth + 20
-                height: Theme.sizes.favoriteImageHeight + 20
-                Image {
-                    id: favoriteImage
-                    anchors.centerIn: parent
-                    source: favorite ? Theme.images.favorite : Theme.images.notFavorite
-                    width: Theme.sizes.favoriteImageWidth
-                    height: Theme.sizes.favoriteImageHeight
-                }
-                MouseArea {
-                    anchors.fill: parent
-                    onClicked:{
-                        if (favorite)
-                            ModelsSingleton.removeFavorite(id)
-                        else
-                            ModelsSingleton.saveFavorite(id)
-                    }
-                }
-            }
-
-            // For some reason text wrap does not work as expected
-            // if Text items are not placed inside Item.
-            ColumnLayout {
-                id: columnLayout
-                anchors.fill: colorBackground
-                anchors.margins: 10
-              //  height: trackList.height
-                Item {
-                    width: columnLayout.width
-                    height: 50
-                    Text {
-                        text: topic
-                        color: Theme.colors.black
-                        width: columnLayout.width
-                        font.pixelSize: 25
-                        maximumLineCount: 2
-                        wrapMode: Text.Wrap
-                        elide: Text.ElideRight
-                    }
-                }
-                Text {
-                    text: performer
-                    color: Theme.colors.gray
-                    width: colorBackground.width - 20
-                    font.pixelSize: 14
-                    font.capitalization: Font.AllUppercase
-                    maximumLineCount: 1
-                }
-                Item {
-                    width: columnLayout.width
-                    height: 50
-                    Text {
-                        width: columnLayout.width - favoriteImage.width
-                        text: Qt.formatTime(start, "h:mm") + " - " + Qt.formatTime(end, "h:mm") + " I " + location
-                        color: Theme.colors.gray
-                        font.pixelSize: 14
-                        font.capitalization: Font.AllUppercase
-                        maximumLineCount: 3
-                        wrapMode: Text.WordWrap
-                    }
-                }
-            }
-
-            MouseArea {
-                anchors {
-                    top: parent.top
-                    bottom: parent.bottom
-                    left: parent.left
-                    right: imageArea.left
-                }
-                onClicked: stack.push({"item" : Qt.resolvedUrl("Event.qml"), "properties" : {"eventId" : id}})
-            }
-        }
+    DayTracksModel {
+        id: dayTracksModel
+        dayId: id
+        onIsReady: repeater1.model = rowsArray.length
     }
 
-    model: SortFilterModel {
-        id:tmp;
-        sortRole: "start"
-        filterRole: "track"
-        filterRegExp: new RegExp(id)
-        model: ModelsSingleton.eventModel
+    Column {
+        id: column
+        width: parent.width
+        Repeater {
+            id: repeater1
+            Item {
+                id: row
+                width: parent.width
+                property var rowModel: dayTracksModel.rowsArray[index]
+                height: trackDelegate.trackHeight
+                Repeater {
+                    id: repeater
+                    model: row.rowModel.length
+                    Item {
+                        id: item
+                        property bool favorite: !!getData("favorite") ? getData("favorite") : false
+                        property int trackWidth: Functions.countTrackWidth(getData("start"), getData("end"))
+                        function getData(role) {
+                            return dayTracksModel.modelTracks.get(row.rowModel[index], role)
+                        }
+
+                        Connections {
+                            target: ModelsSingleton.eventModel
+                            onDataChanged: favorite = !!getData("favorite") ? getData("favorite") : false
+                        }
+
+                        anchors.top: parent.top
+                        anchors.bottom: parent.bottom
+                        width: trackWidth
+                        x: Functions.countTrackPosition(getData("start"))
+
+                        Rectangle {
+                            id: colorBackground
+                            anchors { fill: parent; leftMargin: 5; rightMargin: 5; bottomMargin: 5 }
+                            color: Theme.colors.smokewhite
+                        }
+                        Item {
+                            // Add this imageArea to make it easier to click the image
+                            id: imageArea
+                            anchors.bottom: colorBackground.bottom
+                            anchors.right: colorBackground.right
+                            width: Theme.sizes.favoriteImageWidth + 20
+                            height: Theme.sizes.favoriteImageHeight + 20
+                            Image {
+                                id: favoriteImage
+                                anchors.centerIn: parent
+                                source: favorite ? Theme.images.favorite : Theme.images.notFavorite
+                                width: Theme.sizes.favoriteImageWidth
+                                height: Theme.sizes.favoriteImageHeight
+                            }
+                            MouseArea {
+                                anchors.fill: parent
+                                onClicked:{
+                                    if (favorite)
+                                        ModelsSingleton.removeFavorite(getData("id"))
+                                    else
+                                        ModelsSingleton.saveFavorite(getData("id"))
+                                }
+                            }
+                        }
+                        // For some reason text wrap does not work as expected
+                        // if Text items are not placed inside Item.
+                        ColumnLayout {
+                            id: columnLayout
+                            anchors.fill: colorBackground
+                            height: trackDelegate.trackHeight
+                            anchors.leftMargin: 10
+                            anchors.rightMargin: 10
+                            Item {
+                                width: columnLayout.width
+                                height: 50
+                                Text {
+                                    text: getData("topic")
+                                    color: Theme.colors.black
+                                    width: columnLayout.width
+                                    font.pixelSize: 25
+                                    maximumLineCount: 2
+                                    wrapMode: Text.Wrap
+                                    elide: Text.ElideRight
+                                }
+                            }
+                            Text {
+                                text: getData("performer")
+                                color: Theme.colors.gray
+                                width: colorBackground.width - 20
+                                font.pixelSize: 14
+                                font.capitalization: Font.AllUppercase
+                                maximumLineCount: 1
+                            }
+                            Item {
+                                width: columnLayout.width
+                                height: 50
+                                Text {
+                                    width: columnLayout.width - favoriteImage.width
+                                    text: Qt.formatTime(getData("start"), "h:mm") + " - " + Qt.formatTime(getData("end"), "h:mm") + " I " + getData("location")
+                                    color: Theme.colors.gray
+                                    font.pixelSize: 14
+                                    font.capitalization: Font.AllUppercase
+                                    maximumLineCount: 3
+                                    wrapMode: Text.WordWrap
+                                }
+                            }
+                        }
+                        MouseArea {
+                            anchors {
+                                top: parent.top
+                                bottom: parent.bottom
+                                left: parent.left
+                                right: imageArea.left
+                            }
+                            onClicked: stack.push({"item" : Qt.resolvedUrl("Event.qml"), "properties" : {"eventId" : getData("id")}})
+                        }
+                    }
+                }
+            }
+        }
     }
 }
