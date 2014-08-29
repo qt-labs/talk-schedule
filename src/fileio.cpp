@@ -41,14 +41,19 @@
 #include <QFile>
 #include <QTextStream>
 #include <QDir>
+#include <QtCore/QStandardPaths>
 #include <QDebug>
 
 FileIO::FileIO(QObject *parent) :
     QObject(parent)
 {
-    QDir dir;
-    mSource = dir.currentPath();
-    mSource.append("/userId.txt");
+    QString path = QStandardPaths::standardLocations(QStandardPaths::DataLocation).value(0);
+    QDir dir(path);
+    if (!dir.exists())
+         dir.mkpath(path);
+    if (!path.isEmpty() && !path.endsWith("/"))
+        path += "/";
+    mSource = QString("%1userId.txt").arg(path);
 }
 
 QString FileIO::read()
