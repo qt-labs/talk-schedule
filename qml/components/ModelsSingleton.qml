@@ -199,7 +199,7 @@ QtObject {
             if (reply.errorType !== EnginioReply.NoError)
                 console.log("Failed to create an Favorite:\n" + JSON.stringify(reply.data, undefined, 2) + "\n\n")
             else
-                queryUserConferenceFavorites()
+                eventModel.addFavorite(saveEventId)
             busy = false
             console.log("favorite save done")
         })
@@ -234,13 +234,10 @@ QtObject {
                     var reply = client.remove({ "objectType": "objects.Favorite",
                                                   "id": favoriteQuery.data.results[0].id })
                     reply.finished.connect(function() {
-                        if (favoriteQuery.errorType !== EnginioReply.NoError) {
+                        if (favoriteQuery.errorType !== EnginioReply.NoError)
                             console.log("Failed to remove an Favorite:\n" + JSON.stringify(reply.data, undefined, 2) + "\n\n")
-                        }
-                        else {
+                        else
                             eventModel.removeFavorite(removeEventId)
-                            queryUserConferenceFavorites()
-                        }
                     })
                 }
             }
