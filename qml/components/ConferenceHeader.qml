@@ -85,67 +85,59 @@ Item {
                 Layout.preferredWidth: Theme.sizes.logoWidth
 
             }
-            ComboBox {
-                id: dropMenu
+            Item {
+                Layout.alignment: Qt.AlignRight
                 Layout.preferredWidth: topicRect.height
                 Layout.preferredHeight: topicRect.height
-                property string menuImage
-                Layout.alignment: Qt.AlignRight
-                model: choices
-                style: ComboBoxStyle{
-                    drowDownButtonWidth: 0
-                    label: Item {
-                    }
-                    background: Item {
-                        height: topicRect.height
-                        width: topicRect.height
-                        Image{
-                            id: mImage
-                            source: dropMenu.menuImage
-                            height: Theme.sizes.menuHeight
-                            width: Theme.sizes.menuWidth
-                            anchors.centerIn: parent
+                MouseArea {
+                    anchors.fill: parent
+                    onClicked: menu.popup()
+                }
+                Menu {
+                    id: menu
+                    MenuItem {
+                        text: Theme.text.schedule
+                        onTriggered: {
+                            var item = Qt.resolvedUrl("TrackSwitcher.qml")
+                            stack.pop(stack.find(function(item){}))
                         }
-
+                    }
+                    MenuItem {
+                        text: Theme.text.favorites
+                        onTriggered: {
+                            var itemF = Qt.resolvedUrl("EventsList.qml")
+                            var loadedFav = stack.find(function(itemF){ return (itemF.isFavoriteView === true)})
+                            if (loadedFav !== null)
+                                stack.pop(loadedFav)
+                            else
+                                stack.push({
+                                               "item" : itemF,
+                                               "properties" : { "isFavoriteView" : true }
+                                           })
+                        }
+                    }
+                    MenuItem {
+                        text: Theme.text.talks
+                        onTriggered: {
+                            var itemE = Qt.resolvedUrl("EventsList.qml")
+                            var loadedEv = stack.find(function(itemE){ return (itemE.isFavoriteView === false)})
+                            if (loadedEv !== null)
+                                stack.pop(loadedEv)
+                            else
+                                stack.push(itemE)
+                        }
                     }
                 }
-                onCurrentIndexChanged: {
-                    if (currentIndex === 0) {
-                        var item = Qt.resolvedUrl("TrackSwitcher.qml")
-                        stack.pop(stack.find(function(item){}))
-                    } else if (currentIndex === 1) {
-                        var itemF = Qt.resolvedUrl("EventsList.qml")
-                        var loadedFav = stack.find(function(itemF){ return (itemF.isFavoriteView === true)})
-                        if (loadedFav !== null)
-                            stack.pop(loadedFav)
-                        else
-                            stack.push({
-                                           "item" : itemF,
-                                           "properties" : { "isFavoriteView" : true }
-                                       })
-                    } else if (currentIndex === 2) {
-                        var itemE = Qt.resolvedUrl("EventsList.qml")
-                        var loadedEv = stack.find(function(itemE){ return (itemE.isFavoriteView === false)})
-                        if (loadedEv !== null)
-                            stack.pop(loadedEv)
-                        else
-                            stack.push(itemE)
-                    }
-                    // View can be changed also with back button. So currentIndex does
-                    // not necessarily change view as index is not changed.
-                    // This is why currentIndex is changed to -1 after opening view
-                    currentIndex = -1
+                Image {
+                    id: dropMenu
+                    anchors.centerIn: parent
+                    property string menuImage
+                    Layout.alignment: Qt.AlignRight
+                    source: dropMenu.menuImage
+                    height: Theme.sizes.menuHeight
+                    width: Theme.sizes.menuWidth
                 }
             }
-        }
-    }
-
-    ListModel {
-        id: choices
-        Component.onCompleted: {
-            choices.append({text: Theme.text.schedule})
-            choices.append({text: Theme.text.favorites})
-            choices.append({text: Theme.text.talks})
         }
     }
 
