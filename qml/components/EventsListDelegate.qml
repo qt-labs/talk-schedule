@@ -55,8 +55,10 @@ Rectangle {
     Label {
         id: dayLabel
         height: labelHeight
-        width: parent.width
+        anchors.left: parent.left
+        anchors.right: parent.right
         anchors.leftMargin: 10
+        verticalAlignment: Text.AlignVCenter
         text: isDayLabelVisible ? Qt.formatDate(start, "dddd dd.MM.yyyy") : ""
         font.pixelSize: 20
         font.capitalization: Font.AllUppercase
