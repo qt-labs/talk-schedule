@@ -156,10 +156,9 @@ QtObject {
                 console.log("Account Created.")
                 userId = reply.data.id
                 writeUserIdToFile(userId)
-                return userId
+                currentUserId = userId
             }
         })
-        return userId
     }
 
     function getUser()
@@ -170,11 +169,9 @@ QtObject {
             if (queryUser.errorType !== EnginioReply.NoError || queryUser.data.results[0] === undefined) {
                 // User not found. Create new one
                 userIdFile.write("")
-                userId = 0
-                return createUser()
+                createUser()
             }
         })
-        return 0
     }
 
     function saveFavorite(saveEventId)
