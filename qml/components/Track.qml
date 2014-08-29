@@ -109,7 +109,6 @@ ListView {
                         text: topic
                         color: Theme.colors.black
                         width: columnLayout.width
-                        font.family: "Open Sans"
                         font.pixelSize: 25
                         maximumLineCount: 2
                         wrapMode: Text.Wrap
@@ -120,7 +119,6 @@ ListView {
                     text: performer
                     color: Theme.colors.gray
                     width: colorBackground.width - 20
-                    font.family: "Open Sans"
                     font.pixelSize: 14
                     font.capitalization: Font.AllUppercase
                     maximumLineCount: 1
@@ -132,7 +130,6 @@ ListView {
                         width: columnLayout.width - favoriteImage.width
                         text: Qt.formatTime(start, "h:mm") + " - " + Qt.formatTime(end, "h:mm") + " I " + "name room" // TODO tracks.location
                         color: Theme.colors.gray
-                        font.family: "Open Sans"
                         font.pixelSize: 14
                         font.capitalization: Font.AllUppercase
                         maximumLineCount: 3

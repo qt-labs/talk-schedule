@@ -41,6 +41,8 @@
 #include <QtQml>
 #include <QtCore/QString>
 #include <QtGui/QGuiApplication>
+#include <QtGui/QFont>
+#include <QtGui/QFontDatabase>
 
 #include "theme.h"
 #include "model.h"
@@ -63,6 +65,17 @@ int main(int argc, char *argv[])
     QGuiApplication app(argc, argv);
     app.setApplicationName("TalkSchedule");
     app.setOrganizationName("Qt.Digia");
+
+    QFontDatabase::addApplicationFont(":/fonts/OpenSans-Bold.ttf");
+    QFontDatabase::addApplicationFont(":/fonts/OpenSans-Semibold.ttf");
+    int openSansID = QFontDatabase::addApplicationFont(":/fonts/OpenSans-Regular.ttf");
+    QStringList loadedFontFamilies = QFontDatabase::applicationFontFamilies(openSansID);
+    if (!loadedFontFamilies.empty()) {
+        QString fontName = loadedFontFamilies.at(0);
+        QGuiApplication::setFont(QFont(fontName));
+    } else {
+        qWarning("Error: fail to load Open Sans font");
+    }
 
     QQmlApplicationEngine engine;
     engine.rootContext()->setContextProperty("backId", QString(BACKEND_ID));

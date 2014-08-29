@@ -68,7 +68,6 @@ ListView {
                 anchors.margins: 10
                 text: name
                 color: fontColor
-                font.family: "Open Sans"
                 font.pixelSize: 20
                 horizontalAlignment: Text.AlignLeft
                 verticalAlignment: Text.AlignVCenter

@@ -88,7 +88,6 @@ Rectangle {
                 text: model.data(indexCurrentEvent, "topic")
                 color: Theme.colors.black
                 width: columnLayout.width
-                font.family: "Open Sans"
                 font.pixelSize: 32
                 maximumLineCount: 2
                 wrapMode: Text.Wrap
@@ -97,7 +96,6 @@ Rectangle {
             Label {
                 id: eventPerformers
                 text: model.data(indexCurrentEvent, "performer")
-                font.family: "Open Sans"
                 font.pixelSize: 20
                 font.capitalization: Font.AllUppercase
                 color: Theme.colors.gray
@@ -110,7 +108,6 @@ Rectangle {
             Label {
                 id: eventIntro
                 text: model.data(indexCurrentEvent, "intro")
-                font.family: "Open Sans"
                 font.pixelSize: 19
                 width: parent.width
                 wrapMode: Text.WordWrap
@@ -124,7 +121,6 @@ Rectangle {
             Label {
                 id: eventTags
                 text: model.data(indexCurrentEvent, "tags")
-                font.family: "Open Sans"
                 font.pixelSize: 19
                 color: Theme.colors.green
             }
@@ -154,7 +150,6 @@ Rectangle {
                 anchors.margins: 10
                 text: track.name
                 color: track.fontColor
-                font.family: "Open Sans"
                 font.pixelSize: 20
                 horizontalAlignment: Text.AlignLeft
                 verticalAlignment: Text.AlignVCenter
@@ -174,14 +169,12 @@ Rectangle {
                     height: parent.height
                     text: Qt.formatTime(model.data(indexCurrentEvent, "start"), "hh:mm") + " - " + Qt.formatTime(model.data(indexCurrentEvent, "end"), "hh:mm")
                     color: Theme.colors.gray
-                    font.family: "Open Sans"
                     font.pixelSize: 20
                 }
                 Label {
                     text: "name room" // TODO track.location
                     height: parent.height
                     color: Theme.colors.darkgray
-                    font.family: "Open Sans"
                     font.pixelSize: 20
                 }
                 Item {

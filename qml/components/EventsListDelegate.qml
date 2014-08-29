@@ -58,7 +58,6 @@ Rectangle {
         width: parent.width
         anchors.leftMargin: 10
         text: isDayLabelVisible ? Qt.formatDate(start, "dddd dd.MM.yyyy") : ""
-        font.family: "Open Sans"
         font.pixelSize: 20
         font.capitalization: Font.AllUppercase
     }
@@ -78,7 +77,6 @@ Rectangle {
                 anchors.margins: 10
                 text: tracks.name
                 color: tracks.fontColor
-                font.family: "Open Sans"
                 fontSizeMode: Text.Fit
                 font.pixelSize: 20
                 horizontalAlignment: Text.AlignLeft
@@ -108,7 +106,6 @@ Rectangle {
                         text: topic
                         color: Theme.colors.black
                         width: parent.width
-                        font.family: "Open Sans"
                         font.pixelSize: 25
                         maximumLineCount: 2
                         elide: Text.ElideRight
@@ -119,7 +116,6 @@ Rectangle {
                     text: performer
                     color: Theme.colors.gray
                     width: parent.width - 20
-                    font.family: "Open Sans"
                     font.pixelSize: 14
                     font.capitalization: Font.AllUppercase
                     maximumLineCount: 1
@@ -135,7 +131,6 @@ Rectangle {
                     Text {
                         text: " I "
                         color: Theme.colors.gray
-                        font.family: "Open Sans"
                         font.pixelSize: 14
                         font.capitalization: Font.AllUppercase
                     }
@@ -143,7 +138,6 @@ Rectangle {
                         text: "name room" // TODO tracks.location
                         Layout.fillWidth: true
                         color: Theme.colors.gray
-                        font.family: "Open Sans"
                         font.pixelSize: 14
                         font.capitalization: Font.AllUppercase
                         maximumLineCount: 1

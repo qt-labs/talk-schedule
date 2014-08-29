@@ -26,7 +26,11 @@ OTHER_FILES += \
     qml/components/SubTitle.qml \
     qml/components/EventsList.qml \
     qml/components/ModelsSingleton.qml \
-    qml/components/EventsListDelegate.qml
+    qml/components/EventsListDelegate.qml \
+    qml/components/EventsList.qml \
+    fonts/OpenSans-Bold.ttf \
+    fonts/OpenSans-Semibold.ttf \
+    fonts/OpenSans-Regular.ttf
 
 RESOURCES += \
     resource.qrc

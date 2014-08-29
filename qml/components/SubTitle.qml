@@ -56,7 +56,6 @@ Rectangle {
         id: text
         anchors.centerIn: parent
         text: titleText
-        font.family: "Open Sans"
         font.pixelSize: 24
         font.capitalization: Font.AllUppercase
         color: Theme.colors.black

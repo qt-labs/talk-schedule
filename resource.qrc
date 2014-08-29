@@ -12,5 +12,8 @@
         <file>qml/components/EventsList.qml</file>
         <file>qml/components/ModelsSingleton.qml</file>
         <file>qml/components/EventsListDelegate.qml</file>
+        <file>fonts/OpenSans-Regular.ttf</file>
+        <file>fonts/OpenSans-Semibold.ttf</file>
+        <file>fonts/OpenSans-Bold.ttf</file>
     </qresource>
 </RCC>

@@ -96,7 +96,6 @@ Item {
                                 anchors.verticalCenter: parent.verticalCenter
                                 anchors.left: parent.left
                                 anchors.leftMargin: 10
-                                font.family: "Open Sans"
                                 font.pixelSize: 25
                                 text: Qt.formatTime(timeColumn.timeList[index], "h:mm")}
                         }

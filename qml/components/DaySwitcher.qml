@@ -79,6 +79,7 @@ Rectangle {
                 font.pixelSize: 22
                 text: isDivider ? "|" : Qt.formatDate(dayModel.get((index-1)/2, "date"), "ddd dd.MM")
                 font.capitalization: Font.AllUppercase
+                font.weight: Font.DemiBold
                 height: topSwitcher.height
                 color: isDivider ? Theme.colors.gray :
                                    dayId === currentDayId ? Theme.colors.blue : Theme.colors.black
