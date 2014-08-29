@@ -52,13 +52,9 @@ Item {
     property string notFavoriteImage
     property string location
 
-    anchors { top: parent.top; left: parent.left; right: parent.right }
-    height: 70
-
     Item {
         id: topicRect
-        anchors { left: parent.left; right: parent.right; top: parent.top }
-        height: 70
+        anchors.fill: parent
 
         RowLayout {
             id: texts
@@ -68,22 +64,31 @@ Item {
             anchors.margins: 10
             MouseArea {
                 enabled: stack.depth > 1
-                height: parent.height
-                width: parent.height
+                Layout.preferredHeight: topicRect.height
+                Layout.preferredWidth: topicRect.height
                 onClicked: stack.pop()
                 Image {
                     id: backButton
-                    anchors.centerIn: parent
+                    anchors.left: parent.left
+                    anchors.verticalCenter: parent.verticalCenter
+                    anchors.leftMargin: 20
                     opacity: stack.depth > 1 ? 1 : 0
                     Behavior on opacity { PropertyAnimation{} }
+                    height: Theme.sizes.backHeight
+                    width: Theme.sizes.backWidth
                 }
             }
             Image {
                 id: header
-                Layout.alignment: Qt.AlignHCenter
+                Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
+                Layout.preferredHeight: Theme.sizes.logoHeight
+                Layout.preferredWidth: Theme.sizes.logoWidth
+
             }
             ComboBox {
                 id: dropMenu
+                Layout.preferredWidth: topicRect.height
+                Layout.preferredHeight: topicRect.height
                 property string menuImage
                 Layout.alignment: Qt.AlignRight
                 model: choices
@@ -91,9 +96,17 @@ Item {
                     drowDownButtonWidth: 0
                     label: Item {
                     }
-                    background: Image{
-                        id: mImage
-                        source: dropMenu.menuImage
+                    background: Item {
+                        height: topicRect.height
+                        width: topicRect.height
+                        Image{
+                            id: mImage
+                            source: dropMenu.menuImage
+                            height: Theme.sizes.menuHeight
+                            width: Theme.sizes.menuWidth
+                            anchors.centerIn: parent
+                        }
+
                     }
                 }
                 onCurrentIndexChanged: {

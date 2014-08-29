@@ -38,6 +38,8 @@
 **
 ****************************************************************************/
 
+.import TalkSchedule 1.0 as TS
+
 function countTrackWidth(start, end) {
     var startHours = getHour(start);
     var startMinutes = getMinutes(start);
@@ -46,11 +48,11 @@ function countTrackWidth(start, end) {
     var endMinutes = getMinutes(end);
 
     var duration = (endHours - startHours)*60 + endMinutes- startMinutes;
-    var trackWidth = (timeColumnWidth/60) * duration;
+    var trackWidth = (TS.Theme.sizes.timeColumnWidth/60) * duration;
     return trackWidth;
 }
 
-function countTrackPosition(start, topic) {
+function countTrackPosition(start) {
     for (var i = 0; i < timeColumnList.count; i++) {
         var modelTime = timeColumn.timeList[i]
         var modelHour = getHour(modelTime);
@@ -58,20 +60,26 @@ function countTrackPosition(start, topic) {
 
         var startHour = getHour(start);
         if (modelHour === startHour) {
-            var tmp = parseInt(timeColumnWidth*i);
+            var tmp = parseInt(TS.Theme.sizes.timeColumnWidth*i);
             // Add minutes too
             var startMinute = getMinutes(start);
-            tmp += startMinute*timeColumnWidth/60;
+            tmp += startMinute*TS.Theme.sizes.timeColumnWidth/60;
             return tmp;
         }
     }
     return 0;
 }
 
-function getHour(time) {
+function getHour(time, isEndTime) {
+    if (isEndTime === undefined)
+        isEndTime = false
     var tempTime = Qt.formatTime(time, "h:mm");
     var tempTimeParts = tempTime.split(':');
     var hourPart = parseInt(tempTimeParts[0]);
+    if (isEndTime)
+        var minutes = getMinutes(time)
+    if (minutes > 0)
+        hourPart = hourPart + 1
     return hourPart;
 }
 function getMinutes(time) {

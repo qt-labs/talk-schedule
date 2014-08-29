@@ -49,9 +49,8 @@ Rectangle {
     property string confLocation: window.location
     property string dayId
     property int daysCount: 0
-    property int dayWidth: 150 // TODO
     property int margins: 30
-    color: Theme.colors.white
+    color: Theme.colors.smokewhite
 
     GridLayout {
         id: dayRow
@@ -100,7 +99,7 @@ Rectangle {
             model: daysCount * 2 + 1
             Item {
                 property bool isDivider: !Functions.isEvenNumber(index)
-                property real expectedWidth: topSwitcher.dayWidth
+                property int expectedWidth: Theme.sizes.dayWidth
                 Layout.preferredWidth: isDivider ? 5 : (index === 0 ) ?  expectedWidth/2 : expectedWidth
                 Layout.preferredHeight: 1
             }
@@ -109,7 +108,7 @@ Rectangle {
     }
 
     SortFilterModel {
-        id: dayModel;
+        id: dayModel
         sortRole: "date"
     }
 

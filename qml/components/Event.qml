@@ -43,10 +43,9 @@ import QtQuick.Controls 1.2
 import QtQuick.Layouts 1.1
 import TalkSchedule 1.0
 
-Item {
+Rectangle {
     id: eventView
     property string eventId
-    property bool isSelected: false
     signal selectFavorite(bool favorite)
 
     property var indexCurrentEvent: ModelsSingleton.eventModel.indexOf("id", eventId)
@@ -54,39 +53,37 @@ Item {
     property var favorite: model.data(indexCurrentEvent, "favorite")
     property var track: model.data(indexCurrentEvent, "tracks")
 
+    color: Theme.colors.white
+
     Connections {
         target: ModelsSingleton.eventModel
         onDataChanged: favorite = model.data(indexCurrentEvent, "favorite")
     }
 
-    height: window.height
-    width: window.width
-
     SubTitle {
         id: subTitle
         titleText: Theme.text.talks
-    }
-    Rectangle {
-        color: Theme.colors.white
-        anchors.fill: flickable
     }
 
     Flickable {
         id: flickable
         anchors.top: subTitle.bottom
+        anchors.bottom: statusBar.top
         anchors.left: subTitle.left
         anchors.right: subTitle.right
-        anchors.topMargin: 5
-        height: window.height - subTitle.height - statusBar.height - 30 // Todo: calculate this better
-        contentHeight: columnLayout.height +  statusBar.height
+        anchors.topMargin: 20
+        anchors.bottomMargin: 5
+        anchors.leftMargin: 10
+        anchors.rightMargin: 10
+        interactive: true
         flickableDirection: Flickable.VerticalFlick
+        boundsBehavior: flickable.StopAtBounds
+        contentHeight: columnLayout.height
         clip: true
         Column {
             id: columnLayout
-            anchors.left: parent.left
-            anchors.right: parent.right
-            anchors.margins: 15
-            spacing: 20
+            width: parent.width
+            spacing: 10
             Text {
                 text: model.data(indexCurrentEvent, "topic")
                 color: Theme.colors.black
@@ -105,6 +102,11 @@ Item {
                 font.capitalization: Font.AllUppercase
                 color: Theme.colors.gray
             }
+            Item {
+                id: separator
+                height: 10
+                width: 100
+            }
             Label {
                 id: eventIntro
                 text: model.data(indexCurrentEvent, "intro")
@@ -114,6 +116,10 @@ Item {
                 wrapMode: Text.WordWrap
                 elide: Text.ElideRight
                 color: Theme.colors.gray
+            }
+            Item {
+                height: 10
+                width: 100
             }
             Label {
                 id: eventTags
@@ -133,39 +139,40 @@ Item {
 
     RowLayout {
         id: statusBar
-        anchors.bottom: flickable.bottom
+        anchors.bottom: eventView.bottom
         anchors.left: flickable.left
         anchors.right: flickable.right
-        height: 80
-        anchors.leftMargin: 10
-        anchors.rightMargin: 10
+        height: Theme.sizes.trackHeaderHeight
+        spacing: 5
         Rectangle {
             id: trackSquare
-            width: statusBar.height - 10
-            height: statusBar.height - 10
-            radius: 5
+            Layout.preferredHeight: Theme.sizes.trackHeaderHeight
+            Layout.preferredWidth: Theme.sizes.trackHeaderWidth
             color: track.backgroundColor
             Text {
-                anchors.centerIn: parent
+                anchors.fill: parent
+                anchors.margins: 10
                 text: track.name
                 color: track.fontColor
                 font.family: "Open Sans"
                 font.pixelSize: 20
+                horizontalAlignment: Text.AlignLeft
+                verticalAlignment: Text.AlignVCenter
+                font.capitalization: Font.AllUppercase
             }
         }
         Rectangle {
+
             Layout.fillWidth: true
             color: Theme.colors.smokewhite
-            height: statusBar.height - 10
-            radius: 5
-
+            height: statusBar.height
             RowLayout {
                 id: statusBar2
                 anchors.fill: parent
                 anchors.leftMargin: 10
                 Label {
                     height: parent.height
-                    text: Qt.formatTime(model.data(indexCurrentEvent, "start"), "hmm") + "-" + Qt.formatTime(model.data(indexCurrentEvent, "end"), "hmm")
+                    text: Qt.formatTime(model.data(indexCurrentEvent, "start"), "hh:mm") + " - " + Qt.formatTime(model.data(indexCurrentEvent, "end"), "hh:mm")
                     color: Theme.colors.gray
                     font.family: "Open Sans"
                     font.pixelSize: 20
@@ -180,11 +187,13 @@ Item {
                 Item {
                     Layout.alignment: Qt.AlignRight
                     height: statusBar.height
-                    width: 80
+                    width: statusBar.height
                     Image {
                         id: favorImage
                         anchors.centerIn: parent
                         source: favorite ? window.favoriteImage : window.notFavoriteImage
+                        width: Theme.sizes.favoriteImageWidth
+                        height: Theme.sizes.favoriteImageHeight
                     }
                     MouseArea {
                         anchors.fill: parent

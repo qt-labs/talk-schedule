@@ -49,29 +49,31 @@ ListView {
     id: trackHeaderListView
 
     height: rowLayout.height
-    width: 100
+    width: Theme.sizes.trackHeaderWidth
 
     clip: true
     boundsBehavior: Flickable.StopAtBounds
 
     delegate: Item {
         id: delegateItem
-        height: trackHeight
-        width: 100
+        height: Theme.sizes.trackHeaderHeight
+        width: Theme.sizes.trackHeaderWidth
         Rectangle {
             id: trackHeader
-            anchors { fill: parent; bottomMargin: 10; }
+            anchors.fill: parent
             color: backgroundColor
-
+            anchors.margins: 5
             Text {
-                anchors { fill: parent;  margins: 10 }
+                anchors.fill: parent
+                anchors.margins: 10
                 text: name
                 color: fontColor
                 font.family: "Open Sans"
                 font.pixelSize: 20
-                horizontalAlignment: Text.AlignRight
+                horizontalAlignment: Text.AlignLeft
                 verticalAlignment: Text.AlignVCenter
                 wrapMode: Text.WordWrap
+                font.capitalization: Font.AllUppercase
             }
         }
     }

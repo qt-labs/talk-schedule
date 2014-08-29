@@ -47,14 +47,14 @@ import "components"
 ApplicationWindow {
     id: window
     visible: true
-    height: 620
-    width: 420
+    height: 800
+    width: 1080
     property string favoriteImage: header.favoriteImage
     property string notFavoriteImage: header.notFavoriteImage
     property bool busy
     property string location: header.location
 
-    color: Theme.colors.smokewhite
+    color: Theme.colors.white
 
     FileIO {
         id: userIdFile
@@ -66,22 +66,17 @@ ApplicationWindow {
         onWriteUserIdToFile: userIdFile.write(userId)
     }
 
-    ConferenceHeader {
+    toolBar: ConferenceHeader {
         id: header
+        height: Theme.sizes.conferenceHeaderHeight
+        width: parent.width
     }
 
     StackView {
         id: stack
         focus: true
-
-        anchors { top: header.bottom }
-        initialItem: {
-            "item" : Qt.resolvedUrl("components/TrackSwitcher.qml"),
-                "properties" : {
-                "height" : window.height - header.height,
-                "width": "540"
-            }
-        }
+        anchors.fill: parent
+        initialItem: Qt.resolvedUrl("components/TrackSwitcher.qml")
 
         // capture Android back key
         Keys.onReleased: {

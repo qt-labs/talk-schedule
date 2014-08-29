@@ -49,8 +49,8 @@ Rectangle {
     anchors.top: parent.top
     anchors.left: parent.left
     width: parent.width
-    height: 50
-    color: Theme.colors.white
+    height: Theme.sizes.titleHeight
+    color: Theme.colors.smokewhite
 
     Text {
         id: text

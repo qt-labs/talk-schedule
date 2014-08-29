@@ -47,8 +47,8 @@ import "functions.js" as Functions
 ListView {
     id: trackList
 
-    interactive: false
-    height: trackHeight
+    interactive: true
+    height: Theme.sizes.trackHeaderHeight
     currentIndex: 0
     orientation: ListView.Horizontal
     clip: false
@@ -57,31 +57,32 @@ ListView {
         id: delegateItem
         height: trackList.height
         property bool isSelected: false
-        property int trackWidth: Functions.countTrackWidth(start, end)
 
         Item {
             id: item
             height: trackList.height
-            width: trackWidth
-            x: Functions.countTrackPosition(start, topic)
+            width: Functions.countTrackWidth(start, end)
+            x: Functions.countTrackPosition(start)
 
             Rectangle {
                 id: colorBackground
-                anchors { fill: parent;  bottomMargin: 10; leftMargin: 10;}
-                color: Theme.colors.white
+                anchors.fill: parent
+                anchors.margins: 5
+                color: Theme.colors.smokewhite
             }
             Item {
                 // Add this imageArea to make it easier to click the image
                 id: imageArea
                 anchors.bottom: colorBackground.bottom
                 anchors.right: colorBackground.right
-                width: 80
-                height: 80
+                width: Theme.sizes.favoriteImageWidth + 20
+                height: Theme.sizes.favoriteImageHeight + 20
                 Image {
                     id: favoriteImage
-                    anchors.bottom: imageArea.bottom
-                    anchors.right: imageArea.right
+                    anchors.centerIn: parent
                     source: favorite ? window.favoriteImage : window.notFavoriteImage
+                    width: Theme.sizes.favoriteImageWidth
+                    height: Theme.sizes.favoriteImageHeight
                 }
                 MouseArea {
                     anchors.fill: parent
@@ -99,9 +100,8 @@ ListView {
             ColumnLayout {
                 id: columnLayout
                 anchors.fill: colorBackground
-                height: trackList.height
-                anchors.leftMargin: 10
-                anchors.rightMargin: 10
+                anchors.margins: 10
+              //  height: trackList.height
                 Item {
                     width: columnLayout.width
                     height: 50

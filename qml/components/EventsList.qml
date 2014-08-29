@@ -46,9 +46,6 @@ import QtQuick.Controls 1.1
 Item {
     id: eventsList
     property bool isFavoriteView: false
-    property int minTrackHeight: 120
-    property int maxTrackHeight: 200
-    property int trackHeight: Math.max(minTrackHeight, Math.min(maxTrackHeight, Math.floor((window.height - header.height - subTitle.height)/5)));
 
     SubTitle {
         id: subTitle
@@ -59,8 +56,7 @@ Item {
         id: eventsListView
         interactive: true
         anchors.top: subTitle.bottom
-        anchors.topMargin: 5
-        height: parent.height - subTitle.height - 75 //header height
+        height: parent.height - subTitle.height
         width: parent.width
         clip: true
         model: SortFilterModel {

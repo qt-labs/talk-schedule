@@ -60,6 +60,24 @@ Theme::Theme(QObject *parent)
     m_colors->insert(QLatin1String("blue"), QVariant("#14aaff"));
     m_colors->insert(QLatin1String("green"), QVariant("#328930"));
     m_colors->insert(QLatin1String("black"), QVariant("#000000"));
+
+    m_sizes = new QQmlPropertyMap(this);
+    m_sizes->insert(QLatin1String("trackHeaderHeight"), QVariant(255));
+    m_sizes->insert(QLatin1String("trackHeaderWidth"), QVariant(270));
+    m_sizes->insert(QLatin1String("timeColumnWidth"), QVariant(300));
+    m_sizes->insert(QLatin1String("conferenceHeaderHeight"), QVariant(158));
+    m_sizes->insert(QLatin1String("dayWidth"), QVariant(150));
+    m_sizes->insert(QLatin1String("favoriteImageHeight"), QVariant(76));
+    m_sizes->insert(QLatin1String("favoriteImageWidth"), QVariant(80));
+    m_sizes->insert(QLatin1String("titleHeight"), QVariant(60));
+    m_sizes->insert(QLatin1String("backHeight"), QVariant(74));
+    m_sizes->insert(QLatin1String("backWidth"), QVariant(42));
+    m_sizes->insert(QLatin1String("logoHeight"), QVariant(100));
+    m_sizes->insert(QLatin1String("logoWidth"), QVariant(286));
+    m_sizes->insert(QLatin1String("menuHeight"), QVariant(62));
+    m_sizes->insert(QLatin1String("menuWidth"), QVariant(78));
+    m_sizes->insert(QLatin1String("dayLabelHeight"), QVariant(40));
+
 }
 
 int Theme::trackWidthDivider() const

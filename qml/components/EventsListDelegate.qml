@@ -43,51 +43,53 @@ import TalkSchedule 1.0
 import QtQuick.Layouts 1.1
 import QtQuick.Controls 1.1
 
-Item {
+Rectangle {
     id: delegateItem
     property bool isDayLabelVisible: isSameDay()
-    property int labelHeight: isDayLabelVisible ? 35 : 5
+    property int labelHeight: isDayLabelVisible ? Theme.sizes.dayLabelHeight : 5
     property var viewSortModel: ListView.view.model
+    color: Theme.colors.white
 
-    height: trackHeight + labelHeight
+    height: Theme.sizes.trackHeaderHeight + labelHeight
     width: parent.width
     Label {
         id: dayLabel
         height: labelHeight
         width: parent.width
         anchors.leftMargin: 10
-        text: isDayLabelVisible ? Qt.formatDate(start, "dddd d.M.yyyy") : ""
+        text: isDayLabelVisible ? Qt.formatDate(start, "dddd dd.MM.yyyy") : ""
         font.family: "Open Sans"
         font.pixelSize: 20
         font.capitalization: Font.AllUppercase
     }
     RowLayout {
         id: rowLayout
-        height: trackHeight
+        height: Theme.sizes.trackHeaderHeight
         width: parent.width
         anchors.top: dayLabel.bottom
-        //anchors.margins: 10
         Rectangle {
             id: trackHeader
-            height: parent.height
-            width: 100
+            height: Theme.sizes.trackHeaderHeight
+            width: Theme.sizes.trackHeaderWidth
             color: tracks.backgroundColor
 
             Text {
-                anchors { fill: parent;  margins: 10 }
+                anchors.fill: parent
+                anchors.margins: 10
                 text: tracks.name
                 color: tracks.fontColor
                 font.family: "Open Sans"
                 fontSizeMode: Text.Fit
                 font.pixelSize: 20
-                horizontalAlignment: Text.AlignRight
+                horizontalAlignment: Text.AlignLeft
                 verticalAlignment: Text.AlignVCenter
+                font.capitalization: Font.AllUppercase
                 wrapMode: Text.WordWrap
             }
         }
         Rectangle {
             Layout.fillWidth: true
-            color: Theme.colors.white
+            color: Theme.colors.smokewhite
             height: parent.height
             width: parent.width
 
@@ -158,13 +160,14 @@ Item {
         id: imageArea
         anchors.bottom: rowLayout.bottom
         anchors.right: rowLayout.right
-        width: 80
-        height: 80
+        width: Theme.sizes.favoriteImageWidth + 20
+        height: Theme.sizes.favoriteImageHeight + 20
         Image {
             id: favoriteImage
-            anchors.bottom: imageArea.bottom
-            anchors.right: imageArea.right
+            anchors.centerIn: parent
             source: (favorite) ? window.favoriteImage : window.notFavoriteImage
+            width: Theme.sizes.favoriteImageWidth
+            height: Theme.sizes.favoriteImageHeight
         }
         MouseArea {
             anchors.fill: parent

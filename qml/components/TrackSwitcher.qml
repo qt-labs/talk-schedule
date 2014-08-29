@@ -48,29 +48,23 @@ import "functions.js" as Functions
 Item {
     id: root
 
-    property int timeColumnWidth: 200
-    property int minTrackHeight: 130
-    property int maxTrackHeight: 200
-    property int trackHeight: Math.max(minTrackHeight, Math.min(maxTrackHeight, Math.floor((window.height - header.height - timeColumn.height - daysWitcher.height)/5)));
     property bool isViewScrolling: false
 
     DaySwitcher {
         id: daysWitcher
         anchors.top: parent.top
         width: parent.width
-        height: 60
+        height: Theme.sizes.titleHeight
     }
 
     Row {
         id: rowLayout
-        height: root.height - daysWitcher.height
-        anchors.top: daysWitcher.bottom
-        anchors.left: parent.left
-        anchors.right: parent.right
+        anchors.fill: parent
+        anchors.topMargin: daysWitcher.height
         Column{
             // Add this empty item so track won't overlap with time line
             Item {
-                height: timeColumn.height
+                height: Theme.sizes.dayLabelHeight
                 width: 100
             }
 
@@ -83,22 +77,19 @@ Item {
             height: rowLayout.height
             width: root.width
             clip: true
-            contentWidth: timeColumn.width // contentItem.childrenRect.width
+            contentWidth: timeColumn.width + Theme.sizes.timeColumnWidth/2 // add some extra space to be able to scroll to the end
             flickableDirection: Flickable.HorizontalFlick
             Column {
                 anchors.fill: parent
-
                 Row {
                     id: timeColumn
                     property var timeList: []
-                    height: 35
+                    height: Theme.sizes.dayLabelHeight
                     Repeater {
                         id: timeColumnList
-
                         model: timeColumn.timeList
-
                         delegate: Item {
-                            width: timeColumnWidth
+                            width: Theme.sizes.timeColumnWidth
                             height: timeColumn.height
                             Text {
                                 id: repeaterText;
@@ -119,8 +110,10 @@ Item {
                                 var time
 
                                 var timeHours
+
+                                var isEndTime = true
                                 var earliestHours = Functions.getHour(earliestTime)
-                                var latestHours = Functions.getHour(latestTime)
+                                var latestHours = Functions.getHour(latestTime, isEndTime)
 
                                 // Count here what is the first hour and last hour that needs to be shown in time listView
                                 // for example 10.00 11.00 12.00 ... or 08.00 09.00 10.00
@@ -135,13 +128,13 @@ Item {
 
                                     time = tmp.get(i, "end")
                                     timeHours = Functions.getHour(time)
-                                    latestHours = Functions.getHour(latestTime)
+                                    latestHours = Functions.getHour(latestTime, isEndTime)
                                     if (timeHours > latestHours)
                                         latestTime = time
                                 }
 
                                 var temp = []
-                                var timeCount = Functions.getHour(latestTime) - Functions.getHour(earliestTime)
+                                var timeCount = Functions.getHour(latestTime, isEndTime) - Functions.getHour(earliestTime)
                                 var hours = Functions.getHour(earliestTime)
 
                                 for (var j = 0; j <= timeCount; j++) {
