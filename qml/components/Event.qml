@@ -77,7 +77,7 @@ Rectangle {
         anchors.rightMargin: 10
         interactive: true
         flickableDirection: Flickable.VerticalFlick
-        boundsBehavior: flickable.StopAtBounds
+        boundsBehavior: Flickable.StopAtBounds
         contentHeight: columnLayout.height
         clip: true
         Column {
