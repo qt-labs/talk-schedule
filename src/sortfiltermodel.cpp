@@ -46,6 +46,7 @@ SortFilterModel::SortFilterModel(QObject *parent)
 {
     connect(this, SIGNAL(sourceModelChanged()), SIGNAL(modelChanged()));
     connect(this, SIGNAL(sortRoleChanged()), SLOT(manualSort()));
+    setDynamicSortFilter(false);
 }
 
 void SortFilterModel::setModel(QObject *model)
