@@ -43,3 +43,5 @@ HEADERS += \
 
 DEFINES += \
     TALK_SCHEDULE_BACKEND_ID=$$TALK_SCHEDULE_BACKEND_ID
+
+winrt: WINRT_MANIFEST.capabilities += internetClientServer
