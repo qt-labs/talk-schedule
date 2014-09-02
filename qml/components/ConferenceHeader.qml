@@ -48,7 +48,6 @@ import TalkSchedule 1.0
 Item {
     id: conferenceHeader
     property var event
-    property string location
 
     Item {
         id: topicRect
@@ -136,23 +135,6 @@ Item {
                     source: Theme.images.menu
                 }
             }
-        }
-    }
-
-    EnginioClient {
-        id: client
-        backendId: backId
-
-        onError: console.log("Enginio error " + reply.errorCode + ": " + reply.errorString)
-        Component.onCompleted: {
-            var eventQuery = query({ "objectType": "objects.Conference"})
-
-            eventQuery.finished.connect(function() {
-                event = eventQuery.data.results[0]
-
-                ModelsSingleton.conferenceId = event.id
-                location = event.location
-            })
         }
     }
 }

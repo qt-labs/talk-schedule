@@ -50,7 +50,6 @@ ApplicationWindow {
     height: 800
     width: 1080
     property bool busy
-    property string location: header.location
 
     color: Theme.colors.white
 

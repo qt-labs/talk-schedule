@@ -47,10 +47,22 @@ QtObject {
     id: object
     property string conferenceId
     property string currentUserId
+    property string conferenceLocation
     property var currentConferenceTracks: []
     property var currentConferenceEvents: []
     property var busy: false
-    property var client: EnginioClient { backendId: backId }
+    property var client: EnginioClient {
+        backendId: backId
+        onError: console.log("Enginio error " + reply.errorCode + ": " + reply.errorString)
+        Component.onCompleted: {
+            var conferenceQuery = query({ "objectType": "objects.Conference"})
+            conferenceQuery.finished.connect(function() {
+                var conference = conferenceQuery.data.results[0]
+                ModelsSingleton.conferenceId = conference.id
+                ModelsSingleton.conferenceLocation = conference.location
+            })
+        }
+    }
 
     signal writeUserIdToFile(string userId)
 

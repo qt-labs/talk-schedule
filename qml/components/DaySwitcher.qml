@@ -46,7 +46,6 @@ import "functions.js" as Functions
 
 Rectangle {
     id: topSwitcher
-    property string confLocation: window.location
     property string dayId
     property int daysCount: 0
     property int margins: 30
@@ -62,7 +61,7 @@ Rectangle {
         Item { Layout.fillWidth: true; width: 5; Layout.preferredHeight: 1 }
         Label {
             id: locationLabel
-            text: topSwitcher.confLocation
+            text: ModelsSingleton.conferenceLocation
             verticalAlignment: Text.AlignVCenter
             horizontalAlignment: Text.AlignHCenter
             font.pointSize: 14
