@@ -109,3 +109,9 @@ void SortFilterModel::manualSort()
 {
     sort(0, sortOrder());
 }
+
+void SortFilterModel::filter()
+{
+    QSortFilterProxyModel::invalidate();
+    manualSort();
+}

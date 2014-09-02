@@ -65,6 +65,7 @@ public:
     Q_INVOKABLE void set(int row, const QVariant &data, const QString &role);
     Q_INVOKABLE QVariant indexOf(const QString &role, QVariant value);
     Q_INVOKABLE int rowCount(const QModelIndex &parent = QModelIndex()) const;
+    Q_INVOKABLE void filter();
 
 public Q_SLOTS:
     void manualSort();

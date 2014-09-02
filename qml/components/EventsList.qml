@@ -60,11 +60,16 @@ Item {
         width: parent.width
         clip: true
         model: SortFilterModel {
-                           sortRole: "start"
-                           filterRole: "favorite"
-                           filterRegExp: eventsList.isFavoriteView ? new RegExp("true") : new RegExp()
-                           model: ModelsSingleton.eventModel
-                       }
+            id: sortModel
+            sortRole: "start"
+            filterRole: "favorite"
+            filterRegExp: eventsList.isFavoriteView ? new RegExp("true") : new RegExp()
+            model: ModelsSingleton.eventModel
+        }
+        Connections {
+            target: ModelsSingleton.eventModel
+            onDataChanged: if (eventsList.isFavoriteView) sortModel.filter()
+        }
         delegate: EventsListDelegate {}
     }
 }
