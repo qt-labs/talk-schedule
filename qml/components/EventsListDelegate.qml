@@ -161,7 +161,7 @@ Rectangle {
         Image {
             id: favoriteImage
             anchors.centerIn: parent
-            source: (favorite) ? window.favoriteImage : window.notFavoriteImage
+            source: favorite ? Theme.images.favorite : Theme.images.notFavorite
             width: Theme.sizes.favoriteImageWidth
             height: Theme.sizes.favoriteImageHeight
         }

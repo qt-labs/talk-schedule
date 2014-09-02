@@ -15,5 +15,10 @@
         <file>fonts/OpenSans-Regular.ttf</file>
         <file>fonts/OpenSans-Semibold.ttf</file>
         <file>fonts/OpenSans-Bold.ttf</file>
+        <file alias="images/BackArrow.svg">qml/components/images/BackArrow.svg</file>
+        <file alias="images/DevDaysLogo.svg">qml/components/images/DevDaysLogo.svg</file>
+        <file alias="images/Menu.svg">qml/components/images/Menu.svg</file>
+        <file alias="images/Star.svg">qml/components/images/Star.svg</file>
+        <file alias="images/StarSelected.svg">qml/components/images/StarSelected.svg</file>
     </qresource>
 </RCC>

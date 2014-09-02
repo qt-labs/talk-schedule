@@ -51,6 +51,7 @@ class Theme : public QObject
     Q_PROPERTY(QObject *text READ text CONSTANT)
     Q_PROPERTY(QObject *colors READ colors CONSTANT)
     Q_PROPERTY(QObject *sizes READ sizes CONSTANT)
+    Q_PROPERTY(QObject *images READ images CONSTANT)
 
 public:
     explicit Theme(QObject *parent = 0);
@@ -59,12 +60,14 @@ public:
     QQmlPropertyMap *text() const { return m_text; }
     QQmlPropertyMap *colors() const { return m_colors; }
     QQmlPropertyMap *sizes() const { return m_sizes; }
+    QQmlPropertyMap *images() const { return m_images; }
 
 private:
     int m_trackWidthDivider;
     QQmlPropertyMap *m_text;
     QQmlPropertyMap *m_colors;
     QQmlPropertyMap *m_sizes;
+    QQmlPropertyMap *m_images;
 };
 
 #endif // APPLICATIONINFO_H

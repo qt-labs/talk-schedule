@@ -78,6 +78,12 @@ Theme::Theme(QObject *parent)
     m_sizes->insert(QLatin1String("menuWidth"), QVariant(78));
     m_sizes->insert(QLatin1String("dayLabelHeight"), QVariant(40));
 
+    m_images = new QQmlPropertyMap(this);
+    m_images->insert(QLatin1String("back"), QVariant("qrc:/images/BackArrow.svg"));
+    m_images->insert(QLatin1String("menu"), QVariant("qrc:/images/Menu.svg"));
+    m_images->insert(QLatin1String("logo"), QVariant("qrc:/images/DevDaysLogo.svg"));
+    m_images->insert(QLatin1String("favorite"), QVariant("qrc:/images/StarSelected.svg"));
+    m_images->insert(QLatin1String("notFavorite"), QVariant("qrc:/images/Star.svg"));
 }
 
 int Theme::trackWidthDivider() const

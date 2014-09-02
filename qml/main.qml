@@ -49,8 +49,6 @@ ApplicationWindow {
     visible: true
     height: 800
     width: 1080
-    property string favoriteImage: header.favoriteImage
-    property string notFavoriteImage: header.notFavoriteImage
     property bool busy
     property string location: header.location
 

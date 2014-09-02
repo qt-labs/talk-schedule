@@ -48,8 +48,6 @@ import TalkSchedule 1.0
 Item {
     id: conferenceHeader
     property var event
-    property string favoriteImage
-    property string notFavoriteImage
     property string location
 
     Item {
@@ -76,6 +74,7 @@ Item {
                     Behavior on opacity { PropertyAnimation{} }
                     height: Theme.sizes.backHeight
                     width: Theme.sizes.backWidth
+                    source: Theme.images.back
                 }
             }
             Image {
@@ -83,7 +82,7 @@ Item {
                 Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
                 Layout.preferredHeight: Theme.sizes.logoHeight
                 Layout.preferredWidth: Theme.sizes.logoWidth
-
+                source: Theme.images.logo
             }
             Item {
                 Layout.alignment: Qt.AlignRight
@@ -131,11 +130,10 @@ Item {
                 Image {
                     id: dropMenu
                     anchors.centerIn: parent
-                    property string menuImage
                     Layout.alignment: Qt.AlignRight
-                    source: dropMenu.menuImage
                     height: Theme.sizes.menuHeight
                     width: Theme.sizes.menuWidth
+                    source: Theme.images.menu
                 }
             }
         }
@@ -154,63 +152,6 @@ Item {
 
                 ModelsSingleton.conferenceId = event.id
                 location = event.location
-
-                // After id is fetched, download also images
-                if (!!event.logo) {
-                    var downloadLogo = {
-                        "id": event.logo.id,
-                    }
-                    var replyLogo = client.downloadUrl(downloadLogo)
-                    replyLogo.finished.connect(function() {
-                        if (header && replyLogo.data.expiringUrl) {
-                            header.source = replyLogo.data.expiringUrl
-                        }
-                    })
-                }
-                if (!!event.backImage) {
-                    var downloadBackImage = {
-                        "id": event.backImage.id,
-                    }
-                    var replyBackImage = client.downloadUrl(downloadBackImage)
-                    replyBackImage.finished.connect(function() {
-                        if (backButton && replyBackImage.data.expiringUrl) {
-                            backButton.source = replyBackImage.data.expiringUrl
-                        }
-                    })
-                }
-                if (!!event.menuImage) {
-                    var downloaMenuImage = {
-                        "id": event.menuImage.id,
-                    }
-                    var replyMenuImage = client.downloadUrl(downloaMenuImage)
-                    replyMenuImage.finished.connect(function() {
-                        if ( replyMenuImage.data.expiringUrl) {
-                            dropMenu.menuImage = replyMenuImage.data.expiringUrl
-                        }
-                    })
-                }
-                if (!!event.favoriteNotSelectedImage) {
-                    var downloaFavoriteNotSelectedImage = {
-                        "id": event.favoriteNotSelectedImage.id,
-                    }
-                    var replyFavoriteNotImage = client.downloadUrl(downloaFavoriteNotSelectedImage)
-                    replyFavoriteNotImage.finished.connect(function() {
-                        if ( replyFavoriteNotImage.data.expiringUrl) {
-                            notFavoriteImage = replyFavoriteNotImage.data.expiringUrl
-                        }
-                    })
-                }
-                if (!!event.favoriteSelectedImage) {
-                    var downloaFavoriteSelectedImage = {
-                        "id": event.favoriteSelectedImage.id,
-                    }
-                    var replyFavoriteImage = client.downloadUrl(downloaFavoriteSelectedImage)
-                    replyFavoriteImage.finished.connect(function() {
-                        if ( replyFavoriteImage.data.expiringUrl) {
-                            favoriteImage = replyFavoriteImage.data.expiringUrl
-                        }
-                    })
-                }
             })
         }
     }
