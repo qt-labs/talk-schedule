@@ -63,18 +63,20 @@ ApplicationWindow {
         onWriteUserIdToFile: userIdFile.write(userId)
     }
 
-    toolBar: ConferenceHeader {
+    ConferenceHeader {
         id: header
         height: Theme.sizes.conferenceHeaderHeight
         width: parent.width
+        opacity: stack.opacity
+        Behavior on opacity { PropertyAnimation{} }
     }
 
     StackView {
         id: stack
         focus: true
         anchors.fill: parent
-        initialItem: Qt.resolvedUrl("components/TrackSwitcher.qml")
-
+        opacity: 1 - splashscreen.opacity
+        Behavior on opacity { PropertyAnimation{} }
         // capture Android back key
         Keys.onReleased: {
             if (event.key === Qt.Key_Back) {
@@ -83,6 +85,30 @@ ApplicationWindow {
                     stack.pop()
                 }
             }
+        }
+    }
+
+    Item {
+        id: splashscreen
+        anchors.fill: parent
+        Image {
+            id: splashlogo
+            anchors.centerIn: parent
+            source: Theme.images.logo
+            sourceSize.width: Theme.sizes.logoWidth * 2
+            sourceSize.height: Theme.sizes.logoHeight * 2
+            ParallelAnimation {
+                id: animation
+                running: false
+                PropertyAnimation {target: splashlogo; properties: "width"; from: 0; to: Theme.sizes.logoWidth * 2; duration: 1500}
+                PropertyAnimation {target: splashlogo; properties: "height"; from: 0; to: Theme.sizes.logoHeight * 2; duration: 1500}
+                onRunningChanged: if (!running) {
+                                      splashscreen.opacity = 0
+                                      toolBar = header
+                                      stack.push(Qt.resolvedUrl("components/TrackSwitcher.qml"))
+                                  }
+            }
+            Component.onCompleted: animation.running = true
         }
     }
 }

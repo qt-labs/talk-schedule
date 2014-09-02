@@ -170,8 +170,10 @@ Item {
                         id: tracks
                         filterRole: "day"
                         filterRegExp: new RegExp(daysWitcher.dayId)
+                        model: ModelsSingleton.trackModel
                     }
 
+                    // Keep the connection in case the model would not be ready at startup
                     Connections {
                         target: ModelsSingleton.trackModel
                         onDataReady: tracks.model = ModelsSingleton.trackModel

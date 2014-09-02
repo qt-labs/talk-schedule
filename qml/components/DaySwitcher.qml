@@ -111,8 +111,14 @@ Rectangle {
     SortFilterModel {
         id: dayModel
         sortRole: "date"
+        model: ModelsSingleton.day
+        Component.onCompleted: {
+            dayId = dayModel.get(0,"id")
+            daysCount = dayModel.rowCount()
+        }
     }
 
+    // Keep the connection in case the model would not be ready at startup
     Connections {
         target: ModelsSingleton.day
         onDataReady: {
