@@ -77,20 +77,6 @@ ListView {
         }
     }
 
-    model: SortFilterModel {
-        id: tmp;
-        sortRole: "start"
-        filterRole: "day"
-        filterRegExp: new RegExp(daysWitcher.dayId)
-        model: ModelsSingleton.locationModel
-    }
-
-    // Keep the connection in case the model would not be ready at startup
-    Connections {
-        target: ModelsSingleton.locationModel
-        onDataReady: tmp.model = ModelsSingleton.locationModel
-    }
-
     onContentYChanged: {
         if (isViewScrolling === false) {
             isViewScrolling = true;

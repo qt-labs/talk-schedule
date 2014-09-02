@@ -70,10 +70,6 @@ QtObject {
         backendId: backId
     }
 
-    property var locationModel: Model {
-        backendId: backId
-    }
-
     property var trackModel: Model {
         backendId: backId
         onDataReady: {
@@ -263,12 +259,6 @@ QtObject {
                           }
                       }
                   })
-        locationModel.query({ "objectType": "objects.Track",
-                                "query": {
-                                    "conference": {
-                                        "id": object.conferenceId, "objectType": "objects.Conference"
-                                    }
-                                }});
         trackModel.query({"objectType": "objects.Track",
                              "query": { "conference": { "id": object.conferenceId, "objectType": "objects.Conference" } }});
 

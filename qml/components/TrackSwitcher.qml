@@ -57,6 +57,20 @@ Item {
         height: Theme.sizes.titleHeight
     }
 
+    SortFilterModel{
+        id: tracksModel
+        sortRole: "trackNumber"
+        filterRole: "day"
+        filterRegExp: new RegExp(daysWitcher.dayId)
+        model: ModelsSingleton.trackModel
+    }
+
+    // Keep the connection in case the model would not be ready at startup
+    Connections {
+        target: ModelsSingleton.trackModel
+        onDataReady: tracksModel.model = ModelsSingleton.trackModel
+    }
+
     Row {
         id: rowLayout
         anchors.fill: parent
@@ -70,6 +84,7 @@ Item {
 
             TrackHeader {
                 id: trackHeader
+                model: tracksModel
             }
         }
         Flickable {
@@ -166,18 +181,7 @@ Item {
                     boundsBehavior: Flickable.StopAtBounds
                     delegate: Track {}
 
-                    model: SortFilterModel {
-                        id: tracks
-                        filterRole: "day"
-                        filterRegExp: new RegExp(daysWitcher.dayId)
-                        model: ModelsSingleton.trackModel
-                    }
-
-                    // Keep the connection in case the model would not be ready at startup
-                    Connections {
-                        target: ModelsSingleton.trackModel
-                        onDataReady: tracks.model = ModelsSingleton.trackModel
-                    }
+                    model: tracksModel
 
                     onContentYChanged: {
                         if (isViewScrolling === false) {
