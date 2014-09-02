@@ -136,8 +136,7 @@ Rectangle {
     RowLayout {
         id: statusBar
         anchors.bottom: eventView.bottom
-        anchors.left: flickable.left
-        anchors.right: flickable.right
+        width: eventView.width
         height: Theme.sizes.trackHeaderHeight
         spacing: 5
         Rectangle {

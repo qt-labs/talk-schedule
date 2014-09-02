@@ -159,7 +159,7 @@ Item {
                 }
                 ListView {
                     id: listView
-                    height: root.height - daysWitcher.height - timeColumn.height - 70
+                    height: root.height - daysWitcher.height - timeColumn.height
                     width: parent.width
                     interactive: true
                     clip: true
