@@ -171,7 +171,7 @@ Rectangle {
                     font.pixelSize: 20
                 }
                 Label {
-                    text: "name room" // TODO track.location
+                    text: model.data(indexCurrentEvent, "location")
                     height: parent.height
                     color: Theme.colors.darkgray
                     font.pixelSize: 20

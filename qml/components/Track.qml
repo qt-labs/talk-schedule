@@ -128,7 +128,7 @@ ListView {
                     height: 50
                     Text {
                         width: columnLayout.width - favoriteImage.width
-                        text: Qt.formatTime(start, "h:mm") + " - " + Qt.formatTime(end, "h:mm") + " I " + "name room" // TODO tracks.location
+                        text: Qt.formatTime(start, "h:mm") + " - " + Qt.formatTime(end, "h:mm") + " I " + location
                         color: Theme.colors.gray
                         font.pixelSize: 14
                         font.capitalization: Font.AllUppercase

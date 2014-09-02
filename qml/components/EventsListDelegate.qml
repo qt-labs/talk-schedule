@@ -137,7 +137,7 @@ Rectangle {
                         font.capitalization: Font.AllUppercase
                     }
                     Text {
-                        text: "name room" // TODO tracks.location
+                        text: location
                         Layout.fillWidth: true
                         color: Theme.colors.gray
                         font.pixelSize: 14
