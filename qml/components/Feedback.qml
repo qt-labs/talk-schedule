@@ -62,29 +62,27 @@ Item {
             height: window.height / 3
             width: window.width
 
-            TextEdit {
+            TextArea {
                 id: feedbackEdit
                 anchors.fill: parent
                 font.family: "OpenSans"
-                focus: true
                 text: "Write your comments here"
                 textMargin: 10
                 wrapMode: TextEdit.Wrap
+                onFocusChanged: text = ""
             }
         }
 
-        Rectangle {
-            // separator line
-            width: parent.width
-            height: 2
-            color: Theme.colors.lightgrey
-        }
-
         Row {
-            spacing: 10
+            Item {
+                width: 20
+                height: 30
+            }
+
             Button {
                 text: "Clear"
                 onClicked: feedbackEdit.text = ""
+                width: window.width / 3.5
 
                 style: ButtonStyle {
                     background: Rectangle {
@@ -95,6 +93,11 @@ Item {
                 }
             }
 
+            Item {
+                width: window.width / 7
+                height: 30
+            }
+
             Button {
                 text: "Send"
                 onClicked: {
@@ -103,6 +106,7 @@ Item {
                     ModelsSingleton.saveFeedback(feedbackEdit.text)
                     stack.pop()
                 }
+                width: window.width / 3.5
 
                 style: ButtonStyle {
                     background: Rectangle {
