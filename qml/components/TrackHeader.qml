@@ -52,6 +52,11 @@ ListView {
 
     clip: true
     boundsBehavior: Flickable.StopAtBounds
+    Rectangle {
+        z: -1
+        anchors.fill: parent
+        color: Theme.colors.white
+    }
 
     delegate: Rectangle {
         id: delegateItem
@@ -72,8 +77,9 @@ ListView {
             anchors.fill: parent
             color: backgroundColor
             anchors.rightMargin: Theme.margins.five
-            anchors.bottomMargin: Theme.margins.five
+            anchors.bottomMargin: index !== (listView.count - 1) ? Theme.margins.five : 0
             Text {
+                visible: !dayTracksModel.isEmpty
                 anchors.fill: parent
                 anchors.margins: Theme.margins.ten
                 text: name

@@ -75,7 +75,6 @@ QtObject {
                 numberCollidingEvents = Math.max(colliding, numberCollidingEvents)
             }
             dayTracksModel.isReady()
-            //repeater1.model = trackDelegate.rowsArray.length
         }
         function isCollidingWithPreviousEvents(index) {
             var currentTimeStart = new Date(modelTracks.get(index, "start"))

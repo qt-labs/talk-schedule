@@ -94,4 +94,13 @@ function isEvenNumber(Nb)
    return Nb/2 === Math.round(Nb/2)
 }
 
+function isStartTimeAfterNow(start)
+{
+    var now = new Date()
+    var localOffset = now.getTimezoneOffset()
+    now = new Date(Date.now() - localOffset * 60 * 1000)
+    var eventStart = new Date(start)
+    return eventStart > now
+}
+
 

@@ -51,6 +51,7 @@ QtObject {
     property string rssFeed
     property var currentConferenceTracks: []
     property var currentConferenceEvents: []
+    property var currentConferenceDays: []
     property bool busy: false
     property var client: EnginioClient {
         backendId: backId
@@ -70,6 +71,12 @@ QtObject {
 
     property var day: Model {
         backendId: backId
+        onDataReady: {
+            currentConferenceDays = []
+            for (var i = 0; i < day.rowCount(); i++)
+            currentConferenceDays[i] = day.data(i, "id")
+            queryConferenceBreaks()
+        }
     }
 
     property var trackModel: Model {
@@ -100,6 +107,10 @@ QtObject {
         onDataReady: getFavoriteIds()
     }
 
+    property var breakModel: Model {
+        backendId: backId
+    }
+
     property var timeListModel: Model {
         backendId: backId
         property var tracksTodayModel
@@ -107,10 +118,10 @@ QtObject {
             if (!!tracksTodayModel) {
                 var todaysTracks = []
                 for (var i = 0; i < tracksTodayModel.rowCount(); i++)
-                todaysTracks[i] = trackModel.data(i, "id")
+                    todaysTracks.push(tracksTodayModel.data(i, "id"))
                 timeListModel.query({ "objectType": "objects.Event",
                                         "sort" : [{"sortBy": "start", "direction": "asc"}],
-                                        "track.id" : { "$in" : todaysTracks }
+                                        "query": { "track.id" : { "$in" : todaysTracks } }
                                     })
             }
         }
@@ -128,6 +139,14 @@ QtObject {
                                      "result": "selectOne",
                                  }
                              }
+                         })
+    }
+
+    function queryConferenceBreaks()
+    {
+        breakModel.query({
+                             "objectType": "objects.Break",
+                             "query": { "day.id" : { "$in" : currentConferenceDays } },
                          })
     }
 

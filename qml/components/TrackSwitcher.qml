@@ -49,6 +49,7 @@ Item {
     id: root
     objectName: "trackSwitcher"
     property bool isViewScrolling: false
+    property var firstEvent
 
     DaySwitcher {
         id: daysWitcher
@@ -63,6 +64,21 @@ Item {
         filterRole: "day"
         filterRegExp: new RegExp(daysWitcher.dayId)
         model: ModelsSingleton.trackModel
+        function data(index, role)
+        {
+            return get(index, role)
+        }
+    }
+    SortFilterModel {
+        id: currentDayBreaksModel
+        model: ModelsSingleton.breakModel
+        sortRole: "start"
+        filterRole: "day"
+        filterRegExp: new RegExp(daysWitcher.dayId)
+        function data(index, role)
+        {
+            return get(index, role)
+        }
     }
 
     // Keep the connection in case the model would not be ready at startup
@@ -76,55 +92,124 @@ Item {
         onDayIdChanged: ModelsSingleton.timeListModel.tracksTodayModel = currentDayTracksModel
     }
 
+    function getTimeRange(model)
+    {
+        var earliestTime = model.data(0, "start")
+        if (Functions.isStartTimeAfterNow(earliestTime)) {
+            if (firstEvent === undefined || earliestTime < firstEvent)
+                firstEvent = earliestTime
+        }
+        var latestTime = model.data(0, "end") // earliestTime
+        var time
+
+        var timeHours
+        var earliestHours = Functions.getHour(earliestTime)
+        var latestHours = Functions.getHour(latestTime)
+
+        // Count here what is the first hour and last hour that needs to be shown in time listView
+        // for example 10.00 11.00 12.00 ... or 08.00 09.00 10.00
+        for (var i = 0; i < model.rowCount(); i++) {
+
+            time = model.data(i, "start")
+            if (firstEvent === undefined && Functions.isStartTimeAfterNow(time))
+                firstEvent = time
+
+            timeHours = Functions.getHour(time)
+            earliestHours = Functions.getHour(earliestTime)
+
+            if (timeHours < earliestHours )
+                earliestTime = time
+
+            time = model.data(i, "end")
+            timeHours = Functions.getHour(time)
+            var timeMinutes = Functions.getMinutes(time)
+            if (timeMinutes > 0)
+                timeHours = timeHours + 1
+            latestHours = Functions.getHour(latestTime)
+            if (timeHours > latestHours)
+                latestTime = time
+        }
+
+        var temp = []
+        var timeCount = Functions.getHour(latestTime) - Functions.getHour(earliestTime)
+        timeMinutes = Functions.getMinutes(latestTime)
+        if (timeMinutes > 0)
+            timeCount = timeCount + 1
+        var hours = Functions.getHour(earliestTime)
+
+        for (var j = 0; j <= timeCount; j++) {
+            var date = new Date
+            date.setHours(hours + j)
+            // HACK, ISOString ignores timezone offset, so add it to date
+            date.setHours(date.getHours()+ date.getHours() - date.getUTCHours())
+            date.setMinutes(0)
+            temp.push(date.toISOString())
+        }
+        return temp
+    }
+
     Connections {
         target: ModelsSingleton.timeListModel
         onDataReady: {
-            if (ModelsSingleton.timeListModel.rowCount() > 0) {
-                var earliestTime = ModelsSingleton.timeListModel.data(0, "start")
-                var latestTime = ModelsSingleton.timeListModel.data(0, "end") // earliestTime
-                var time
+            firstEvent = undefined
+            flickable1.contentX = 0
+            var temp = []
+            var tempTimeEvents = []
+            var tempTimeBreaks = []
+            if (ModelsSingleton.timeListModel.rowCount() > 0)
+                tempTimeEvents = getTimeRange(ModelsSingleton.timeListModel)
+            temp = tempTimeEvents
+            if (currentDayBreaksModel.rowCount() > 0)
+                tempTimeBreaks = getTimeRange(currentDayBreaksModel)
+            var firstEventTime = Functions.getHour(tempTimeEvents[0])
+            var lastEventTime = Functions.getHour(tempTimeEvents[tempTimeEvents.length - 1], true)
+            var earlierTime = []
+            var afterTime = []
+            for (var i = 0; i < tempTimeBreaks.length; i++) {
+                var breakTimeStart = Functions.getHour(tempTimeBreaks[i])
+                var breakTimeEnd = Functions.getHour(tempTimeBreaks[i], true)
+                if (breakTimeStart < firstEventTime)
+                    earlierTime.push(tempTimeBreaks[i])
+                if (breakTimeEnd > lastEventTime)
+                    afterTime.push(tempTimeBreaks[i])
+            }
+            temp = earlierTime.concat(temp)
+            temp = temp.concat(afterTime)
+            timeColumn.timeList = temp
+            if (!!firstEvent)
+                flickable1.contentX = Functions.countTrackPosition(firstEvent)
+        }
+    }
 
-                var timeHours
-                var earliestHours = Functions.getHour(earliestTime)
-                var latestHours = Functions.getHour(latestTime)
-
-                // Count here what is the first hour and last hour that needs to be shown in time listView
-                // for example 10.00 11.00 12.00 ... or 08.00 09.00 10.00
-                for (var i = 0; i < ModelsSingleton.timeListModel.rowCount(); i++) {
-
-                    time = ModelsSingleton.timeListModel.data(i, "start")
-                    timeHours = Functions.getHour(time)
-                    earliestHours = Functions.getHour(earliestTime)
-
-                    if (timeHours < earliestHours )
-                        earliestTime = time
-
-                    time = ModelsSingleton.timeListModel.data(i, "end")
-                    timeHours = Functions.getHour(time)
-                    var timeMinutes = Functions.getMinutes(time)
-                    if (timeMinutes > 0)
-                        timeHours = timeHours + 1
-                    latestHours = Functions.getHour(latestTime)
-                    if (timeHours > latestHours)
-                        latestTime = time
+    Item {
+        id: breakData
+        property real trackScrolling: 0
+        anchors.fill: rowLayout
+        Item {
+            id: breakColumn
+            anchors.top: parent.top
+            anchors.topMargin: Theme.sizes.dayLabelHeight
+            anchors.right: parent.right
+            height: Math.min(parent.height - Theme.sizes.dayLabelHeight,
+                             listView.contentHeight)
+            width: parent.width - Theme.sizes.trackHeaderWidth
+            Repeater {
+                id: breaks
+                model: currentDayBreaksModel
+                Rectangle {
+                    color: Theme.colors.smokewhite
+                    anchors.top: parent.top
+                    x: Functions.countTrackPosition(start) - breakData.trackScrolling
+                    width: Functions.countTrackWidth(start, end) - Theme.margins.five
+                    anchors.bottom: parent.bottom
+                    Text {
+                        anchors.centerIn: parent
+                        horizontalAlignment: Text.AlignHCenter
+                        font.pixelSize: 20
+                        text: name +  "\n" + Qt.formatTime(start, "hh:mm") + " - " + Qt.formatTime(end, "hh:mm")
+                        color: Theme.colors.gray
+                    }
                 }
-
-                var temp = []
-                var timeCount = Functions.getHour(latestTime) - Functions.getHour(earliestTime)
-                timeMinutes = Functions.getMinutes(latestTime)
-                if (timeMinutes > 0)
-                    timeCount = timeCount + 1
-                var hours = Functions.getHour(earliestTime)
-
-                for (var j = 0; j <= timeCount; j++) {
-                    var date = new Date
-                    date.setHours(hours + j)
-                    // HACK, ISOString ignores timezone offset, so add it to date
-                    date.setHours(date.getHours()+ date.getHours() - date.getUTCHours())
-                    date.setMinutes(0)
-                    temp.push(date.toISOString())
-                }
-                timeColumn.timeList = temp
             }
         }
     }
@@ -142,18 +227,18 @@ Item {
             TrackHeader {
                 id: trackHeader
                 model: currentDayTracksModel
-                anchors.margins: Theme.margins.five
             }
         }
+
         Flickable {
             id: flickable1
             height: rowLayout.height
             width: root.width
             clip: true
-            contentWidth: timeColumn.width + Theme.sizes.timeColumnWidth/3 // add some extra space to be able to scroll to the end
+            contentWidth: timeColumn.width
             flickableDirection: Flickable.HorizontalFlick
+            onContentXChanged: breakData.trackScrolling = flickable1.contentX
             Column {
-                anchors.fill: parent
                 spacing: 0
                 Row {
                     id: timeColumn
@@ -169,7 +254,6 @@ Item {
                                 id: repeaterText;
                                 anchors.verticalCenter: parent.verticalCenter
                                 anchors.left: parent.left
-                                anchors.leftMargin: Theme.margins.ten
                                 font.pointSize: Theme.fonts.seven_pt
                                 text: Qt.formatTime(timeColumn.timeList[index], "h:mm")
                             }
