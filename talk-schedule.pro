@@ -6,7 +6,7 @@
 
 TALK_SCHEDULE_BACKEND_ID = 53eb4610e5bde51bac007bb1
 
-QT += qml quick enginio svg
+QT += qml quick enginio svg xmlpatterns xml
 TARGET = talkschedule
 TEMPLATE = app
 SOURCES += src/main.cpp \

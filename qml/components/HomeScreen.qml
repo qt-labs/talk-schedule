@@ -39,6 +39,7 @@
 ****************************************************************************/
 
 import QtQuick 2.2
+import QtQuick.XmlListModel 2.0
 import TalkSchedule 1.0
 
 Rectangle {
@@ -75,9 +76,18 @@ Rectangle {
         }
         Rectangle {
             // news
-            // Todo: get RSS feed items
             width: window.width
             height:  window.height / 3
+
+            XmlListModel {
+                id: rssXmlModel
+                source: "http://feeds.feedburner.com/QtDD14-EUROPE"
+                query: "/rss/channel/item"
+
+                XmlRole { name: "title"; query: "title/string()" }
+                XmlRole { name: "description"; query: "description/string()" }
+            }
+
             Text {
                 id: labelNews
                 text: Theme.text.news
@@ -85,9 +95,16 @@ Rectangle {
                 horizontalAlignment: Text.AlignHCenter
                 font.capitalization: Font.AllUppercase
             }
-            Text {
+            ListView {
                 anchors.top: labelNews.bottom
-                text: "Lorem Ipsum"
+                model: rssXmlModel
+                delegate: Text {
+                    x: 10
+                    width: window.width - 20
+                    text: "<b>" + title + "</b>" + "\n" + description
+                    textFormat: Text.StyledText
+                    wrapMode: Text.Wrap
+                }
             }
         }
         Rectangle {
