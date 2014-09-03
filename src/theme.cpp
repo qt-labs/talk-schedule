@@ -71,7 +71,7 @@ Theme::Theme(QObject *parent)
     m_sizes = new QQmlPropertyMap(this);
     m_sizes->insert(QLatin1String("trackHeaderHeight"), QVariant(255));
     m_sizes->insert(QLatin1String("trackHeaderWidth"), QVariant(270));
-    m_sizes->insert(QLatin1String("timeColumnWidth"), QVariant(300));
+    m_sizes->insert(QLatin1String("timeColumnWidth"), QVariant(600));
     m_sizes->insert(QLatin1String("conferenceHeaderHeight"), QVariant(158));
     m_sizes->insert(QLatin1String("dayWidth"), QVariant(150));
     m_sizes->insert(QLatin1String("favoriteImageHeight"), QVariant(76));
@@ -93,6 +93,13 @@ Theme::Theme(QObject *parent)
     m_images->insert(QLatin1String("logo"), QVariant("qrc:/images/DevDaysLogo.svg"));
     m_images->insert(QLatin1String("favorite"), QVariant("qrc:/images/StarSelected.svg"));
     m_images->insert(QLatin1String("notFavorite"), QVariant("qrc:/images/Star.svg"));
+
+    m_fonts = new QQmlPropertyMap(this);
+    m_fonts->insert(QLatin1String("six_pt"), QVariant(8));
+    m_fonts->insert(QLatin1String("seven_pt"), QVariant(9));
+    m_fonts->insert(QLatin1String("eight_pt"), QVariant(10));
+    m_fonts->insert(QLatin1String("ten_pt"), QVariant(12));
+    m_fonts->insert(QLatin1String("twelve_pt"), QVariant(14));
 }
 
 int Theme::trackWidthDivider() const

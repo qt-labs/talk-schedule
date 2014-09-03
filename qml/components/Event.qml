@@ -88,7 +88,7 @@ Rectangle {
                 text: model.data(indexCurrentEvent, "topic")
                 color: Theme.colors.black
                 width: columnLayout.width
-                font.pixelSize: 32
+                font.pointSize: Theme.fonts.twelve_pt
                 maximumLineCount: 2
                 wrapMode: Text.Wrap
                 elide: Text.ElideRight
@@ -96,7 +96,7 @@ Rectangle {
             Label {
                 id: eventPerformers
                 text: model.data(indexCurrentEvent, "performer")
-                font.pixelSize: 20
+                font.pointSize: Theme.fonts.seven_pt
                 font.capitalization: Font.AllUppercase
                 color: Theme.colors.gray
             }
@@ -108,7 +108,7 @@ Rectangle {
             Label {
                 id: eventIntro
                 text: model.data(indexCurrentEvent, "intro")
-                font.pixelSize: 19
+                font.pointSize: Theme.fonts.seven_pt
                 width: parent.width
                 wrapMode: Text.WordWrap
                 elide: Text.ElideRight
@@ -121,7 +121,7 @@ Rectangle {
             Label {
                 id: eventTags
                 text: model.data(indexCurrentEvent, "tags")
-                font.pixelSize: 19
+                font.pointSize: Theme.fonts.seven_pt
                 color: Theme.colors.green
             }
         }
@@ -149,7 +149,7 @@ Rectangle {
                 anchors.margins: 10
                 text: track.name
                 color: track.fontColor
-                font.pixelSize: 20
+                font.pointSize: Theme.fonts.six_pt
                 horizontalAlignment: Text.AlignLeft
                 verticalAlignment: Text.AlignVCenter
                 font.capitalization: Font.AllUppercase
@@ -168,13 +168,13 @@ Rectangle {
                     height: parent.height
                     text: Qt.formatTime(model.data(indexCurrentEvent, "start"), "hh:mm") + " - " + Qt.formatTime(model.data(indexCurrentEvent, "end"), "hh:mm")
                     color: Theme.colors.gray
-                    font.pixelSize: 20
+                    font.pointSize: Theme.fonts.seven_pt
                 }
                 Label {
                     text: model.data(indexCurrentEvent, "location")
                     height: parent.height
                     color: Theme.colors.darkgray
-                    font.pixelSize: 20
+                    font.pointSize: Theme.fonts.seven_pt
                 }
                 Item {
                     Layout.alignment: Qt.AlignRight

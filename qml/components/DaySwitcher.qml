@@ -64,7 +64,7 @@ Rectangle {
             text: ModelsSingleton.conferenceLocation
             verticalAlignment: Text.AlignVCenter
             horizontalAlignment: Text.AlignHCenter
-            font.pointSize: 14
+            font.pointSize: Theme.fonts.seven_pt
             font.capitalization: Font.AllUppercase
             color: Theme.colors.black
             Layout.fillWidth: false
@@ -76,7 +76,7 @@ Rectangle {
                 id: label
                 property bool isDivider: Functions.isEvenNumber(index)
                 property string currentDayId: isDivider ? "invalid" : dayModel.get((index-1)/2, "id")
-                font.pointSize: 14
+                font.pointSize: Theme.fonts.seven_pt
                 text: isDivider ? "|" : Qt.formatDate(dayModel.get((index-1)/2, "date"), "ddd dd.MM")
                 font.capitalization: Font.AllUppercase
                 font.weight: dayId === currentDayId ? Font.DemiBold : Font.Normal

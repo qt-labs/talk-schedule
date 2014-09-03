@@ -60,7 +60,7 @@ Rectangle {
         anchors.leftMargin: 10
         verticalAlignment: Text.AlignVCenter
         text: isDayLabelVisible ? Qt.formatDate(start, "dddd dd.MM.yyyy") : ""
-        font.pixelSize: 20
+        font.pointSize: Theme.fonts.seven_pt
         font.capitalization: Font.AllUppercase
     }
     RowLayout {
@@ -70,8 +70,8 @@ Rectangle {
         anchors.top: dayLabel.bottom
         Rectangle {
             id: trackHeader
-            height: Theme.sizes.trackHeaderHeight
-            width: Theme.sizes.trackHeaderWidth
+            Layout.preferredHeight: Theme.sizes.trackHeaderHeight
+            Layout.preferredWidth: Theme.sizes.trackHeaderWidth
             color: tracks.backgroundColor
 
             Text {
@@ -80,7 +80,7 @@ Rectangle {
                 text: tracks.name
                 color: tracks.fontColor
                 fontSizeMode: Text.Fit
-                font.pixelSize: 20
+                font.pointSize: Theme.fonts.six_pt
                 horizontalAlignment: Text.AlignLeft
                 verticalAlignment: Text.AlignVCenter
                 font.capitalization: Font.AllUppercase
@@ -88,10 +88,9 @@ Rectangle {
             }
         }
         Rectangle {
-            Layout.fillWidth: true
             color: Theme.colors.smokewhite
-            height: parent.height
-            width: parent.width
+            Layout.preferredHeight: Theme.sizes.trackHeaderHeight
+            Layout.fillWidth: true
 
             ColumnLayout {
                 id: eventColumn
@@ -101,14 +100,15 @@ Rectangle {
                 // For some reason word wrap does not work correctly
                 // if Text not inside Item
                 Item {
-                    width: textTopic.implicitWidth
-                    height: 50
+                    Layout.preferredWidth: parent.width
+                    Layout.fillWidth: true
+                    Layout.preferredHeight: textTopic.implicitHeight
                     Text {
                         id: textTopic
                         text: topic
                         color: Theme.colors.black
                         width: parent.width
-                        font.pixelSize: 25
+                        font.pointSize: Theme.fonts.eight_pt
                         maximumLineCount: 2
                         elide: Text.ElideRight
                         wrapMode: Text.WordWrap
@@ -117,30 +117,29 @@ Rectangle {
                 Text {
                     text: performer
                     color: Theme.colors.gray
-                    width: parent.width - 20
-                    font.pixelSize: 14
+                    Layout.preferredWidth: parent.width - 20
+                    font.pointSize: Theme.fonts.seven_pt
                     font.capitalization: Font.AllUppercase
                     maximumLineCount: 1
                 }
                 RowLayout {
-                    anchors.left: parent.left
-                    anchors.right: parent.right
+                    Layout.fillWidth: true
                     Text {
                         text: Qt.formatTime(start, "h:mm") + " - " + Qt.formatTime(end, "h:mm")
                         color: Theme.colors.gray
-                        font.pixelSize: 14
+                        font.pointSize: Theme.fonts.seven_pt
                     }
                     Text {
                         text: " I "
                         color: Theme.colors.gray
-                        font.pixelSize: 14
+                        font.pointSize: Theme.fonts.seven_pt
                         font.capitalization: Font.AllUppercase
                     }
                     Text {
                         text: location
                         Layout.fillWidth: true
-                        color: Theme.colors.gray
-                        font.pixelSize: 14
+                        color: Theme.colors.darkgray
+                        font.pointSize: Theme.fonts.seven_pt
                         font.capitalization: Font.AllUppercase
                         maximumLineCount: 1
                         wrapMode: Text.WrapAnywhere

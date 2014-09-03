@@ -133,7 +133,7 @@ Row {
                                     text: getData("topic")
                                     color: Theme.colors.black
                                     width: columnLayout.width
-                                    font.pixelSize: 25
+                                    font.pointSize: Theme.fonts.eight_pt
                                     maximumLineCount: 2
                                     wrapMode: Text.Wrap
                                     elide: Text.ElideRight
@@ -143,7 +143,7 @@ Row {
                                 text: getData("performer")
                                 color: Theme.colors.gray
                                 width: colorBackground.width - 20
-                                font.pixelSize: 14
+                                font.pointSize: Theme.fonts.seven_pt
                                 font.capitalization: Font.AllUppercase
                                 maximumLineCount: 1
                             }
@@ -154,7 +154,7 @@ Row {
                                     width: columnLayout.width - favoriteImage.width
                                     text: Qt.formatTime(getData("start"), "h:mm") + " - " + Qt.formatTime(getData("end"), "h:mm") + " I " + getData("location")
                                     color: Theme.colors.gray
-                                    font.pixelSize: 14
+                                    font.pointSize: Theme.fonts.seven_pt
                                     font.capitalization: Font.AllUppercase
                                     maximumLineCount: 3
                                     wrapMode: Text.WordWrap

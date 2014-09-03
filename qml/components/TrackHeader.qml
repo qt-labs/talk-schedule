@@ -78,7 +78,7 @@ ListView {
                 anchors.margins: 10
                 text: name
                 color: fontColor
-                font.pixelSize: 20
+                font.pointSize: Theme.fonts.six_pt
                 horizontalAlignment: Text.AlignLeft
                 verticalAlignment: Text.AlignVCenter
                 wrapMode: Text.WordWrap

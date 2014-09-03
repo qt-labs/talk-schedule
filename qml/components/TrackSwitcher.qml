@@ -169,7 +169,7 @@ Item {
                                 anchors.verticalCenter: parent.verticalCenter
                                 anchors.left: parent.left
                                 anchors.leftMargin: 10
-                                font.pixelSize: 25
+                                font.pointSize: Theme.fonts.seven_pt
                                 text: Qt.formatTime(timeColumn.timeList[index], "h:mm")
                             }
                         }
