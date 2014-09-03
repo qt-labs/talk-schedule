@@ -45,7 +45,6 @@
 
 Theme::Theme(QObject *parent)
     : QObject(parent)
-    , m_trackWidthDivider(400)
 {
     m_text = new QQmlPropertyMap(this);
     m_text->insert(QLatin1String("home"), tr("Home"));
@@ -100,9 +99,4 @@ Theme::Theme(QObject *parent)
     m_fonts->insert(QLatin1String("eight_pt"), QVariant(10));
     m_fonts->insert(QLatin1String("ten_pt"), QVariant(12));
     m_fonts->insert(QLatin1String("twelve_pt"), QVariant(14));
-}
-
-int Theme::trackWidthDivider() const
-{
-    return m_trackWidthDivider;
 }

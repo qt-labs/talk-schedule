@@ -47,7 +47,6 @@
 class Theme : public QObject
 {
     Q_OBJECT
-    Q_PROPERTY(int trackWidthDivider READ trackWidthDivider CONSTANT)
     Q_PROPERTY(QObject *text READ text CONSTANT)
     Q_PROPERTY(QObject *colors READ colors CONSTANT)
     Q_PROPERTY(QObject *sizes READ sizes CONSTANT)
@@ -65,7 +64,6 @@ public:
     QQmlPropertyMap *fonts() const { return m_fonts; }
 
 private:
-    int m_trackWidthDivider;
     QQmlPropertyMap *m_text;
     QQmlPropertyMap *m_colors;
     QQmlPropertyMap *m_sizes;
