@@ -104,6 +104,7 @@ Rectangle {
                     text: "<b>" + title + "</b>" + "\n" + description
                     textFormat: Text.StyledText
                     wrapMode: Text.Wrap
+                    onLinkActivated: Qt.openUrlExternally(link)
                 }
             }
         }
@@ -121,7 +122,9 @@ Rectangle {
             }
             Text {
                 anchors.top: labelInfo.bottom
-                text: "Lorem Ipsum"
+                textFormat: Text.StyledText
+                text: "<a href='https://www.qtdeveloperdays.com/europe/europe-exhibit-hall-info'><b>Venue, Accommodation and Useful Info</b></a>"
+                onLinkActivated: Qt.openUrlExternally(link)
             }
         }
     }
