@@ -60,4 +60,11 @@ Rectangle {
         font.capitalization: Font.AllUppercase
         color: Theme.colors.black
     }
+
+    Rectangle {
+        color: Qt.lighter(parent.color, 1.2)
+        height: 1
+        anchors.bottom: parent.bottom
+        width: parent.width
+    }
 }
