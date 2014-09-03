@@ -91,7 +91,7 @@ Row {
 
                         Rectangle {
                             id: colorBackground
-                            anchors { fill: parent; leftMargin: 5; rightMargin: 5; bottomMargin: 5 }
+                            anchors { fill: parent; rightMargin: Theme.margins.five; bottomMargin: Theme.margins.five }
                             color: Theme.colors.smokewhite
                         }
                         Item {
@@ -99,14 +99,16 @@ Row {
                             id: imageArea
                             anchors.bottom: colorBackground.bottom
                             anchors.right: colorBackground.right
-                            width: Theme.sizes.favoriteImageWidth + 20
-                            height: Theme.sizes.favoriteImageHeight + 20
+                            width: Theme.sizes.favoriteImageWidth + Theme.margins.twenty
+                            height: Theme.sizes.favoriteImageHeight + Theme.margins.twenty
                             Image {
                                 id: favoriteImage
                                 anchors.centerIn: parent
                                 source: favorite ? Theme.images.favorite : Theme.images.notFavorite
                                 width: Theme.sizes.favoriteImageWidth
                                 height: Theme.sizes.favoriteImageHeight
+                                sourceSize.height: Theme.sizes.favoriteImageHeight
+                                sourceSize.width: Theme.sizes.favoriteImageWidth
                             }
                             MouseArea {
                                 anchors.fill: parent
@@ -124,11 +126,11 @@ Row {
                             id: columnLayout
                             anchors.fill: colorBackground
                             height: trackDelegate.trackHeight
-                            anchors.leftMargin: 10
-                            anchors.rightMargin: 10
+                            anchors.leftMargin: Theme.margins.ten
+                            anchors.rightMargin: Theme.margins.ten
                             Item {
                                 width: columnLayout.width
-                                height: 50
+                                height: Theme.sizes.trackFieldHeight
                                 Text {
                                     text: getData("topic")
                                     color: Theme.colors.black
@@ -142,20 +144,18 @@ Row {
                             Text {
                                 text: getData("performer")
                                 color: Theme.colors.gray
-                                width: colorBackground.width - 20
+                                width: colorBackground.width - Theme.margins.twenty
                                 font.pointSize: Theme.fonts.seven_pt
-                                font.capitalization: Font.AllUppercase
                                 maximumLineCount: 1
                             }
                             Item {
                                 width: columnLayout.width
-                                height: 50
+                                height: Theme.sizes.trackFieldHeight
                                 Text {
                                     width: columnLayout.width - favoriteImage.width
                                     text: Qt.formatTime(getData("start"), "h:mm") + " - " + Qt.formatTime(getData("end"), "h:mm") + " I " + getData("location")
                                     color: Theme.colors.gray
                                     font.pointSize: Theme.fonts.seven_pt
-                                    font.capitalization: Font.AllUppercase
                                     maximumLineCount: 3
                                     wrapMode: Text.WordWrap
                                 }

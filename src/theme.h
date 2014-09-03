@@ -52,16 +52,20 @@ class Theme : public QObject
     Q_PROPERTY(QObject *sizes READ sizes CONSTANT)
     Q_PROPERTY(QObject *images READ images CONSTANT)
     Q_PROPERTY(QObject *fonts READ fonts CONSTANT)
+    Q_PROPERTY(QObject *margins READ margins CONSTANT)
 
 public:
     explicit Theme(QObject *parent = 0);
 
-    int trackWidthDivider() const;
     QQmlPropertyMap *text() const { return m_text; }
     QQmlPropertyMap *colors() const { return m_colors; }
     QQmlPropertyMap *sizes() const { return m_sizes; }
     QQmlPropertyMap *images() const { return m_images; }
     QQmlPropertyMap *fonts() const { return m_fonts; }
+    QQmlPropertyMap *margins() const { return m_margins; }
+
+    int applyFontRatio(const int value);
+    Q_INVOKABLE int applyRatio(const int value);
 
 private:
     QQmlPropertyMap *m_text;
@@ -69,6 +73,8 @@ private:
     QQmlPropertyMap *m_sizes;
     QQmlPropertyMap *m_images;
     QQmlPropertyMap *m_fonts;
+    QQmlPropertyMap *m_margins;
+    qreal m_ratioFont, m_ratio;
 };
 
 #endif // APPLICATIONINFO_H

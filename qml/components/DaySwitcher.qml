@@ -48,7 +48,7 @@ Rectangle {
     id: topSwitcher
     property string dayId
     property int daysCount: 0
-    property int margins: 30
+    property int margins: Theme.margins.thirty
     color: Theme.colors.smokewhite
 
     GridLayout {
@@ -58,7 +58,7 @@ Rectangle {
         anchors.rightMargin: margins
         columns: daysCount * 2 + 3
         rows: 2
-        Item { Layout.fillWidth: true; width: 5; Layout.preferredHeight: 1 }
+        Item { Layout.fillWidth: true; width:Theme.margins.five; Layout.preferredHeight: 1 }
         Label {
             id: locationLabel
             text: ModelsSingleton.conferenceLocation
@@ -94,18 +94,18 @@ Rectangle {
                 Layout.alignment: Text.AlignVCenter | Text.AlignHCenter
             }
         }
-        Item { Layout.fillWidth: true; width: 5; Layout.preferredHeight: 1 }
-        Item { Layout.fillWidth: true; width: 5; Layout.preferredHeight: 1 }
+        Item { Layout.fillWidth: true; width: Theme.margins.five; Layout.preferredHeight: 1 }
+        Item { Layout.fillWidth: true; width: Theme.margins.five; Layout.preferredHeight: 1 }
         Repeater {
             model: daysCount * 2 + 1
             Item {
                 property bool isDivider: !Functions.isEvenNumber(index)
                 property int expectedWidth: Theme.sizes.dayWidth
-                Layout.preferredWidth: isDivider ? 5 : (index === 0 ) ?  expectedWidth/2 : expectedWidth
+                Layout.preferredWidth: isDivider ? Theme.margins.five : (index === 0 ) ?  expectedWidth/2 : expectedWidth
                 Layout.preferredHeight: 1
             }
         }
-        Item { Layout.fillWidth: true; width: 5; Layout.preferredHeight: 1 }
+        Item { Layout.fillWidth: true; width: Theme.margins.five; Layout.preferredHeight: 1 }
     }
 
     SortFilterModel {

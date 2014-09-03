@@ -136,12 +136,12 @@ Item {
             // Add this empty item so track won't overlap with time line
             Item {
                 height: Theme.sizes.dayLabelHeight
-                width: 100
+                width: Theme.margins.ten
             }
             TrackHeader {
                 id: trackHeader
                 model: currentDayTracksModel
-                anchors.margins: 5
+                anchors.margins: Theme.margins.five
             }
         }
         Flickable {
@@ -168,7 +168,7 @@ Item {
                                 id: repeaterText;
                                 anchors.verticalCenter: parent.verticalCenter
                                 anchors.left: parent.left
-                                anchors.leftMargin: 10
+                                anchors.leftMargin: Theme.margins.ten
                                 font.pointSize: Theme.fonts.seven_pt
                                 text: Qt.formatTime(timeColumn.timeList[index], "h:mm")
                             }

@@ -47,7 +47,7 @@ import TalkSchedule 1.0
 Item {
     height: window.height
     width: window.width
-    anchors.margins: 10
+    anchors.margins: Theme.margins.ten
 
     SubTitle {
         id: subTitle
@@ -67,7 +67,7 @@ Item {
                 anchors.fill: parent
                 font.family: "OpenSans"
                 text: "Write your comments here"
-                textMargin: 10
+                textMargin: Theme.margins.ten
                 wrapMode: TextEdit.Wrap
                 onFocusChanged: text = ""
             }
@@ -75,8 +75,8 @@ Item {
 
         Row {
             Item {
-                width: 20
-                height: 30
+                width: Theme.margins.twenty
+                height: Theme.margins.thirty
             }
 
             Button {
@@ -95,7 +95,7 @@ Item {
 
             Item {
                 width: window.width / 7
-                height: 30
+                height: Theme.margins.thirty
             }
 
             Button {

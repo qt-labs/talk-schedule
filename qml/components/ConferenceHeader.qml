@@ -58,7 +58,7 @@ Item {
             anchors.left: parent.left
             anchors.right: parent.right
             height: topicRect.height
-            anchors.margins: 10
+            anchors.margins: Theme.margins.ten
             MouseArea {
                 enabled: stack.depth > 1
                 Layout.preferredHeight: topicRect.height
@@ -68,11 +68,13 @@ Item {
                     id: backButton
                     anchors.left: parent.left
                     anchors.verticalCenter: parent.verticalCenter
-                    anchors.leftMargin: 20
+                    anchors.leftMargin: Theme.margins.twenty
                     opacity: stack.depth > 1 ? 1 : 0
                     Behavior on opacity { PropertyAnimation{} }
                     height: Theme.sizes.backHeight
                     width: Theme.sizes.backWidth
+                    sourceSize.height: Theme.sizes.backHeight
+                    sourceSize.width: Theme.sizes.backWidth
                     source: Theme.images.back
                 }
             }
@@ -81,6 +83,8 @@ Item {
                 Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
                 Layout.preferredHeight: Theme.sizes.logoHeight
                 Layout.preferredWidth: Theme.sizes.logoWidth
+                sourceSize.height: Theme.sizes.logoHeight
+                sourceSize.width: Theme.sizes.logoWidth
                 source: Theme.images.logo
             }
             Item {
@@ -156,6 +160,8 @@ Item {
                     height: Theme.sizes.menuHeight
                     width: Theme.sizes.menuWidth
                     source: Theme.images.menu
+                    sourceSize.height: Theme.sizes.menuHeight
+                    sourceSize.width: Theme.sizes.menuWidth
                 }
             }
         }

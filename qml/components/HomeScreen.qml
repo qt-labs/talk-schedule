@@ -60,9 +60,9 @@ Rectangle {
                 id: labelUpcoming
                 text: Theme.text.upcoming
                 width: parent.width
-                height: Theme.sizes.titleHeight
+                height: Theme.sizes.homeTitleHeight
                 z: 1
-                font.pointSize: 12 // Theme.fonts.seven_pt
+                font.pointSize: Theme.fonts.seven_pt
                 horizontalAlignment: Text.AlignHCenter
                 verticalAlignment: Text.AlignVCenter
                 font.capitalization: Font.AllUppercase
@@ -78,7 +78,7 @@ Rectangle {
                 anchors.bottom: parent.bottom
                 anchors.right: parent.right
                 anchors.left: parent.left
-                anchors.margins: 10
+                anchors.margins: Theme.margins.ten
                 clip: true
                 model: SortFilterModel {
                     id: sortModel
@@ -93,17 +93,19 @@ Rectangle {
                         Layout.fillWidth: true
                         Layout.preferredHeight: Theme.sizes.upcomingEventHeight
                         Text {
-                            text: Qt.formatDate(start, "ddd") + " " + Qt.formatTime(start, "h:mm")
+                            text: Qt.formatDate(start, "ddd") + " " + Qt.formatTime(start, "hh:mm")
                             Layout.fillHeight: true
                             Layout.preferredWidth: Theme.sizes.upcomingEventTimeWidth
                             verticalAlignment: Text.AlignVCenter
                             horizontalAlignment: Text.AlignLeft
+                            font.pointSize: Theme.fonts.seven_pt
                         }
                         Text {
                             text: topic + " in " + location
                             Layout.fillHeight: true
                             Layout.fillWidth: true
                             verticalAlignment: Text.AlignVCenter
+                            font.pointSize: Theme.fonts.seven_pt
                             elide: Text.ElideRight
                             MouseArea {
                                 anchors.fill: parent
@@ -138,8 +140,8 @@ Rectangle {
                 z: 1
                 text: Theme.text.news
                 width: parent.width
-                height: Theme.sizes.titleHeight
-                font.pointSize: 12 // Theme.fonts.seven_pt
+                height: Theme.sizes.homeTitleHeight
+                font.pointSize: Theme.fonts.seven_pt
                 horizontalAlignment: Text.AlignHCenter
                 verticalAlignment: Text.AlignVCenter
                 font.capitalization: Font.AllUppercase
@@ -155,15 +157,16 @@ Rectangle {
                 anchors.left: parent.left
                 anchors.right: parent.right
                 anchors.bottom: parent.bottom
-                anchors.margins: 10
+                anchors.margins: Theme.margins.ten
                 model: rssXmlModel
                 clip: true
                 delegate: Text {
-                    width: window.width - 20
+                    width: window.width - Theme.margins.twenty
                     text: "<b>" + title + "</b>" + "\n" + description
                     textFormat: Text.StyledText
                     wrapMode: Text.Wrap
                     onLinkActivated: Qt.openUrlExternally(link)
+                    font.pointSize: Theme.fonts.seven_pt
                 }
             }
         }
@@ -177,8 +180,8 @@ Rectangle {
                 z: 1
                 text: Theme.text.info
                 width: parent.width
-                height: Theme.sizes.titleHeight
-                font.pointSize: 12 // Theme.fonts.seven_pt
+                height: Theme.sizes.homeTitleHeight
+                font.pointSize: Theme.fonts.seven_pt
                 horizontalAlignment: Text.AlignHCenter
                 verticalAlignment: Text.AlignVCenter
                 font.capitalization: Font.AllUppercase
@@ -194,8 +197,9 @@ Rectangle {
                 anchors.left: parent.left
                 anchors.right: parent.right
                 anchors.bottom: parent.bottom
-                anchors.margins: 10
+                anchors.margins: Theme.margins.ten
                 textFormat: Text.StyledText
+                font.pointSize: Theme.fonts.seven_pt
                 text: "<a href='https://www.qtdeveloperdays.com/europe/europe-exhibit-hall-info'><b>Venue, Accommodation and Useful Info</b></a>"
                 onLinkActivated: Qt.openUrlExternally(link)
             }

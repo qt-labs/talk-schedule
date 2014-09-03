@@ -63,7 +63,7 @@ ListView {
             dayId: id
         }
 
-        height: !dayTracksModel.isEmpty ? trackHeight * ( dayTracksModel.numberCollidingEvents + 1 ) : 0
+        height: !dayTracksModel.isEmpty ? trackHeight * ( dayTracksModel.numberCollidingEvents + 1 ): 0
         width: Theme.sizes.trackHeaderWidth
         visible: !dayTracksModel.isEmpty
 
@@ -71,11 +71,11 @@ ListView {
             id: trackHeader
             anchors.fill: parent
             color: backgroundColor
-            anchors.rightMargin: 5
-            anchors.bottomMargin: 5
+            anchors.rightMargin: Theme.margins.five
+            anchors.bottomMargin: Theme.margins.five
             Text {
                 anchors.fill: parent
-                anchors.margins: 10
+                anchors.margins: Theme.margins.ten
                 text: name
                 color: fontColor
                 font.pointSize: Theme.fonts.six_pt

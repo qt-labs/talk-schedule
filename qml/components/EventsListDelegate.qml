@@ -46,7 +46,7 @@ import QtQuick.Controls 1.1
 Rectangle {
     id: delegateItem
     property bool isDayLabelVisible: isSameDay()
-    property int labelHeight: isDayLabelVisible ? Theme.sizes.dayLabelHeight : 5
+    property int labelHeight: isDayLabelVisible ? Theme.sizes.dayLabelHeight : 0
     property var viewSortModel: ListView.view.model
     color: Theme.colors.white
 
@@ -57,17 +57,23 @@ Rectangle {
         height: labelHeight
         anchors.left: parent.left
         anchors.right: parent.right
-        anchors.leftMargin: 10
+        anchors.leftMargin: Theme.margins.ten
         verticalAlignment: Text.AlignVCenter
         text: isDayLabelVisible ? Qt.formatDate(start, "dddd dd.MM.yyyy") : ""
         font.pointSize: Theme.fonts.seven_pt
         font.capitalization: Font.AllUppercase
     }
+    Item {
+        id: divider
+        width: parent.width
+        height: isDayLabelVisible ? 0 : Theme.margins.five
+    }
     RowLayout {
         id: rowLayout
         height: Theme.sizes.trackHeaderHeight
         width: parent.width
-        anchors.top: dayLabel.bottom
+        anchors.top: isDayLabelVisible ? dayLabel.bottom : divider.bottom
+        spacing: Theme.margins.five
         Rectangle {
             id: trackHeader
             Layout.preferredHeight: Theme.sizes.trackHeaderHeight
@@ -76,7 +82,7 @@ Rectangle {
 
             Text {
                 anchors.fill: parent
-                anchors.margins: 10
+                anchors.margins: Theme.margins.ten
                 text: tracks.name
                 color: tracks.fontColor
                 fontSizeMode: Text.Fit
@@ -95,7 +101,7 @@ Rectangle {
             ColumnLayout {
                 id: eventColumn
                 anchors.fill: parent
-                anchors.margins: 20
+                anchors.margins: Theme.margins.twenty
 
                 // For some reason word wrap does not work correctly
                 // if Text not inside Item
@@ -117,9 +123,8 @@ Rectangle {
                 Text {
                     text: performer
                     color: Theme.colors.gray
-                    Layout.preferredWidth: parent.width - 20
+                    Layout.preferredWidth: parent.width - Theme.margins.twenty
                     font.pointSize: Theme.fonts.seven_pt
-                    font.capitalization: Font.AllUppercase
                     maximumLineCount: 1
                 }
                 RowLayout {
@@ -140,7 +145,6 @@ Rectangle {
                         Layout.fillWidth: true
                         color: Theme.colors.darkgray
                         font.pointSize: Theme.fonts.seven_pt
-                        font.capitalization: Font.AllUppercase
                         maximumLineCount: 1
                         wrapMode: Text.WrapAnywhere
                         elide: Text.ElideRight
@@ -155,14 +159,16 @@ Rectangle {
         id: imageArea
         anchors.bottom: rowLayout.bottom
         anchors.right: rowLayout.right
-        width: Theme.sizes.favoriteImageWidth + 20
-        height: Theme.sizes.favoriteImageHeight + 20
+        width: Theme.sizes.favoriteImageWidth + Theme.margins.twenty
+        height: Theme.sizes.favoriteImageHeight + Theme.margins.twenty
         Image {
             id: favoriteImage
             anchors.centerIn: parent
             source: favorite ? Theme.images.favorite : Theme.images.notFavorite
             width: Theme.sizes.favoriteImageWidth
             height: Theme.sizes.favoriteImageHeight
+            sourceSize.height: Theme.sizes.favoriteImageHeight
+            sourceSize.width: Theme.sizes.favoriteImageWidth
         }
         MouseArea {
             anchors.fill: parent

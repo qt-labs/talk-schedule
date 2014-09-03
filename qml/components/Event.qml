@@ -71,10 +71,10 @@ Rectangle {
         anchors.bottom: statusBar.top
         anchors.left: subTitle.left
         anchors.right: subTitle.right
-        anchors.topMargin: 20
-        anchors.bottomMargin: 5
-        anchors.leftMargin: 10
-        anchors.rightMargin: 10
+        anchors.topMargin: Theme.margins.twenty
+        anchors.bottomMargin: Theme.margins.five
+        anchors.leftMargin: Theme.margins.ten
+        anchors.rightMargin: Theme.margins.ten
         interactive: true
         flickableDirection: Flickable.VerticalFlick
         boundsBehavior: Flickable.StopAtBounds
@@ -83,7 +83,7 @@ Rectangle {
         Column {
             id: columnLayout
             width: parent.width
-            spacing: 10
+            spacing: Theme.margins.ten
             Text {
                 text: model.data(indexCurrentEvent, "topic")
                 color: Theme.colors.black
@@ -102,8 +102,8 @@ Rectangle {
             }
             Item {
                 id: separator
-                height: 10
-                width: 100
+                height: Theme.margins.ten
+                width: parent.width
             }
             Label {
                 id: eventIntro
@@ -115,8 +115,8 @@ Rectangle {
                 color: Theme.colors.gray
             }
             Item {
-                height: 10
-                width: 100
+                height: Theme.margins.ten
+                width: parent.width
             }
             Label {
                 id: eventTags
@@ -129,7 +129,6 @@ Rectangle {
         MouseArea {
             anchors.fill: parent
             onClicked: stack.pop()
-
         }
     }
 
@@ -138,7 +137,7 @@ Rectangle {
         anchors.bottom: eventView.bottom
         width: eventView.width
         height: Theme.sizes.trackHeaderHeight
-        spacing: 5
+        spacing: Theme.margins.five
         Rectangle {
             id: trackSquare
             Layout.preferredHeight: Theme.sizes.trackHeaderHeight
@@ -146,7 +145,7 @@ Rectangle {
             color: track.backgroundColor
             Text {
                 anchors.fill: parent
-                anchors.margins: 10
+                anchors.margins: Theme.margins.ten
                 text: track.name
                 color: track.fontColor
                 font.pointSize: Theme.fonts.six_pt
@@ -156,14 +155,13 @@ Rectangle {
             }
         }
         Rectangle {
-
             Layout.fillWidth: true
             color: Theme.colors.smokewhite
             height: statusBar.height
             RowLayout {
                 id: statusBar2
                 anchors.fill: parent
-                anchors.leftMargin: 10
+                anchors.leftMargin: Theme.margins.ten
                 Label {
                     height: parent.height
                     text: Qt.formatTime(model.data(indexCurrentEvent, "start"), "hh:mm") + " - " + Qt.formatTime(model.data(indexCurrentEvent, "end"), "hh:mm")
@@ -186,6 +184,8 @@ Rectangle {
                         source: favorite ? Theme.images.favorite : Theme.images.notFavorite
                         width: Theme.sizes.favoriteImageWidth
                         height: Theme.sizes.favoriteImageHeight
+                        sourceSize.height: Theme.sizes.favoriteImageHeight
+                        sourceSize.width: Theme.sizes.favoriteImageWidth
                     }
                     MouseArea {
                         anchors.fill: parent

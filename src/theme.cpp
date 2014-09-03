@@ -46,6 +46,30 @@
 Theme::Theme(QObject *parent)
     : QObject(parent)
 {
+    // Reference values from the Nexus 5
+    qreal refDpi = 216.;
+    qreal refHeight = 1776.;
+    qreal refWidth = 1080.;
+    QRect rect = qApp->primaryScreen()->geometry();
+    qreal height = qMax(rect.width(), rect.height());
+    qreal width = qMin(rect.width(), rect.height());
+    qreal dpi = qApp->primaryScreen()->logicalDotsPerInch();
+    m_ratio = qMin(height/refHeight, width/refWidth);
+    m_ratioFont = qMin(height*refDpi/(dpi*refHeight), width*refDpi/(dpi*refWidth));
+
+    int tempTimeColumnWidth = 600;
+    int tempTrackHeaderWidth = 270;
+    // check if the font size is acceptable
+    if (m_ratioFont < 1.) {
+        m_ratioFont = 1;
+        // check if sizes are acceptable
+        int margins = applyRatio(30);
+        int tempWidthContent = applyRatio(tempTimeColumnWidth) + applyRatio(tempTrackHeaderWidth) + margins;
+        qreal tempRatio = tempWidthContent / width;
+        if (tempRatio < 1)
+            m_ratio /= tempRatio;
+    }
+
     m_text = new QQmlPropertyMap(this);
     m_text->insert(QLatin1String("home"), tr("Home"));
     m_text->insert(QLatin1String("schedule"), tr("Schedule"));
@@ -68,23 +92,25 @@ Theme::Theme(QObject *parent)
     m_colors->insert(QLatin1String("black"), QVariant("#000000"));
 
     m_sizes = new QQmlPropertyMap(this);
-    m_sizes->insert(QLatin1String("trackHeaderHeight"), QVariant(255));
-    m_sizes->insert(QLatin1String("trackHeaderWidth"), QVariant(270));
-    m_sizes->insert(QLatin1String("timeColumnWidth"), QVariant(600));
-    m_sizes->insert(QLatin1String("conferenceHeaderHeight"), QVariant(158));
-    m_sizes->insert(QLatin1String("dayWidth"), QVariant(150));
-    m_sizes->insert(QLatin1String("favoriteImageHeight"), QVariant(76));
-    m_sizes->insert(QLatin1String("favoriteImageWidth"), QVariant(80));
-    m_sizes->insert(QLatin1String("titleHeight"), QVariant(60));
-    m_sizes->insert(QLatin1String("backHeight"), QVariant(74));
-    m_sizes->insert(QLatin1String("backWidth"), QVariant(42));
-    m_sizes->insert(QLatin1String("logoHeight"), QVariant(100));
-    m_sizes->insert(QLatin1String("logoWidth"), QVariant(286));
-    m_sizes->insert(QLatin1String("menuHeight"), QVariant(62));
-    m_sizes->insert(QLatin1String("menuWidth"), QVariant(78));
-    m_sizes->insert(QLatin1String("dayLabelHeight"), QVariant(40));
-    m_sizes->insert(QLatin1String("upcomingEventHeight"), QVariant(45));
-    m_sizes->insert(QLatin1String("upcomingEventTimeWidth"), QVariant(150));
+    m_sizes->insert(QLatin1String("trackHeaderHeight"), QVariant(applyRatio(270)));
+    m_sizes->insert(QLatin1String("trackHeaderWidth"), QVariant(applyRatio(tempTrackHeaderWidth)));
+    m_sizes->insert(QLatin1String("timeColumnWidth"), QVariant(applyRatio(tempTimeColumnWidth)));
+    m_sizes->insert(QLatin1String("conferenceHeaderHeight"), QVariant(applyRatio(158)));
+    m_sizes->insert(QLatin1String("dayWidth"), QVariant(applyRatio(150)));
+    m_sizes->insert(QLatin1String("favoriteImageHeight"), QVariant(applyRatio(76)));
+    m_sizes->insert(QLatin1String("favoriteImageWidth"), QVariant(applyRatio(80)));
+    m_sizes->insert(QLatin1String("titleHeight"), QVariant(applyRatio(60)));
+    m_sizes->insert(QLatin1String("backHeight"), QVariant(applyRatio(74)));
+    m_sizes->insert(QLatin1String("backWidth"), QVariant(applyRatio(42)));
+    m_sizes->insert(QLatin1String("logoHeight"), QVariant(applyRatio(100)));
+    m_sizes->insert(QLatin1String("logoWidth"), QVariant(applyRatio(286)));
+    m_sizes->insert(QLatin1String("menuHeight"), QVariant(applyRatio(62)));
+    m_sizes->insert(QLatin1String("menuWidth"), QVariant(applyRatio(78)));
+    m_sizes->insert(QLatin1String("dayLabelHeight"), QVariant(applyRatio(50)));
+    m_sizes->insert(QLatin1String("upcomingEventHeight"), QVariant(applyRatio(45)));
+    m_sizes->insert(QLatin1String("homeTitleHeight"), QVariant(applyRatio(50)));
+    m_sizes->insert(QLatin1String("upcomingEventTimeWidth"), QVariant(applyRatio(180)));
+    m_sizes->insert(QLatin1String("trackFieldHeight"), QVariant(applyRatio(50)));
 
     m_images = new QQmlPropertyMap(this);
     m_images->insert(QLatin1String("back"), QVariant("qrc:/images/BackArrow.svg"));
@@ -94,9 +120,25 @@ Theme::Theme(QObject *parent)
     m_images->insert(QLatin1String("notFavorite"), QVariant("qrc:/images/Star.svg"));
 
     m_fonts = new QQmlPropertyMap(this);
-    m_fonts->insert(QLatin1String("six_pt"), QVariant(8));
-    m_fonts->insert(QLatin1String("seven_pt"), QVariant(9));
-    m_fonts->insert(QLatin1String("eight_pt"), QVariant(10));
-    m_fonts->insert(QLatin1String("ten_pt"), QVariant(12));
-    m_fonts->insert(QLatin1String("twelve_pt"), QVariant(14));
+    m_fonts->insert(QLatin1String("six_pt"), QVariant(applyFontRatio(8)));
+    m_fonts->insert(QLatin1String("seven_pt"), QVariant(applyFontRatio(9)));
+    m_fonts->insert(QLatin1String("eight_pt"), QVariant(applyFontRatio(10)));
+    m_fonts->insert(QLatin1String("ten_pt"), QVariant(applyFontRatio(12)));
+    m_fonts->insert(QLatin1String("twelve_pt"), QVariant(applyFontRatio(14)));
+
+    m_margins = new QQmlPropertyMap(this);
+    m_margins->insert(QLatin1String("five"), QVariant(applyRatio(5)));
+    m_margins->insert(QLatin1String("ten"), QVariant(applyRatio(10)));
+    m_margins->insert(QLatin1String("twenty"), QVariant(applyRatio(20)));
+    m_margins->insert(QLatin1String("thirty"), QVariant(applyRatio(30)));
+}
+
+int Theme::applyFontRatio(const int value)
+{
+    return int(value * m_ratioFont);
+}
+
+int Theme::applyRatio(const int value)
+{
+    return qMax(2, int(value * m_ratio));
 }
