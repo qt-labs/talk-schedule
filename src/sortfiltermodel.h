@@ -66,6 +66,7 @@ public:
     Q_INVOKABLE QVariant indexOf(const QString &role, QVariant value);
     Q_INVOKABLE int rowCount(const QModelIndex &parent = QModelIndex()) const;
     Q_INVOKABLE void filter();
+    bool filterAcceptsRow(int source_row, const QModelIndex &source_parent) const;
 
 public Q_SLOTS:
     void manualSort();

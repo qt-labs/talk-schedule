@@ -39,6 +39,7 @@
 ****************************************************************************/
 
 #include "sortfiltermodel.h"
+#include <QtCore/QDateTime>
 #include <QtCore/QDebug>
 
 SortFilterModel::SortFilterModel(QObject *parent)
@@ -114,4 +115,18 @@ void SortFilterModel::filter()
 {
     QSortFilterProxyModel::invalidate();
     manualSort();
+}
+
+bool SortFilterModel::filterAcceptsRow(int source_row, const QModelIndex &source_parent) const
+{
+    if (filterRole() == "fromNow" && sourceModel()->roleNames().values().contains("start")) {
+        QModelIndex index = sourceModel()->index(source_row, 0, source_parent);
+        QDateTime date = sourceModel()->data(index, sourceModel()->roleNames().key("start")).toDateTime();
+        QDateTime currentDateTime = QDateTime::currentDateTime();
+        int localTimeZoneOffset = currentDateTime.offsetFromUtc();
+        currentDateTime.setMSecsSinceEpoch(currentDateTime.currentMSecsSinceEpoch() + localTimeZoneOffset*1000);
+        return date >= currentDateTime;
+    } else {
+        return QSortFilterProxyModel::filterAcceptsRow(source_row, source_parent);
+    }
 }

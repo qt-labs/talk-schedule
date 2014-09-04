@@ -39,6 +39,7 @@
 ****************************************************************************/
 
 import QtQuick 2.2
+import QtQuick.Layouts 1.1
 import QtQuick.XmlListModel 2.0
 import TalkSchedule 1.0
 
@@ -46,12 +47,10 @@ Rectangle {
     id: homeScreenWindow
     height: window.height - header.height
     width: window.width
-    property int trackHeight: 150
 
     Column {
-        spacing: 2
-
-        Rectangle {
+        spacing: 0
+        Item {
             // upcoming
             // Todo: List upcoming talks
             width: homeScreenWindow.width
@@ -61,23 +60,69 @@ Rectangle {
                 id: labelUpcoming
                 text: Theme.text.upcoming
                 width: parent.width
+                height: Theme.sizes.titleHeight
+                z: 1
+                font.pointSize: 12 // Theme.fonts.seven_pt
                 horizontalAlignment: Text.AlignHCenter
+                verticalAlignment: Text.AlignVCenter
                 font.capitalization: Font.AllUppercase
+                Rectangle {
+                    anchors.fill: parent
+                    z: -1
+                    color: Theme.colors.smokewhite
+                }
             }
             ListView {
                 id: homeScreenListView
                 anchors.top: labelUpcoming.bottom
+                anchors.bottom: parent.bottom
+                anchors.right: parent.right
+                anchors.left: parent.left
                 anchors.margins: 10
-                model: ModelsSingleton.eventModel
-                delegate: Text {
-                    text: "Topic: " + topic
+                clip: true
+                model: SortFilterModel {
+                    id: sortModel
+                    sortRole: "start"
+                    filterRole: "fromNow"
+                    model: ModelsSingleton.eventModel
+                }
+                onVisibleChanged: sortModel.filter()
+                delegate: ColumnLayout {
+                    width: parent.width
+                    RowLayout {
+                        Layout.fillWidth: true
+                        Layout.preferredHeight: Theme.sizes.upcomingEventHeight
+                        Text {
+                            text: Qt.formatDate(start, "ddd") + " " + Qt.formatTime(start, "h:mm")
+                            Layout.fillHeight: true
+                            Layout.preferredWidth: Theme.sizes.upcomingEventTimeWidth
+                            verticalAlignment: Text.AlignVCenter
+                            horizontalAlignment: Text.AlignLeft
+                        }
+                        Text {
+                            text: topic + " in " + location
+                            Layout.fillHeight: true
+                            Layout.fillWidth: true
+                            verticalAlignment: Text.AlignVCenter
+                            elide: Text.ElideRight
+                            MouseArea {
+                                anchors.fill: parent
+                                onClicked: stack.push({"item" : Qt.resolvedUrl("Event.qml"), "properties" : {"eventId" : id}})
+                            }
+                        }
+                    }
+                    Rectangle {
+                        Layout.fillWidth: true
+                        Layout.preferredHeight: 1
+                        color: Theme.colors.darkgray
+                    }
                 }
             }
         }
-        Rectangle {
+        Item {
             // news
             width: window.width
-            height:  window.height / 3
+            height:  homeScreenWindow.height / 3
 
             XmlListModel {
                 id: rssXmlModel
@@ -90,16 +135,30 @@ Rectangle {
 
             Text {
                 id: labelNews
+                z: 1
                 text: Theme.text.news
                 width: parent.width
+                height: Theme.sizes.titleHeight
+                font.pointSize: 12 // Theme.fonts.seven_pt
                 horizontalAlignment: Text.AlignHCenter
+                verticalAlignment: Text.AlignVCenter
                 font.capitalization: Font.AllUppercase
+                Rectangle {
+                    anchors.fill: parent
+                    z: -1
+                    color: Theme.colors.smokewhite
+                }
             }
             ListView {
+                id: listNews
                 anchors.top: labelNews.bottom
+                anchors.left: parent.left
+                anchors.right: parent.right
+                anchors.bottom: parent.bottom
+                anchors.margins: 10
                 model: rssXmlModel
+                clip: true
                 delegate: Text {
-                    x: 10
                     width: window.width - 20
                     text: "<b>" + title + "</b>" + "\n" + description
                     textFormat: Text.StyledText
@@ -108,20 +167,34 @@ Rectangle {
                 }
             }
         }
-        Rectangle {
+        Item {
             // useful info
             // Todo: Content
             width: window.width
-            height:  window.height / 3
+            height:  homeScreenWindow.height / 3
             Text {
                 id: labelInfo
+                z: 1
                 text: Theme.text.info
                 width: parent.width
+                height: Theme.sizes.titleHeight
+                font.pointSize: 12 // Theme.fonts.seven_pt
                 horizontalAlignment: Text.AlignHCenter
+                verticalAlignment: Text.AlignVCenter
                 font.capitalization: Font.AllUppercase
+                Rectangle {
+                    anchors.fill: parent
+                    z: -1
+                    color: Theme.colors.smokewhite
+                }
             }
             Text {
+                id: info
                 anchors.top: labelInfo.bottom
+                anchors.left: parent.left
+                anchors.right: parent.right
+                anchors.bottom: parent.bottom
+                anchors.margins: 10
                 textFormat: Text.StyledText
                 text: "<a href='https://www.qtdeveloperdays.com/europe/europe-exhibit-hall-info'><b>Venue, Accommodation and Useful Info</b></a>"
                 onLinkActivated: Qt.openUrlExternally(link)

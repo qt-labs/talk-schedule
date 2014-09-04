@@ -57,7 +57,6 @@ Theme::Theme(QObject *parent)
     m_text->insert(QLatin1String("news"), tr("News"));
     m_text->insert(QLatin1String("info"), tr("Useful Information"));
 
-
     m_colors = new QQmlPropertyMap(this);
     m_colors->insert(QLatin1String("white"), QVariant("#ffffff"));
     m_colors->insert(QLatin1String("smokewhite"), QVariant("#f2f2f2"));
@@ -85,6 +84,8 @@ Theme::Theme(QObject *parent)
     m_sizes->insert(QLatin1String("menuHeight"), QVariant(62));
     m_sizes->insert(QLatin1String("menuWidth"), QVariant(78));
     m_sizes->insert(QLatin1String("dayLabelHeight"), QVariant(40));
+    m_sizes->insert(QLatin1String("upcomingEventHeight"), QVariant(45));
+    m_sizes->insert(QLatin1String("upcomingEventTimeWidth"), QVariant(150));
 
     m_images = new QQmlPropertyMap(this);
     m_images->insert(QLatin1String("back"), QVariant("qrc:/images/BackArrow.svg"));
