@@ -126,7 +126,7 @@ Rectangle {
 
             XmlListModel {
                 id: rssXmlModel
-                source: "http://feeds.feedburner.com/QtDD14-EUROPE"
+                source: ModelsSingleton.rssFeed
                 query: "/rss/channel/item"
 
                 XmlRole { name: "title"; query: "title/string()" }

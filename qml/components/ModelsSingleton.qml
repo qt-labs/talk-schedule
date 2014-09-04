@@ -48,6 +48,7 @@ QtObject {
     property string conferenceId
     property string currentUserId
     property string conferenceLocation
+    property string rssFeed
     property var currentConferenceTracks: []
     property var currentConferenceEvents: []
     property bool busy: false
@@ -60,6 +61,7 @@ QtObject {
                 var conference = conferenceQuery.data.results[0]
                 ModelsSingleton.conferenceId = conference.id
                 ModelsSingleton.conferenceLocation = conference.location
+                ModelsSingleton.rssFeed = conference.rssFeed
             })
         }
     }
