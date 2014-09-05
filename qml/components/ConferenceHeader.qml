@@ -85,6 +85,20 @@ Item {
                     sourceSize.width: Theme.sizes.backWidth
                     source: Theme.images.back
                 }
+                Text {
+                    id: locationLabel
+                    anchors.left: parent.left
+                    anchors.verticalCenter: parent.verticalCenter
+                    anchors.leftMargin: Theme.margins.twenty
+                    text: ModelsSingleton.conferenceLocation
+                    font.pointSize: Theme.fonts.ten_pt
+                    font.capitalization: Font.AllUppercase
+                    color: Theme.colors.black
+                    Layout.fillWidth: false
+                    Layout.alignment: Text.AlignVCenter | Text.AlignHCenter
+                    opacity: stack.depth == 1 ? 1 : 0
+                    Behavior on opacity { PropertyAnimation{} }
+                }
             }
             Image {
                 id: header
