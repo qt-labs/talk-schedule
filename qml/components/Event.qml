@@ -40,6 +40,7 @@
 
 import QtQuick 2.2
 import QtQuick.Controls 1.2
+import QtQuick.Controls.Styles 1.2
 import QtQuick.Layouts 1.1
 import TalkSchedule 1.0
 
@@ -93,12 +94,51 @@ Rectangle {
                 wrapMode: Text.Wrap
                 elide: Text.ElideRight
             }
-            Label {
-                id: eventPerformers
-                text: model.data(indexCurrentEvent, "performer")
-                font.pointSize: Theme.fonts.seven_pt
-                font.capitalization: Font.AllUppercase
-                color: Theme.colors.gray
+            RowLayout {
+                id: feedbackBar
+                width: columnLayout.width
+                Label {
+                    id: eventPerformers
+                    text: model.data(indexCurrentEvent, "performer")
+                    font.pointSize: Theme.fonts.seven_pt
+                    color: Theme.colors.gray
+                }
+                Item {
+                    Layout.fillWidth: true
+                    Layout.fillHeight: true
+                }
+                Button {
+                    id: buttonFeedback
+                    text: Theme.text.feedback
+                    Layout.preferredHeight: Theme.sizes.buttonHeight
+                    Layout.preferredWidth: Theme.sizes.buttonWidth
+                    style: ButtonStyle {
+                        background: Rectangle {
+                            radius: 5
+                            border.width: 2
+                            border.color: Theme.colors.qtgreen
+                            color: control.pressed ? Qt.darker(Theme.colors.white, 1.1) : Theme.colors.white
+                        }
+                        label: Text {
+                            horizontalAlignment: Text.AlignHCenter
+                            verticalAlignment: Text.AlignVCenter
+                            text: control.text
+                            color: Theme.colors.black
+                            font.pointSize: Theme.fonts.six_pt
+                        }
+                    }
+                    onClicked: {
+                        var itemFe = Qt.resolvedUrl("Feedback.qml")
+                        stack.push({
+                                       "item" : itemFe,
+                                       "properties" : {
+                                           "eventId" : eventId,
+                                           "eventPerformer": model.data(indexCurrentEvent, "performer"),
+                                           "eventTopic": model.data(indexCurrentEvent, "topic")
+                                       }
+                                   })
+                    }
+                }
             }
             Item {
                 id: separator

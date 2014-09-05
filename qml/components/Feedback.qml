@@ -41,6 +41,7 @@
 import QtQuick 2.2
 import QtQuick.Controls 1.2
 import QtQuick.Controls.Styles 1.2
+import QtQuick.Layouts 1.1
 import Enginio 1.0
 import TalkSchedule 1.0
 
@@ -48,7 +49,10 @@ Item {
     height: window.height
     width: window.width
     objectName: "feedback"
-    anchors.margins: Theme.margins.ten
+    property string eventId
+    property string eventTopic
+    property string eventPerformer
+    property int rating: -1
 
     SubTitle {
         id: subTitle
@@ -57,61 +61,120 @@ Item {
 
     Column {
         anchors.top: subTitle.bottom
-        spacing: 2
+        anchors.left: parent.left
+        anchors.right: parent.right
+        anchors.margins: Theme.margins.ten
+        spacing: Theme.margins.five
+        Text {
+            text: eventTopic
+            color: Theme.colors.black
+            width: parent.width
+            font.pointSize: Theme.fonts.twelve_pt
+            maximumLineCount: 2
+            wrapMode: Text.Wrap
+            elide: Text.ElideRight
+        }
+        RowLayout {
+            width: parent.width
+            Label {
+                id: eventPerformers
+                text: eventPerformer
+                font.pointSize: Theme.fonts.seven_pt
+                color: Theme.colors.gray
+            }
+            Item {
+                id: separator
+                Layout.fillWidth: true
+                Layout.fillHeight: true
+            }
+            Slider {
+                minimumValue: 0
+                maximumValue: 4
+                stepSize: 1
+                onValueChanged: rating = value + 1
+                style: SliderStyle {
+                    handle: Item {}
+                    groove: RowLayout {
+                        Repeater {
+                            model: 5
+                            Image {
+                                source: index <= (rating - 1) ? Theme.images.favorite : Theme.images.notFavorite
+                                width: Theme.sizes.ratingImageWidth
+                                height: Theme.sizes.ratingImageHeight
+                                sourceSize.height: Theme.sizes.ratingImageHeight
+                                sourceSize.width: Theme.sizes.ratingImageWidth
+                                fillMode: Image.PreserveAspectFit
+                            }
+                        }
+                    }
+                }
+            }
+        }
 
         Rectangle {
             height: window.height / 3
-            width: window.width
-
+            width: parent.width
             TextArea {
                 id: feedbackEdit
                 anchors.fill: parent
-                font.family: "OpenSans"
-                text: "Write your comments here"
                 textMargin: Theme.margins.ten
                 wrapMode: TextEdit.Wrap
                 onFocusChanged: text = ""
+                textColor: text === Theme.text.writeYourCommentHere ? Theme.colors.gray : Theme.colors.black
+                Component.onCompleted: text = Theme.text.writeYourCommentHere
             }
         }
 
         Row {
-            Item {
-                width: Theme.margins.twenty
-                height: Theme.margins.thirty
-            }
-
+            spacing: Theme.margins.twenty
             Button {
                 text: "Clear"
-                onClicked: feedbackEdit.text = ""
+                onClicked: {
+                    rating = -1
+                    feedbackEdit.text = Theme.text.writeYourCommentHere
+                }
                 width: window.width / 3.5
-
+                height: Theme.sizes.buttonHeight
                 style: ButtonStyle {
                     background: Rectangle {
+                        radius: 5
                         border.width: 2
                         border.color: Theme.colors.qtgreen
-                        color: Theme.colors.white
+                        color: control.pressed ? Qt.darker(Theme.colors.white, 1.1) : Theme.colors.white
+                    }
+                    label: Text {
+                        horizontalAlignment: Text.AlignHCenter
+                        verticalAlignment: Text.AlignVCenter
+                        text: control.text
+                        color: Theme.colors.black
+                        font.pointSize: Theme.fonts.six_pt
                     }
                 }
             }
-
-            Item {
-                width: window.width / 7
-                height: Theme.margins.thirty
-            }
-
             Button {
                 text: "Send"
+                enabled: (feedbackEdit.text !== Theme.text.writeYourCommentHere && feedbackEdit.text !== "")
+                         || rating > -1
                 onClicked: {
                     text = "sending..."
                     Qt.inputMethod.hide()
-                    ModelsSingleton.saveFeedback(feedbackEdit.text)
+                    ModelsSingleton.saveFeedback(feedbackEdit.text, eventId, rating)
                     stack.pop()
                 }
                 width: window.width / 3.5
-
+                height: Theme.sizes.buttonHeight
                 style: ButtonStyle {
                     background: Rectangle {
-                        color: Theme.colors.qtgreen
+                        radius: 5
+                        color: control.enabled ? (control.pressed ? Qt.darker(Theme.colors.qtgreen, 1.1) : Theme.colors.qtgreen)
+                                               : Theme.colors.smokewhite
+                    }
+                    label: Text {
+                        horizontalAlignment: Text.AlignHCenter
+                        verticalAlignment: Text.AlignVCenter
+                        text: control.text
+                        color: control.enabled ? Theme.colors.black : Theme.colors.gray
+                        font.pointSize: Theme.fonts.six_pt
                     }
                 }
             }

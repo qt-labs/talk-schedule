@@ -200,13 +200,18 @@ QtObject {
         })
     }
 
-    function saveFeedback(fbtext)
+    function saveFeedback(fbtext, eventId, rating)
     {
         console.log("saveFeedback")
         var reply = client.create({
-               "objectType": "objects.Feedback",
-               "feedbackText": fbtext
-            })
+                                      "objectType": "objects.Feedback",
+                                      "event": {
+                                          "id": eventId,
+                                          "objectType": "objects.Event"
+                                      },
+                                      "rating": rating,
+                                      "feedbackText": fbtext
+                                  })
         reply.finished.connect(function() {
             if (reply.errorType !== EnginioReply.NoError) {
                 console.log("Failed to save feedback.\n")

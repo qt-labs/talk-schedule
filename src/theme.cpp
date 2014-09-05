@@ -79,6 +79,7 @@ Theme::Theme(QObject *parent)
     m_text->insert(QLatin1String("upcoming"), tr("Upcoming"));
     m_text->insert(QLatin1String("news"), tr("News"));
     m_text->insert(QLatin1String("info"), tr("Useful Information (PDF)"));
+    m_text->insert(QLatin1String("writeYourCommentHere"), tr("Write your comments here"));
 
     m_colors = new QQmlPropertyMap(this);
     m_colors->insert(QLatin1String("white"), QVariant("#ffffff"));
@@ -111,6 +112,10 @@ Theme::Theme(QObject *parent)
     m_sizes->insert(QLatin1String("homeTitleHeight"), QVariant(applyRatio(50)));
     m_sizes->insert(QLatin1String("upcomingEventTimeWidth"), QVariant(applyRatio(180)));
     m_sizes->insert(QLatin1String("trackFieldHeight"), QVariant(applyRatio(50)));
+    m_sizes->insert(QLatin1String("buttonHeight"), QVariant(applyRatio(78)));
+    m_sizes->insert(QLatin1String("buttonWidth"), QVariant(applyRatio(300)));
+    m_sizes->insert(QLatin1String("ratingImageHeight"), QVariant(applyRatio(76)));
+    m_sizes->insert(QLatin1String("ratingImageWidth"), QVariant(applyRatio(80)));
 
     m_images = new QQmlPropertyMap(this);
     m_images->insert(QLatin1String("back"), QVariant("qrc:/images/BackArrow.svg"));

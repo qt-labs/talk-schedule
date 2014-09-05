@@ -168,17 +168,6 @@ Item {
                             }
                         }
                     }
-                    MenuItem {
-                        text: Theme.text.feedback
-                        onTriggered: {
-                            var itemFe = Qt.resolvedUrl("Feedback.qml")
-                            var loadedFe = stack.find(function(itemFe){ return itemFe.objectName === "feedback" })
-                            if (loadedFe !== null)
-                                stack.pop(loadedFe)
-                            else
-                                stack.push(itemFe)
-                        }
-                    }
                 }
                 Image {
                     id: dropMenu
