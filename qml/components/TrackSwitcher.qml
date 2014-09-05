@@ -47,6 +47,7 @@ import "functions.js" as Functions
 
 Item {
     id: root
+    objectName: "trackSwitcher"
     property bool isViewScrolling: false
 
     DaySwitcher {

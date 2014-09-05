@@ -114,14 +114,14 @@ Item {
                         text: Theme.text.home
                         onTriggered: {
                             var item = Qt.resolvedUrl("HomeScreen.qml")
-                            stack.pop(stack.find(function(item){}))
+                            stack.pop(stack.find(function(item){ return item.objectName === "homeScreen" }))
                         }
                     }
                     MenuItem {
                         text: Theme.text.schedule
                         onTriggered: {
                             var itemT = Qt.resolvedUrl("TrackSwitcher.qml")
-                            var loadedTr = stack.find(function(itemT){})
+                            var loadedTr = stack.find(function(itemT){ return itemT.objectName === "trackSwitcher" })
                             if (loadedTr !== null)
                                 stack.pop(loadedTr)
                             else
@@ -158,7 +158,7 @@ Item {
                         text: Theme.text.feedback
                         onTriggered: {
                             var itemFe = Qt.resolvedUrl("Feedback.qml")
-                            var loadedFe = stack.find(function(itemFe){})
+                            var loadedFe = stack.find(function(itemFe){ return itemFe.objectName === "feedback" })
                             if (loadedFe !== null)
                                 stack.pop(loadedFe)
                             else

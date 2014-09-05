@@ -47,6 +47,7 @@ Rectangle {
     id: homeScreenWindow
     height: window.height - header.height
     width: window.width
+    objectName: "homeScreen"
 
     Column {
         spacing: 0

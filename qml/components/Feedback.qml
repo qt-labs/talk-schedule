@@ -47,6 +47,7 @@ import TalkSchedule 1.0
 Item {
     height: window.height
     width: window.width
+    objectName: "feedback"
     anchors.margins: Theme.margins.ten
 
     SubTitle {
