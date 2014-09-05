@@ -88,51 +88,45 @@ Rectangle {
                     model: ModelsSingleton.eventModel
                 }
                 onVisibleChanged: sortModel.filter()
-                delegate: ColumnLayout {
+                spacing: Theme.margins.five
+                delegate: RowLayout {
                     width: parent.width
-                    spacing: Theme.margins.five
-                    RowLayout {
-                        Layout.fillWidth: true
-                        Layout.preferredHeight: Theme.sizes.upcomingEventHeight
-                        Rectangle {
-                            color: tracks.backgroundColor
-                            Layout.fillHeight: true
-                            Layout.preferredWidth: Theme.sizes.upcomingEventTimeWidth
+                    height: Theme.sizes.upcomingEventHeight
+                    Rectangle {
+                        color: tracks.backgroundColor
+                        Layout.fillHeight: true
+                        Layout.preferredWidth: Theme.sizes.upcomingEventTimeWidth
 
-                            Text {
-                                anchors.fill: parent
-                                anchors.leftMargin: Theme.margins.five
-                                text: Qt.formatDate(start, "ddd") + " " + Qt.formatTime(start, "h:mm")
-                                verticalAlignment: Text.AlignVCenter
-                                horizontalAlignment: Text.AlignLeft
-                                font.pointSize: Theme.fonts.seven_pt
-                            }
-                        }
-                        Rectangle {
-                            Layout.fillHeight: true
-                            Layout.fillWidth: true
-                            color: mouseArea.pressed ? Theme.colors.smokewhite : Theme.colors.white
-
-                            Text {
-                                anchors.fill: parent
-                                anchors.leftMargin: Theme.margins.five
-                                text: "<b>" + topic + "</b><br />by " + performer + " in " + location
-                                verticalAlignment: Text.AlignVCenter
-                                elide: Text.ElideRight
-                                wrapMode: Text.Wrap
-                                MouseArea {
-                                    id: mouseArea
-                                    anchors.fill: parent
-                                    onClicked: stack.push({
-                                        "item" : Qt.resolvedUrl("Event.qml"),
-                                        "properties" : {"eventId" : id}
-                                    })
-                                }
-                            }
+                        Text {
+                            anchors.fill: parent
+                            anchors.leftMargin: Theme.margins.five
+                            text: Qt.formatDate(start, "ddd") + " " + Qt.formatTime(start, "h:mm")
+                            verticalAlignment: Text.AlignVCenter
+                            horizontalAlignment: Text.AlignLeft
+                            font.pointSize: Theme.fonts.seven_pt
                         }
                     }
                     Rectangle {
-                        Layout.preferredHeight: 1
+                        Layout.fillHeight: true
+                        Layout.fillWidth: true
+                        color: mouseArea.pressed ? Theme.colors.smokewhite : Theme.colors.white
+
+                        Text {
+                            anchors.fill: parent
+                            anchors.leftMargin: Theme.margins.five
+                            text: "<b>" + topic + "</b><br />by " + performer + " in " + location
+                            verticalAlignment: Text.AlignVCenter
+                            elide: Text.ElideRight
+                            wrapMode: Text.Wrap
+                            MouseArea {
+                                id: mouseArea
+                                anchors.fill: parent
+                                onClicked: stack.push({
+                                                          "item" : Qt.resolvedUrl("Event.qml"),
+                                                          "properties" : {"eventId" : id}
+                                                      })
+                            }
+                        }
                     }
                 }
             }
