@@ -94,7 +94,7 @@ Rectangle {
             }
         }
         Rectangle {
-            color: Theme.colors.smokewhite
+            color: mouseArea.pressed ? Theme.colors.lightgray : Theme.colors.smokewhite
             Layout.preferredHeight: Theme.sizes.trackHeaderHeight
             Layout.fillWidth: true
 
@@ -192,6 +192,7 @@ Rectangle {
     }
 
     MouseArea {
+        id: mouseArea
         anchors {
             top: parent.top
             bottom: parent.bottom

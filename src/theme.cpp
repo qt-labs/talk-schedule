@@ -83,7 +83,7 @@ Theme::Theme(QObject *parent)
     m_colors = new QQmlPropertyMap(this);
     m_colors->insert(QLatin1String("white"), QVariant("#ffffff"));
     m_colors->insert(QLatin1String("smokewhite"), QVariant("#f2f2f2"));
-    m_colors->insert(QLatin1String("lightgrey"), QVariant("#cccccc"));
+    m_colors->insert(QLatin1String("lightgray"), QVariant("#cccccc"));
     m_colors->insert(QLatin1String("gray"), QVariant("#808080"));
     m_colors->insert(QLatin1String("darkgray"), QVariant("#333333"));
     m_colors->insert(QLatin1String("blue"), QVariant("#14aaff"));

@@ -92,7 +92,7 @@ Row {
                         Rectangle {
                             id: colorBackground
                             anchors { fill: parent; rightMargin: Theme.margins.five; bottomMargin: Theme.margins.five }
-                            color: Theme.colors.smokewhite
+                            color: mouseArea.pressed ? Theme.colors.lightgray : Theme.colors.smokewhite
                         }
                         Item {
                             // Add this imageArea to make it easier to click the image
@@ -162,6 +162,7 @@ Row {
                             }
                         }
                         MouseArea {
+                            id: mouseArea
                             anchors {
                                 top: parent.top
                                 bottom: parent.bottom

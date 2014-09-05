@@ -61,10 +61,17 @@ Item {
             height: topicRect.height
             anchors.margins: Theme.margins.ten
             MouseArea {
-                enabled: stack.depth > 1
+                id: mouseAreaBack
                 Layout.preferredHeight: topicRect.height
                 Layout.preferredWidth: topicRect.height
+                enabled: stack.depth > 1
                 onClicked: stack.pop()
+                Rectangle {
+                    anchors.fill: parent
+                    anchors.margins: Theme.margins.five
+                    color: mouseAreaBack.pressed ? Theme.colors.smokewhite : Theme.colors.white
+                    radius: 5
+                }
                 Image {
                     id: backButton
                     anchors.left: parent.left
@@ -89,13 +96,17 @@ Item {
                 source: Theme.images.logo
                 fillMode: Image.PreserveAspectFit
             }
-            Item {
+            MouseArea {
+                id: mouseAreaMenu
                 Layout.alignment: Qt.AlignRight
                 Layout.preferredWidth: topicRect.height
                 Layout.preferredHeight: topicRect.height
-                MouseArea {
+                onClicked: menu.popup()
+                Rectangle {
                     anchors.fill: parent
-                    onClicked: menu.popup()
+                    anchors.margins: Theme.margins.five
+                    color: mouseAreaMenu.pressed ? Theme.colors.smokewhite : Theme.colors.white
+                    radius: 5
                 }
                 Menu {
                     id: menu

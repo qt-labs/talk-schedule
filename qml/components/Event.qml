@@ -125,11 +125,6 @@ Rectangle {
                 color: Theme.colors.green
             }
         }
-
-        MouseArea {
-            anchors.fill: parent
-            onClicked: stack.pop()
-        }
     }
 
     RowLayout {

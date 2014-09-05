@@ -110,6 +110,7 @@ Rectangle {
                         Rectangle {
                             Layout.fillHeight: true
                             Layout.fillWidth: true
+                            color: mouseArea.pressed ? Theme.colors.smokewhite : Theme.colors.white
 
                             Text {
                                 anchors.fill: parent
@@ -119,6 +120,7 @@ Rectangle {
                                 elide: Text.ElideRight
                                 wrapMode: Text.Wrap
                                 MouseArea {
+                                    id: mouseArea
                                     anchors.fill: parent
                                     onClicked: stack.push({
                                         "item" : Qt.resolvedUrl("Event.qml"),
