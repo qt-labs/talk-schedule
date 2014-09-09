@@ -71,6 +71,7 @@ QtObject {
 
     property var day: Model {
         backendId: backId
+        fileNameTag: "DayObject"
         onDataReady: {
             currentConferenceDays = []
             for (var i = 0; i < day.rowCount(); i++)
@@ -81,6 +82,7 @@ QtObject {
 
     property var trackModel: Model {
         backendId: backId
+        fileNameTag: "TrackObject"
         onDataReady: {
             currentConferenceTracks = []
             for (var i = 0; i < trackModel.rowCount(); i++)
@@ -92,6 +94,7 @@ QtObject {
     property var eventModel: Model {
         id: eventModel
         backendId: backId
+        fileNameTag: "EventObject"
         onDataReady: queryFavorites()
         function queryFavorites()
         {
@@ -103,15 +106,18 @@ QtObject {
     }
 
     property var favoriteModel: Model {
+        // do not save favorite
         backendId: backId
         onDataReady: getFavoriteIds()
     }
 
     property var breakModel: Model {
+        fileNameTag: "BreakObject"
         backendId: backId
     }
 
     property var timeListModel: Model {
+        // do not save time list
         backendId: backId
         property var tracksTodayModel
         onTracksTodayModelChanged: {
@@ -311,6 +317,13 @@ QtObject {
     }
 
     onConferenceIdChanged: {
+        day.conferenceId = ModelsSingleton.conferenceId
+        trackModel.conferenceId = ModelsSingleton.conferenceId
+        eventModel.conferenceId = ModelsSingleton.conferenceId
+        favoriteModel.conferenceId = ModelsSingleton.conferenceId
+        breakModel.conferenceId = ModelsSingleton.conferenceId
+        timeListModel.conferenceId = ModelsSingleton.conferenceId
+
         day.query({ "objectType": "objects.Day",
                       "query": {
                           "conference": {

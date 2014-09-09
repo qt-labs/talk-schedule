@@ -157,16 +157,31 @@ void Model::setBackendId(const QString &id)
     Q_EMIT backendIdChanged();
 }
 
+void Model::setConferenceId(const QString &id)
+{
+    if (id != m_conferenceId) {
+        m_conferenceId =  id;
+        Q_EMIT conferenceIdChanged();
+    }
+}
+
+void Model::setFileNameTag(const QString &newTag)
+{
+    if (newTag != m_fileNameTag) {
+        m_fileNameTag =  newTag;
+        Q_EMIT fileNameTagChanged();
+    }
+}
+
 void Model::query(const QJSValue &query)
 {
     if (!query.hasProperty("objectType"))
         return;
 
-    if (load(query.property("objectType").toString())) {
-        // TODO: check updates;
-        return;
-    }
+    // Load data from file if available
+    load();
 
+    // Check for updates
     QJsonObject queryObject;
     queryObject["objectType"] = query.property("objectType").toString();
 
@@ -189,20 +204,24 @@ QVariant Model::data(int index, const QString &role) const
 
 void Model::onFinished(EnginioReply *reply)
 {
-    //save(reply->data());
-
-    parse(reply->data());
+    bool dataHasChanged = parse(reply->data());
+    if (dataHasChanged)
+        save(reply->data());
     reply->deleteLater();
 }
 
 bool Model::save(const QJsonObject &object)
 {
+    // Don't save and load if no file name tag is specified
+    if (fileNameTag().isEmpty())
+        return false;
+
     if (!object.keys().contains("results")) {
         qWarning()<< "Wrong json format";
         return false;
     }
 
-    QString fileName = object.value("results").toArray().at(0).toVariant().toMap().value("objectType").toString();
+    QString fileName = QString("%1.%2").arg(m_fileNameTag).arg(m_conferenceId);
     QString path = QStandardPaths::writableLocation(QStandardPaths::DataLocation);
     QDir dir(path);
     if (!dir.exists() && !dir.mkpath(path)) {
@@ -219,13 +238,18 @@ bool Model::save(const QJsonObject &object)
     QJsonDocument saveDoc(object);
     file.write(saveDoc.toJson());
     file.close();
+    currentModelObject[fileNameTag()] = object;
     return true;
 }
 
-bool Model::load(const QString &objectType)
+bool Model::load()
 {
+    // Don't save and load if no file name tag is specified
+    if (fileNameTag().isEmpty())
+        return false;
+
     QString path = QStandardPaths::writableLocation(QStandardPaths::DataLocation);
-    QFile file(QString("%1/%2").arg(path).arg(objectType));
+    QFile file(QString("%1/%2.%3").arg(path).arg(m_fileNameTag).arg(m_conferenceId));
     if (!file.open(QIODevice::ReadOnly)) {
         qWarning() << "On load couldn't open file" << file.fileName();
         return false;
@@ -234,72 +258,80 @@ bool Model::load(const QString &objectType)
     QByteArray data = file.readAll();
     QJsonDocument loadDoc(QJsonDocument::fromJson(data));
     parse(loadDoc.object());
+    currentModelObject[fileNameTag()] = loadDoc.object();
     return true;
 }
 
-void Model::parse(const QJsonObject &object)
+bool Model::parse(const QJsonObject &object)
 {
-    beginResetModel();
-    m_data.clear();
-    m_roleNames.clear();
-    endResetModel();
+    bool dataHasChanged = true;
 
-    QJsonArray array = object.value("results").toArray();
-    if (array.count() > 0) {
-        // Go through the keys in array to find out all the key values
-        // If all values has no content in cloud, that key might sometimes be missing
-        // so you cannot take keys from arbitrary place from array
-        int previousCount = 0;
-        int arrayIndex = 0;
-        for (int i = 0; i < array.count(); i++) {
-            QStringList tempKeys = array.at(i).toVariant().toMap().keys();
-            if (previousCount < tempKeys.count() ){
-                previousCount = tempKeys.count();
-                arrayIndex = i;
+    dataHasChanged = fileNameTag().isEmpty() || object != currentModelObject[fileNameTag()] ;
+
+    if (dataHasChanged) {
+        beginResetModel();
+        m_data.clear();
+        m_roleNames.clear();
+        endResetModel();
+
+        QJsonArray array = object.value("results").toArray();
+        if (array.count() > 0) {
+            // Go through the keys in array to find out all the key values
+            // If all values has no content in cloud, that key might sometimes be missing
+            // so you cannot take keys from arbitrary place from array
+            int previousCount = 0;
+            int arrayIndex = 0;
+            for (int i = 0; i < array.count(); i++) {
+                QStringList tempKeys = array.at(i).toVariant().toMap().keys();
+                if (previousCount < tempKeys.count() ){
+                    previousCount = tempKeys.count();
+                    arrayIndex = i;
+                }
             }
-        }
-        QStringList keys = array.at(arrayIndex).toVariant().toMap().keys();
-        for (int index = 0; index < keys.count(); ++index)
-            m_roleNames.insert(Qt::UserRole + index, keys.at(index).toLatin1());
+            QStringList keys = array.at(arrayIndex).toVariant().toMap().keys();
+            for (int index = 0; index < keys.count(); ++index)
+                m_roleNames.insert(Qt::UserRole + index, keys.at(index).toLatin1());
 
-        // Hack, insert favorites as those will be created in application
-        m_roleNames.insert(2002, "favorite");
-        beginInsertRows(QModelIndex(), m_data.count(), m_data.count() + array.count() - 1);
-        foreach (QJsonValue value, array) {
-            QJsonObject temp;
-            if (value.isObject()) {
+            // Hack, insert favorites as those will be created in application
+            m_roleNames.insert(2002, "favorite");
+            beginInsertRows(QModelIndex(), m_data.count(), m_data.count() + array.count() - 1);
+            foreach (QJsonValue value, array) {
+                QJsonObject temp;
+                if (value.isObject()) {
 
-                // Hack to make it possible to sort by reference
-                QVariant var = value.toVariant().toMap().value("events");
-                if (var.isValid()) {
+                    // Hack to make it possible to sort by reference
+                    QVariant var = value.toVariant().toMap().value("events");
+                    if (var.isValid()) {
 
-                    QJsonObject obj = value.toObject();
-                    int ind= 0;
-                    for (QJsonObject::const_iterator i = obj.constBegin(); i != obj.constEnd(); ++i) {
+                        QJsonObject obj = value.toObject();
+                        int ind= 0;
+                        for (QJsonObject::const_iterator i = obj.constBegin(); i != obj.constEnd(); ++i) {
 
-                        if (i.key() == "events") {
-                            QJsonObject eventObject = i.value().toObject();
-                            for (QJsonObject::const_iterator i2 = eventObject.constBegin(); i2 != eventObject.constEnd();
-                                 ++i2) {
-                                QString key = "events_"+i2.key();
-                                temp[key] = i2.value();
-                                m_roleNames.insert(Qt::UserRole + 400+ind, key.toLatin1());
-                                ind++;
+                            if (i.key() == "events") {
+                                QJsonObject eventObject = i.value().toObject();
+                                for (QJsonObject::const_iterator i2 = eventObject.constBegin(); i2 != eventObject.constEnd();
+                                     ++i2) {
+                                    QString key = "events_"+i2.key();
+                                    temp[key] = i2.value();
+                                    m_roleNames.insert(Qt::UserRole + 400+ind, key.toLatin1());
+                                    ind++;
+                                }
                             }
+                            ind++;
                         }
-                        ind++;
-                    }
 
-                    m_data.append(temp.toVariantMap());
+                        m_data.append(temp.toVariantMap());
+                    } else {
+                        m_data.append(value.toVariant().toMap());
+                    }
                 } else {
+
                     m_data.append(value.toVariant().toMap());
                 }
-            } else {
-
-                m_data.append(value.toVariant().toMap());
             }
+            endInsertRows();
         }
-        endInsertRows();
-        Q_EMIT dataReady();
     }
+    Q_EMIT dataReady();
+    return dataHasChanged;
 }

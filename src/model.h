@@ -57,6 +57,8 @@ class Model : public QAbstractListModel
     Q_OBJECT
 
     Q_PROPERTY(QString backendId READ backendId WRITE setBackendId NOTIFY backendIdChanged)
+    Q_PROPERTY(QString conferenceId READ conferenceId WRITE setConferenceId NOTIFY conferenceIdChanged)
+    Q_PROPERTY(QString fileNameTag READ fileNameTag WRITE setFileNameTag NOTIFY fileNameTagChanged)
 
 public:
     explicit Model(QObject *parent = 0);
@@ -68,6 +70,10 @@ public:
 
     QString backendId() const;
     void setBackendId(const QString &id);
+    QString conferenceId() const { return m_conferenceId; }
+    void setConferenceId(const QString &id);
+    QString fileNameTag() const { return m_fileNameTag; }
+    void setFileNameTag(const QString &newTag);
 
     Q_INVOKABLE int rowCount(const QModelIndex &parent = QModelIndex()) const;
     Q_INVOKABLE void query(const QJSValue &query);
@@ -80,6 +86,8 @@ public:
 
 Q_SIGNALS:
     void backendIdChanged();
+    void conferenceIdChanged();
+    void fileNameTagChanged();
     void dataReady();
 
 private Q_SLOTS:
@@ -87,12 +95,15 @@ private Q_SLOTS:
 
 private:
     bool save(const QJsonObject &object);
-    bool load(const QString &objectType);
-    void parse(const QJsonObject &object);
+    bool load();
+    bool parse(const QJsonObject &object);
 
     QHash<int, QByteArray> m_roleNames;
     QList<QMap<QString, QVariant> > m_data;
     EnginioClient *m_client;
+    QMap<QString, QJsonObject> currentModelObject;
+    QString m_conferenceId;
+    QString m_fileNameTag;
 };
 
 #endif // MODEL_H
