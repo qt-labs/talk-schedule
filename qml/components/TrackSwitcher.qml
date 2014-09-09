@@ -198,10 +198,10 @@ Item {
                 model: currentDayBreaksModel
                 Rectangle {
                     color: Theme.colors.smokewhite
-                    anchors.top: parent.top
+                    anchors.top: breakColumn.top
                     x: Functions.countTrackPosition(start) - breakData.trackScrolling
                     width: Functions.countTrackWidth(start, end) - Theme.margins.five
-                    anchors.bottom: parent.bottom
+                    anchors.bottom: breakColumn.bottom
                     Text {
                         anchors.centerIn: parent
                         horizontalAlignment: Text.AlignHCenter
