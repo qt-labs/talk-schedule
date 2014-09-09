@@ -127,6 +127,8 @@ Theme::Theme(QObject *parent)
     m_images->insert(QLatin1String("favorite"), QVariant("qrc:/images/StarSelected.svg"));
     m_images->insert(QLatin1String("notFavorite"), QVariant("qrc:/images/Star.svg"));
     m_images->insert(QLatin1String("noRating"), QVariant("qrc:/images/NoRating.svg"));
+    m_images->insert(QLatin1String("loading"), QVariant("qrc:/images/icon-loading.png"));
+    m_images->insert(QLatin1String("anonymous"), QVariant("qrc:/images/anonymous.png"));
 
     m_fonts = new QQmlPropertyMap(this);
     m_fonts->insert(QLatin1String("six_pt"), QVariant(applyFontRatio(8)));

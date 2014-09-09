@@ -49,6 +49,49 @@ Rectangle {
     width: window.width
     objectName: "homeScreen"
 
+    property var idx
+    property var ids
+    property int counter: 0
+
+    function linkForEntity(entity)
+    {
+        return (entity.url ? entity.url : entity.expanded_url)
+    }
+
+    function textForEntity(entity)
+    {
+        return (entity.display_url ? entity.display_url : entity.expanded_url)
+    }
+
+    function insertLinks(text, entities)
+    {
+        console.log("Tweet before: " + text)
+
+        if (typeof text !== 'string')
+            return "";
+
+        if (!entities)
+            return text;
+
+        var links = []
+        links = entities.media ? entities.urls.concat(entities.media) : entities.urls
+
+        links.sort(function(a, b) { return b.indices[0] - a.indices[0] })
+
+        for (var i = 0; i < links.length; i++) {
+            var offset = links[i].url ? 0 : 1
+            text = text.substring(0, links[i].indices[0] + offset) +
+                '<a href=\"' + linkForEntity(links[i]) + '\">' +
+                textForEntity(links[i]) + '</a>' +
+                text.substring(links[i].indices[1])
+        }
+
+        console.log("Tweet after: " + text)
+
+        return text.replace(/\n/g, '<br>');
+    }
+
+
     Column {
         spacing: 0
         Item {
@@ -136,14 +179,9 @@ Rectangle {
             width: window.width
             height:  homeScreenWindow.height / 3
 
-            XmlListModel {
-                id: rssXmlModel
-                source: ModelsSingleton.rssFeed
-                query: "/rss/channel/item"
 
-                XmlRole { name: "title"; query: "title/string()" }
-                XmlRole { name: "description"; query: "description/string()" }
-                XmlRole { name: "pubDate"; query: "pubDate/string()" }
+            TweetModel {
+                id: tweetModel
             }
 
             Text {
@@ -161,7 +199,76 @@ Rectangle {
                     z: -1
                     color: Theme.colors.smokewhite
                 }
+                Image {
+                    id: reloadNews
+                    anchors.verticalCenter: parent.verticalCenter
+                    anchors.right: parent.right
+                    anchors.rightMargin: Theme.margins.ten
+                    source: Theme.images.loading
+                }
+                MouseArea {
+                    anchors.fill: reloadNews
+                    onClicked: tweetModel.reload()
+                }
             }
+
+            Component {
+                id: tweetDelegate
+
+                Rectangle {
+                    color: Theme.colors.smokewhite
+                    height: tweetArea.height
+                    width: window.width
+
+                    Image {
+                        id: placeHolder
+                        anchors.verticalCenter: parent.verticalCenter
+                        source: Theme.images.anonymous
+                        visible: avatar.status != Image.Ready
+                    }
+
+                    Image {
+                        id: avatar
+                        anchors.fill: placeHolder
+                        source: model.user.profile_image_url
+                    }
+
+                    Item {
+                        id: tweetArea
+                        width: parent.width - avatar.width
+                        height: childrenRect.height
+                        anchors.left: avatar.right
+
+                        Text {
+                            id: userName
+                            anchors.left: parent.left
+                            anchors.leftMargin: Theme.margins.ten
+                            text: "<b>" + model.user.name + "</b>"
+                        }
+
+                        Text {
+                            id: userScreenName
+                            anchors.left: userName.right
+                            anchors.leftMargin: Theme.margins.ten
+                            text: "@" + model.user.screen_name
+                        }
+
+                        Text {
+                            id: tweetContent
+                            anchors.left: parent.left
+                            anchors.top: userName.bottom
+                            anchors.leftMargin: Theme.margins.ten
+                            anchors.rightMargin: Theme.margins.ten
+                            width: parent.width - Theme.margins.twenty
+                            text: insertLinks(model.text, model.entities)
+                            wrapMode: Text.WordWrap
+                            textFormat: Text.RichText
+                            onLinkActivated: Qt.openUrlExternally(link)
+                        }
+                    }
+                }
+            }
+
             ListView {
                 id: listNews
                 anchors.top: labelNews.bottom
@@ -169,45 +276,11 @@ Rectangle {
                 anchors.right: parent.right
                 anchors.bottom: parent.bottom
                 anchors.margins: Theme.margins.ten
-                model: rssXmlModel
                 clip: true
                 spacing: Theme.margins.ten
-                delegate: Rectangle {
-                    color: Theme.colors.smokewhite
-                    height: childrenRect.height
-                    width: parent.width
-                    Text {
-                        id: newsTitle
-                        anchors.left: parent.left
-                        anchors.top: parent.top
-                        anchors.leftMargin: Theme.margins.ten
-                        anchors.topMargin: Theme.margins.five
-                        width: contentWidth
-                        text: "<b>" + title + "</b>"
-                        textFormat: Text.StyledText
-                        font.pointSize: Theme.fonts.seven_pt
-                    }
-                    Text {
-                        anchors.right: parent.right
-                        anchors.top: parent.top
-                        anchors.rightMargin: Theme.margins.ten
-                        width: contentWidth
-                        text: pubDate
-                        textFormat: Text.StyledText
-                        font.pointSize: Theme.fonts.seven_pt
-                    }
-                    Text {
-                        anchors.top: newsTitle.bottom
-                        anchors.left: parent.left
-                        anchors.right: parent.right
-                        anchors.margins: Theme.margins.ten
-                        text: description
-                        textFormat: Text.StyledText
-                        wrapMode: Text.Wrap
-                        font.pointSize: Theme.fonts.seven_pt
-                        onLinkActivated: Qt.openUrlExternally(link)
-                    }
-                }
+
+                model: tweetModel.model
+                delegate: tweetDelegate
             }
         }
         Item {

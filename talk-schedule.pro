@@ -33,7 +33,8 @@ OTHER_FILES += \
     fonts/OpenSans-Regular.ttf \
     qml/components/HomeScreen.qml \
     qml/components/Feedback.qml \
-    qml/components/DayTracksModel.qml
+    qml/components/DayTracksModel.qml \
+    qml/components/TweetModel.qml
 
 RESOURCES += \
     resource.qrc

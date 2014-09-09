@@ -20,9 +20,12 @@
         <file alias="images/Menu.svg">qml/components/images/Menu.svg</file>
         <file alias="images/Star.svg">qml/components/images/Star.svg</file>
         <file alias="images/StarSelected.svg">qml/components/images/StarSelected.svg</file>
+        <file alias="images/NoRating.svg">qml/components/images/NoRating.svg</file>
+        <file alias="images/anonymous.png">qml/components/images/anonymous.png</file>
+        <file alias="images/icon-loading.png">qml/components/images/icon-loading.png</file>
         <file>qml/components/HomeScreen.qml</file>
         <file>qml/components/Feedback.qml</file>
         <file>qml/components/DayTracksModel.qml</file>
-        <file alias="images/NoRating.svg">qml/components/images/NoRating.svg</file>
+        <file>qml/components/TweetModel.qml</file>
     </qresource>
 </RCC>
