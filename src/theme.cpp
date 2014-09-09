@@ -80,6 +80,7 @@ Theme::Theme(QObject *parent)
     m_text->insert(QLatin1String("news"), tr("News"));
     m_text->insert(QLatin1String("info"), tr("Useful Information (PDF)"));
     m_text->insert(QLatin1String("writeYourCommentHere"), tr("Write your comments here"));
+    m_text->insert(QLatin1String("by"), tr("by %1"));
 
     m_colors = new QQmlPropertyMap(this);
     m_colors->insert(QLatin1String("white"), QVariant("#ffffff"));
@@ -114,8 +115,8 @@ Theme::Theme(QObject *parent)
     m_sizes->insert(QLatin1String("trackFieldHeight"), QVariant(applyRatio(50)));
     m_sizes->insert(QLatin1String("buttonHeight"), QVariant(applyRatio(78)));
     m_sizes->insert(QLatin1String("buttonWidth"), QVariant(applyRatio(300)));
-    m_sizes->insert(QLatin1String("ratingImageHeight"), QVariant(applyRatio(76)));
-    m_sizes->insert(QLatin1String("ratingImageWidth"), QVariant(applyRatio(80)));
+    m_sizes->insert(QLatin1String("ratingImageHeight"), QVariant(applyRatio(38)));
+    m_sizes->insert(QLatin1String("ratingImageWidth"), QVariant(applyRatio(40)));
 
     m_images = new QQmlPropertyMap(this);
     m_images->insert(QLatin1String("back"), QVariant("qrc:/images/BackArrow.svg"));
@@ -123,6 +124,7 @@ Theme::Theme(QObject *parent)
     m_images->insert(QLatin1String("logo"), QVariant("qrc:/images/DevDaysLogo.svg"));
     m_images->insert(QLatin1String("favorite"), QVariant("qrc:/images/StarSelected.svg"));
     m_images->insert(QLatin1String("notFavorite"), QVariant("qrc:/images/Star.svg"));
+    m_images->insert(QLatin1String("noRating"), QVariant("qrc:/images/NoRating.svg"));
 
     m_fonts = new QQmlPropertyMap(this);
     m_fonts->insert(QLatin1String("six_pt"), QVariant(applyFontRatio(8)));
@@ -134,6 +136,7 @@ Theme::Theme(QObject *parent)
     m_margins = new QQmlPropertyMap(this);
     m_margins->insert(QLatin1String("five"), QVariant(applyRatio(5)));
     m_margins->insert(QLatin1String("ten"), QVariant(applyRatio(10)));
+    m_margins->insert(QLatin1String("fifteen"), QVariant(applyRatio(15)));
     m_margins->insert(QLatin1String("twenty"), QVariant(applyRatio(20)));
     m_margins->insert(QLatin1String("thirty"), QVariant(applyRatio(30)));
 }

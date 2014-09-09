@@ -63,30 +63,21 @@ Item {
         anchors.top: subTitle.bottom
         anchors.left: parent.left
         anchors.right: parent.right
-        anchors.margins: Theme.margins.ten
-        spacing: Theme.margins.five
+        anchors.margins: Theme.margins.twenty
+        spacing: Theme.margins.fifteen
         Text {
             text: eventTopic
             color: Theme.colors.black
             width: parent.width
-            font.pointSize: Theme.fonts.twelve_pt
+            font.pointSize: Theme.fonts.eight_pt
             maximumLineCount: 2
             wrapMode: Text.Wrap
             elide: Text.ElideRight
         }
         RowLayout {
             width: parent.width
-            Label {
-                id: eventPerformers
-                text: eventPerformer
-                font.pointSize: Theme.fonts.seven_pt
-                color: Theme.colors.gray
-            }
-            Item {
-                id: separator
-                Layout.fillWidth: true
-                Layout.fillHeight: true
-            }
+            height: Theme.sizes.ratingImageHeight + Theme.margins.twenty
+            spacing: Theme.margins.ten
             Slider {
                 minimumValue: 0
                 maximumValue: 4
@@ -97,17 +88,33 @@ Item {
                     groove: RowLayout {
                         Repeater {
                             model: 5
-                            Image {
-                                source: index <= (rating - 1) ? Theme.images.favorite : Theme.images.notFavorite
-                                width: Theme.sizes.ratingImageWidth
-                                height: Theme.sizes.ratingImageHeight
-                                sourceSize.height: Theme.sizes.ratingImageHeight
-                                sourceSize.width: Theme.sizes.ratingImageWidth
-                                fillMode: Image.PreserveAspectFit
+                            Item {
+                                width: Theme.sizes.ratingImageWidth + Theme.margins.twenty
+                                height: Theme.sizes.ratingImageHeight + Theme.margins.twenty
+                                Image {
+                                    anchors.centerIn: parent
+                                    source: index <= (rating - 1) ? Theme.images.favorite : Theme.images.noRating
+                                    width: Theme.sizes.ratingImageWidth
+                                    height: Theme.sizes.ratingImageHeight
+                                    sourceSize.height: Theme.sizes.ratingImageHeight
+                                    sourceSize.width: Theme.sizes.ratingImageWidth
+                                    fillMode: Image.PreserveAspectFit
+                                }
                             }
                         }
                     }
                 }
+            }
+            Item {
+                id: separator
+                Layout.fillWidth: true
+                Layout.fillHeight: true
+            }
+            Label {
+                id: eventPerformers
+                text: Theme.text.by.arg(eventPerformer)
+                font.pointSize: Theme.fonts.seven_pt
+                color: Theme.colors.gray
             }
         }
 
@@ -124,7 +131,6 @@ Item {
                 Component.onCompleted: text = Theme.text.writeYourCommentHere
             }
         }
-
         Row {
             spacing: Theme.margins.twenty
             Button {

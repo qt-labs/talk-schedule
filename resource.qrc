@@ -23,5 +23,6 @@
         <file>qml/components/HomeScreen.qml</file>
         <file>qml/components/Feedback.qml</file>
         <file>qml/components/DayTracksModel.qml</file>
+        <file alias="images/NoRating.svg">qml/components/images/NoRating.svg</file>
     </qresource>
 </RCC>
