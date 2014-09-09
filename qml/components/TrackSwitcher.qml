@@ -88,6 +88,11 @@ Item {
     }
 
     Connections {
+        target: ModelsSingleton.breakModel
+        onDataReady: currentDayBreaksModel.model = ModelsSingleton.breakModel
+    }
+
+    Connections {
         target: daysWitcher
         onDayIdChanged: ModelsSingleton.timeListModel.tracksTodayModel = currentDayTracksModel
     }
