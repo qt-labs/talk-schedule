@@ -229,7 +229,8 @@ QtObject {
                                           "objectType": "objects.Event"
                                       },
                                       "rating": rating,
-                                      "feedbackText": fbtext
+                                      "feedbackText": fbtext,
+                                      "userId": ModelsSingleton.currentUserId
                                   })
         reply.finished.connect(function() {
             if (reply.errorType !== EnginioReply.NoError) {
