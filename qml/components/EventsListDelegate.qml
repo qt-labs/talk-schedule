@@ -42,15 +42,16 @@ import QtQuick 2.0
 import TalkSchedule 1.0
 import QtQuick.Layouts 1.1
 import QtQuick.Controls 1.1
+import "functions.js" as Functions
 
 Rectangle {
     id: delegateItem
-    property bool isDayLabelVisible: isSameDay()
+    property bool isDayLabelVisible: !Functions.isSameDay(viewSortModel, index)
     property int labelHeight: isDayLabelVisible ? Theme.sizes.dayLabelHeight : 0
     property var viewSortModel: ListView.view.model
     color: Theme.colors.white
 
-    height: Theme.sizes.trackHeaderHeight + labelHeight
+    height: Theme.sizes.trackHeaderHeight + dayLabel.height
     width: parent.width
     Label {
         id: dayLabel
@@ -63,17 +64,12 @@ Rectangle {
         font.pointSize: Theme.fonts.seven_pt
         font.capitalization: Font.AllUppercase
     }
-    Item {
-        id: divider
-        width: parent.width
-        height: isDayLabelVisible ? 0 : Theme.margins.five
-    }
     RowLayout {
         id: rowLayout
         height: Theme.sizes.trackHeaderHeight
         width: parent.width
-        anchors.top: isDayLabelVisible ? dayLabel.bottom : divider.bottom
-        spacing: Theme.margins.five
+        anchors.top: dayLabel.bottom
+        spacing: Theme.margins.ten
         Rectangle {
             id: trackHeader
             Layout.preferredHeight: Theme.sizes.trackHeaderHeight
@@ -141,7 +137,7 @@ Rectangle {
                         font.capitalization: Font.AllUppercase
                     }
                     Text {
-                        text: location
+                        text: Theme.text.room.arg(location)
                         Layout.fillWidth: true
                         color: Theme.colors.darkgray
                         font.pointSize: Theme.fonts.seven_pt
@@ -179,16 +175,6 @@ Rectangle {
                     ModelsSingleton.saveFavorite(id)
             }
         }
-    }
-
-    function isSameDay()
-    {
-        if (index > 0) {
-            var date = Qt.formatDate(start, "dddd d.M.yyyy")
-            var date2 = Qt.formatDate(viewSortModel.get(index - 1, "start"), "dddd d.M.yyyy")
-            return date2 != date
-        }
-        return index === 0
     }
 
     MouseArea {

@@ -91,7 +91,7 @@ Row {
 
                         Rectangle {
                             id: colorBackground
-                            anchors { fill: parent; rightMargin: Theme.margins.five; bottomMargin: index !== (listView.count - 1) ? Theme.margins.five : 0}
+                            anchors { fill: parent; rightMargin: Theme.margins.ten; bottomMargin: index !== (listView.count - 1) ? Theme.margins.ten : 0}
                             color: mouseArea.pressed ? Theme.colors.lightgray : Theme.colors.smokewhite
                         }
                         Item {

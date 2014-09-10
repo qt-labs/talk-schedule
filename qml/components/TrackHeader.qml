@@ -76,8 +76,8 @@ ListView {
             id: trackHeader
             anchors.fill: parent
             color: backgroundColor
-            anchors.rightMargin: Theme.margins.five
-            anchors.bottomMargin: index !== (listView.count - 1) ? Theme.margins.five : 0
+            anchors.rightMargin: Theme.margins.ten
+            anchors.bottomMargin: index !== (listView.count - 1) ? Theme.margins.ten : 0
             Text {
                 visible: !dayTracksModel.isEmpty
                 anchors.fill: parent

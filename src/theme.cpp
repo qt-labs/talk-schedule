@@ -81,6 +81,8 @@ Theme::Theme(QObject *parent)
     m_text->insert(QLatin1String("info"), tr("Useful Information (PDF)"));
     m_text->insert(QLatin1String("writeYourCommentHere"), tr("Write your comments here"));
     m_text->insert(QLatin1String("by"), tr("by %1"));
+    m_text->insert(QLatin1String("room"), tr("Room %1"));
+
 
     m_colors = new QQmlPropertyMap(this);
     m_colors->insert(QLatin1String("white"), QVariant("#ffffff"));
@@ -108,7 +110,7 @@ Theme::Theme(QObject *parent)
     m_sizes->insert(QLatin1String("logoWidth"), QVariant(applyRatio(286)));
     m_sizes->insert(QLatin1String("menuHeight"), QVariant(applyRatio(62)));
     m_sizes->insert(QLatin1String("menuWidth"), QVariant(applyRatio(78)));
-    m_sizes->insert(QLatin1String("dayLabelHeight"), QVariant(applyRatio(50)));
+    m_sizes->insert(QLatin1String("dayLabelHeight"), QVariant(applyRatio(70)));
     m_sizes->insert(QLatin1String("upcomingEventHeight"), QVariant(applyRatio(75)));
     m_sizes->insert(QLatin1String("homeTitleHeight"), QVariant(applyRatio(50)));
     m_sizes->insert(QLatin1String("upcomingEventTimeWidth"), QVariant(applyRatio(180)));

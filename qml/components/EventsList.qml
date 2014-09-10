@@ -59,6 +59,7 @@ Item {
         height: parent.height - subTitle.height
         width: parent.width
         clip: true
+        spacing: Theme.margins.ten
         model: SortFilterModel {
             id: sortModel
             sortRole: "start"

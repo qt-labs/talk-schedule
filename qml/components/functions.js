@@ -103,4 +103,13 @@ function isStartTimeAfterNow(start)
     return eventStart > now
 }
 
-
+function isSameDay(model, index)
+{
+    if (index > 0) {
+        var formatDate = "dddd d.M.yyyy"
+        var date = Qt.formatDate(model.get(index, "start"), formatDate)
+        var date2 = Qt.formatDate(model.get(index - 1, "start"), formatDate)
+        return date2 === date
+    }
+    return false
+}

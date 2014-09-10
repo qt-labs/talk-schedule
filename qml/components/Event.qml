@@ -117,7 +117,7 @@ Rectangle {
                             radius: 5
                             border.width: 2
                             border.color: Theme.colors.qtgreen
-                            color: control.pressed ? Qt.darker(Theme.colors.white, 1.1) : Theme.colors.white
+                            color: control.pressed ? Qt.darker(Theme.colors.qtgreen, 1.1) : Theme.colors.qtgreen
                         }
                         label: Text {
                             horizontalAlignment: Text.AlignHCenter
@@ -172,7 +172,7 @@ Rectangle {
         anchors.bottom: eventView.bottom
         width: eventView.width
         height: Theme.sizes.trackHeaderHeight
-        spacing: Theme.margins.five
+        spacing: Theme.margins.ten
         Rectangle {
             id: trackSquare
             Layout.preferredHeight: Theme.sizes.trackHeaderHeight
@@ -204,7 +204,7 @@ Rectangle {
                     font.pointSize: Theme.fonts.seven_pt
                 }
                 Label {
-                    text: model.data(indexCurrentEvent, "location")
+                    text: Theme.text.room.arg(model.data(indexCurrentEvent, "location"))
                     height: parent.height
                     color: Theme.colors.darkgray
                     font.pointSize: Theme.fonts.seven_pt

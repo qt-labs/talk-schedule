@@ -100,8 +100,13 @@ Item {
     function getTimeRange(model)
     {
         var earliestTime = model.data(0, "start")
-        if (Functions.isStartTimeAfterNow(earliestTime)) {
-            if (firstEvent === undefined || earliestTime < firstEvent)
+        if (firstEvent === undefined)
+            firstEvent = earliestTime
+        else if (!Functions.isStartTimeAfterNow(firstEvent)) {
+            if (earliestTime < firstEvent || Functions.isStartTimeAfterNow(earliestTime))
+                firstEvent = earliestTime
+        } else {
+            if (earliestTime < firstEvent && Functions.isStartTimeAfterNow(earliestTime))
                 firstEvent = earliestTime
         }
         var latestTime = model.data(0, "end") // earliestTime
@@ -116,8 +121,13 @@ Item {
         for (var i = 0; i < model.rowCount(); i++) {
 
             time = model.data(i, "start")
-            if (firstEvent === undefined && Functions.isStartTimeAfterNow(time))
-                firstEvent = time
+            if (!Functions.isStartTimeAfterNow(firstEvent)) {
+                if (time < firstEvent || Functions.isStartTimeAfterNow(time))
+                    firstEvent = time
+            } else {
+                if (time < firstEvent && Functions.isStartTimeAfterNow(time))
+                    firstEvent = time
+            }
 
             timeHours = Functions.getHour(time)
             earliestHours = Functions.getHour(earliestTime)
@@ -196,7 +206,7 @@ Item {
             anchors.topMargin: Theme.sizes.dayLabelHeight
             anchors.right: parent.right
             height: Math.min(parent.height - Theme.sizes.dayLabelHeight,
-                             listView.contentHeight)
+                             listView.contentHeight - Theme.margins.ten)
             width: parent.width - Theme.sizes.trackHeaderWidth
             Repeater {
                 id: breaks
@@ -205,7 +215,7 @@ Item {
                     color: Theme.colors.smokewhite
                     anchors.top: breakColumn.top
                     x: Functions.countTrackPosition(start) - breakData.trackScrolling
-                    width: Functions.countTrackWidth(start, end) - Theme.margins.five
+                    width: Functions.countTrackWidth(start, end) - Theme.margins.ten
                     anchors.bottom: breakColumn.bottom
                     Text {
                         anchors.centerIn: parent
