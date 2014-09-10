@@ -76,7 +76,7 @@ Theme::Theme(QObject *parent)
     m_text->insert(QLatin1String("talks"), tr("Presentations"));
     m_text->insert(QLatin1String("favorites"), tr("Favorites"));
     m_text->insert(QLatin1String("feedback"), tr("Send Feedback"));
-    m_text->insert(QLatin1String("upcoming"), tr("Upcoming"));
+    m_text->insert(QLatin1String("upcoming"), tr("Upcoming: %1"));
     m_text->insert(QLatin1String("news"), tr("News"));
     m_text->insert(QLatin1String("info"), tr("Useful Information (PDF)"));
     m_text->insert(QLatin1String("writeYourCommentHere"), tr("Write your comments here"));

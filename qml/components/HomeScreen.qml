@@ -96,13 +96,12 @@ Rectangle {
         spacing: 0
         Item {
             // upcoming
-            // Todo: List upcoming talks
             width: homeScreenWindow.width
             height: homeScreenWindow.height / 3
 
             Text {
                 id: labelUpcoming
-                text: Theme.text.upcoming
+                text: Theme.text.upcoming.arg(ModelsSingleton.conferenceTitle)
                 width: parent.width
                 height: Theme.sizes.homeTitleHeight
                 z: 1

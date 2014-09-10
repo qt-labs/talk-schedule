@@ -48,6 +48,7 @@ QtObject {
     property string conferenceId
     property string currentUserId
     property string conferenceLocation
+    property string conferenceTitle
     property string conferenceTwitterTag
     property string rssFeed
     property var currentConferenceTracks: []
@@ -63,6 +64,7 @@ QtObject {
                 var conference = conferenceQuery.data.results[0]
                 ModelsSingleton.conferenceId = conference.id
                 ModelsSingleton.conferenceLocation = conference.location
+                ModelsSingleton.conferenceTitle = conference.title
                 ModelsSingleton.conferenceTwitterTag = conference.TwitterTag
                 ModelsSingleton.rssFeed = conference.rssFeed
             })
