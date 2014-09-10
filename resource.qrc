@@ -12,6 +12,10 @@
         <file>qml/components/EventsList.qml</file>
         <file>qml/components/ModelsSingleton.qml</file>
         <file>qml/components/EventsListDelegate.qml</file>
+        <file>qml/components/HomeScreen.qml</file>
+        <file>qml/components/Feedback.qml</file>
+        <file>qml/components/DayTracksModel.qml</file>
+        <file>qml/components/TweetModel.qml</file>
         <file>fonts/OpenSans-Regular.ttf</file>
         <file>fonts/OpenSans-Semibold.ttf</file>
         <file>fonts/OpenSans-Bold.ttf</file>
@@ -23,9 +27,9 @@
         <file alias="images/NoRating.svg">qml/components/images/NoRating.svg</file>
         <file alias="images/anonymous.png">qml/components/images/anonymous.png</file>
         <file alias="images/icon-loading.png">qml/components/images/icon-loading.png</file>
-        <file>qml/components/HomeScreen.qml</file>
-        <file>qml/components/Feedback.qml</file>
-        <file>qml/components/DayTracksModel.qml</file>
-        <file>qml/components/TweetModel.qml</file>
+        <file alias="images/Btn_Hotels.svg">qml/components/images/Btn_Hotels.svg</file>
+        <file alias="images/Btn_Restaurants.svg">qml/components/images/Btn_Restaurants.svg</file>
+        <file alias="images/Btn_VenueMap.svg">qml/components/images/Btn_VenueMap.svg</file>
+        <file alias="images/Location.svg">qml/components/images/Location.svg</file>
     </qresource>
 </RCC>

@@ -129,6 +129,10 @@ Theme::Theme(QObject *parent)
     m_images->insert(QLatin1String("noRating"), QVariant("qrc:/images/NoRating.svg"));
     m_images->insert(QLatin1String("loading"), QVariant("qrc:/images/icon-loading.png"));
     m_images->insert(QLatin1String("anonymous"), QVariant("qrc:/images/anonymous.png"));
+    m_images->insert(QLatin1String("btnHotels"), QVariant("qrc:/images/Btn_Hotels.svg"));
+    m_images->insert(QLatin1String("btnRestaurants"), QVariant("qrc:/images/Btn_Restaurants.svg"));
+    m_images->insert(QLatin1String("btnVenueMap"), QVariant("qrc:/images/Btn_VenueMap.svg"));
+    m_images->insert(QLatin1String("location"), QVariant("qrc:/images/Location.svg"));
 
     m_fonts = new QQmlPropertyMap(this);
     m_fonts->insert(QLatin1String("six_pt"), QVariant(applyFontRatio(8)));
