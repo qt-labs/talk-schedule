@@ -204,9 +204,11 @@ QVariant Model::data(int index, const QString &role) const
 
 void Model::onFinished(EnginioReply *reply)
 {
-    bool dataHasChanged = parse(reply->data());
-    if (dataHasChanged)
-        save(reply->data());
+    if (reply->errorType() == Enginio::NoError) {
+        bool dataHasChanged = parse(reply->data());
+        if (dataHasChanged)
+            save(reply->data());
+    }
     reply->deleteLater();
 }
 

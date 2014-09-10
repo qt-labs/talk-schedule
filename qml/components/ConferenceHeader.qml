@@ -116,6 +116,7 @@ Item {
                 Layout.preferredWidth: topicRect.height
                 Layout.preferredHeight: topicRect.height
                 onClicked: menu.popup()
+                enabled: ModelsSingleton.conferenceId !== ""
                 Rectangle {
                     anchors.fill: parent
                     anchors.margins: Theme.margins.five

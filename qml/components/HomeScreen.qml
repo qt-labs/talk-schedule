@@ -92,8 +92,16 @@ Rectangle {
     }
 
 
+    Text {
+        visible: ModelsSingleton.conferenceId === ""
+        text: "Error: " + ModelsSingleton.errorMessage
+        anchors.centerIn: parent
+        font.pointSize: Theme.fonts.eight_pt
+    }
+
     Column {
         spacing: 0
+        visible: ModelsSingleton.conferenceId !== ""
         Item {
             // upcoming
             width: homeScreenWindow.width

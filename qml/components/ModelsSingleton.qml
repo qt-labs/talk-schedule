@@ -55,12 +55,18 @@ QtObject {
     property var currentConferenceEvents: []
     property var currentConferenceDays: []
     property bool busy: false
+    property string errorMessage
     property var client: EnginioClient {
         backendId: backId
-        onError: console.log("Enginio error " + reply.errorCode + ": " + reply.errorString)
+        onError: {
+            errorMessage = reply.errorString
+            console.log("Enginio error " + reply.errorCode + ": " + reply.errorString)
+        }
         Component.onCompleted: {
             var conferenceQuery = query({ "objectType": "objects.Conference"})
             conferenceQuery.finished.connect(function() {
+                if (conferenceQuery.errorType !== Enginio.NoError)
+                    return
                 var conference = conferenceQuery.data.results[0]
                 ModelsSingleton.conferenceId = conference.id
                 ModelsSingleton.conferenceLocation = conference.location
@@ -321,6 +327,9 @@ QtObject {
     }
 
     onConferenceIdChanged: {
+        if (ModelsSingleton.conferenceId === "")
+            return
+
         day.conferenceId = ModelsSingleton.conferenceId
         trackModel.conferenceId = ModelsSingleton.conferenceId
         eventModel.conferenceId = ModelsSingleton.conferenceId
