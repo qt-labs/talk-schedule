@@ -220,9 +220,9 @@ Item {
                     Text {
                         anchors.centerIn: parent
                         horizontalAlignment: Text.AlignHCenter
-                        font.pixelSize: 20
-                        text: name +  "\n" + Qt.formatTime(start, "hh:mm") + " - " + Qt.formatTime(end, "hh:mm")
-                        color: Theme.colors.gray
+                        font.pointSize: Theme.fonts.seven_pt
+                        text: name +  "\n" + Qt.formatTime(start, "h:mm") + " - " + Qt.formatTime(end, "h:mm")
+                        color: Theme.colors.darkgray
                     }
                 }
             }
