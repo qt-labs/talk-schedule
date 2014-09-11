@@ -290,7 +290,7 @@ Rectangle {
             // useful info
             // Todo: Content
             width: window.width
-            height:  homeScreenWindow.height / 3
+            height: homeScreenWindow.height / 3
             Text {
                 id: labelInfo
                 z: 1
@@ -307,22 +307,39 @@ Rectangle {
                     color: Theme.colors.smokewhite
                 }
             }
-            Text {
-                id: info
+            Row {
                 anchors.top: labelInfo.bottom
-                anchors.left: parent.left
-                anchors.right: parent.right
-                anchors.bottom: parent.bottom
-                anchors.margins: Theme.margins.ten
-                textFormat: Text.StyledText
-                font.pointSize: Theme.fonts.seven_pt
-                text: "<a href='http://www.qtdeveloperdays.com/sites/default/files/files/bcc_map.pdf'>
-                        Venue map</a><br />
-                       <a href='http://www.qtdeveloperdays.com/sites/default/files/files/bcc_hotels.pdf'>
-                        Recommended hotels</a><br />
-                       <a href='https://www.qtdeveloperdays.com/sites/default/files/files/BerlinAlexanderplatzRestaurants_1.pdf'>
-                        Restaurants in the vicinity</a>"
-                onLinkActivated: Qt.openUrlExternally(link)
+                spacing: Theme.margins.twenty
+                Image {
+                    source: Theme.images.btnVenueMap
+                    sourceSize.height: Theme.sizes.infoButtonSize
+                    sourceSize.width: Theme.sizes.infoButtonSize
+
+                    MouseArea {
+                        anchors.fill: parent
+                        onClicked: Qt.openUrlExternally("http://www.qtdeveloperdays.com/sites/default/files/files/bcc_map.pdf")
+                    }
+                }
+                Image {
+                    source: Theme.images.btnHotels
+                    sourceSize.height: Theme.sizes.infoButtonSize
+                    sourceSize.width: Theme.sizes.infoButtonSize
+
+                    MouseArea {
+                        anchors.fill: parent
+                        onClicked: Qt.openUrlExternally("http://www.qtdeveloperdays.com/sites/default/files/files/bcc_hotels.pdf")
+                    }
+                }
+                Image {
+                    source: Theme.images.btnRestaurants
+                    sourceSize.height: Theme.sizes.infoButtonSize
+                    sourceSize.width: Theme.sizes.infoButtonSize
+
+                    MouseArea {
+                        anchors.fill: parent
+                        onClicked: Qt.openUrlExternally("https://www.qtdeveloperdays.com/sites/default/files/files/BerlinAlexanderplatzRestaurants_1.pdf")
+                    }
+                }
             }
         }
     }

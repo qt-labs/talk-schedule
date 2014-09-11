@@ -78,7 +78,7 @@ Theme::Theme(QObject *parent)
     m_text->insert(QLatin1String("feedback"), tr("Send Feedback"));
     m_text->insert(QLatin1String("upcoming"), tr("Upcoming: %1"));
     m_text->insert(QLatin1String("news"), tr("News"));
-    m_text->insert(QLatin1String("info"), tr("Useful Information (PDF)"));
+    m_text->insert(QLatin1String("info"), tr("Useful Information"));
     m_text->insert(QLatin1String("writeYourCommentHere"), tr("Write your comments here"));
     m_text->insert(QLatin1String("by"), tr("by %1"));
     m_text->insert(QLatin1String("room"), tr("Room %1"));
@@ -119,6 +119,7 @@ Theme::Theme(QObject *parent)
     m_sizes->insert(QLatin1String("buttonWidth"), QVariant(applyRatio(300)));
     m_sizes->insert(QLatin1String("ratingImageHeight"), QVariant(applyRatio(38)));
     m_sizes->insert(QLatin1String("ratingImageWidth"), QVariant(applyRatio(40)));
+    m_sizes->insert(QLatin1String("infoButtonSize"), QVariant(applyRatio(140)));
 
     m_images = new QQmlPropertyMap(this);
     m_images->insert(QLatin1String("back"), QVariant("qrc:/images/BackArrow.svg"));
