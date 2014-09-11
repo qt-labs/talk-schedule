@@ -83,6 +83,7 @@ Theme::Theme(QObject *parent)
     m_text->insert(QLatin1String("by"), tr("by %1"));
     m_text->insert(QLatin1String("room"), tr("Room %1"));
     m_text->insert(QLatin1String("room_space"), tr(" - Room %1"));
+    m_text->insert(QLatin1String("tweet_title"), "<b>%1</b> @%2");
 
     m_colors = new QQmlPropertyMap(this);
     m_colors->insert(QLatin1String("white"), QVariant("#ffffff"));
@@ -119,7 +120,7 @@ Theme::Theme(QObject *parent)
     m_sizes->insert(QLatin1String("buttonWidth"), QVariant(applyRatio(300)));
     m_sizes->insert(QLatin1String("ratingImageHeight"), QVariant(applyRatio(38)));
     m_sizes->insert(QLatin1String("ratingImageWidth"), QVariant(applyRatio(40)));
-    m_sizes->insert(QLatin1String("infoButtonSize"), QVariant(applyRatio(140)));
+    m_sizes->insert(QLatin1String("infoButtonSize"), QVariant(applyRatio(160)));
     m_sizes->insert(QLatin1String("reloadButtonSize"), QVariant(applyRatio(50)));
     m_sizes->insert(QLatin1String("twitterAvatarSize"), QVariant(applyRatio(80)));
 

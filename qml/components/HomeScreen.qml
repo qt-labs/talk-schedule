@@ -48,6 +48,7 @@ Rectangle {
     height: window.height - header.height
     width: window.width
     objectName: "homeScreen"
+    property int usefulItemHeight: Theme.sizes.infoButtonSize + Theme.sizes.homeTitleHeight + Theme.margins.twenty
 
     property var idx
     property var ids
@@ -98,11 +99,12 @@ Rectangle {
     Column {
         spacing: 0
         visible: ModelsSingleton.conferenceId !== ""
+        anchors.fill: parent
         Item {
             // upcoming
             id: upcomingItem
             width: homeScreenWindow.width
-            height: homeScreenWindow.height / 3
+            height: (homeScreenWindow.height - homeScreenWindow.usefulItemHeight)/2
 
             property string visibleDate: ""
             property string formatDate: "ddd d.MM"
@@ -209,8 +211,7 @@ Rectangle {
         Item {
             // news
             width: window.width
-            height:  homeScreenWindow.height / 3
-
+            height: (homeScreenWindow.height - homeScreenWindow.usefulItemHeight)/2
 
             TweetModel {
                 id: tweetModel
@@ -235,7 +236,7 @@ Rectangle {
                     id: reloadNews
                     anchors.verticalCenter: parent.verticalCenter
                     anchors.right: parent.right
-                    anchors.rightMargin: Theme.margins.ten
+                    anchors.rightMargin: Theme.margins.fifteen
                     source: Theme.images.loading
                     sourceSize.height: Theme.sizes.reloadButtonSize
                     sourceSize.width: Theme.sizes.reloadButtonSize
@@ -251,15 +252,16 @@ Rectangle {
 
                 Rectangle {
                     color: Theme.colors.smokewhite
-                    height: placeHolder.height
+                    height: Math.max(tweetArea.height, Theme.sizes.twitterAvatarSize)
                     width: window.width
 
                     Image {
                         id: placeHolder
-                        anchors.verticalCenter: parent.verticalCenter
+                        anchors.top: parent.top
+                        anchors.left: parent.left
                         source: Theme.images.anonymous
-                        height: Theme.sizes.twitterAvatarSize
-                        width: Theme.sizes.twitterAvatarSize
+                        sourceSize.height: Theme.sizes.twitterAvatarSize
+                        sourceSize.width: Theme.sizes.twitterAvatarSize
                         visible: avatar.status != Image.Ready
                     }
 
@@ -267,35 +269,27 @@ Rectangle {
                         id: avatar
                         anchors.fill: placeHolder
                         source: model.user.profile_image_url
+                        sourceSize.height: Theme.sizes.twitterAvatarSize
+                        sourceSize.width: Theme.sizes.twitterAvatarSize
                     }
 
-                    Item {
+                    Column {
                         id: tweetArea
                         width: parent.width - placeHolder.width
-                        height: placeHolder.height
+                        height: userName.implicitHeight + tweetContent.implicitHeight
                         anchors.left: placeHolder.right
+                        anchors.leftMargin: Theme.margins.ten
+                        anchors.rightMargin: Theme.margins.ten
 
                         Text {
                             id: userName
-                            anchors.left: parent.left
-                            anchors.leftMargin: Theme.margins.ten
-                            text: "<b>" + model.user.name + "</b>"
-                        }
-
-                        Text {
-                            id: userScreenName
-                            anchors.left: userName.right
-                            anchors.leftMargin: Theme.margins.ten
-                            text: "@" + model.user.screen_name
+                            width: parent.width
+                            text: Theme.text.tweet_title.arg(model.user.name).arg(model.user.screen_name)
                         }
 
                         Text {
                             id: tweetContent
-                            anchors.left: parent.left
-                            anchors.top: userName.bottom
-                            anchors.leftMargin: Theme.margins.ten
-                            anchors.rightMargin: Theme.margins.ten
-                            width: parent.width - Theme.margins.twenty
+                            width: parent.width
                             text: insertLinks(model.text, model.entities)
                             wrapMode: Text.WordWrap
                             textFormat: Text.RichText
@@ -314,16 +308,15 @@ Rectangle {
                 anchors.margins: Theme.margins.ten
                 clip: true
                 spacing: Theme.margins.fifteen
-
                 model: tweetModel.model
                 delegate: tweetDelegate
             }
         }
         Item {
             // useful info
-            // Todo: Content
+            id: usefulItem
             width: window.width
-            height: homeScreenWindow.height / 3
+            height: homeScreenWindow.usefulItemHeight
             Text {
                 id: labelInfo
                 z: 1
@@ -342,12 +335,14 @@ Rectangle {
             }
             Row {
                 anchors.top: labelInfo.bottom
-                spacing: Theme.margins.twenty
+                anchors.bottom: usefulItem.bottom
+                anchors.horizontalCenter: parent.horizontalCenter
+                spacing: Theme.margins.thirty
                 Image {
                     source: Theme.images.btnVenueMap
                     sourceSize.height: Theme.sizes.infoButtonSize
                     sourceSize.width: Theme.sizes.infoButtonSize
-
+                    anchors.verticalCenter: parent.verticalCenter
                     MouseArea {
                         anchors.fill: parent
                         onClicked: Qt.openUrlExternally("http://www.qtdeveloperdays.com/sites/default/files/files/bcc_map.pdf")
@@ -357,7 +352,7 @@ Rectangle {
                     source: Theme.images.btnHotels
                     sourceSize.height: Theme.sizes.infoButtonSize
                     sourceSize.width: Theme.sizes.infoButtonSize
-
+                    anchors.verticalCenter: parent.verticalCenter
                     MouseArea {
                         anchors.fill: parent
                         onClicked: Qt.openUrlExternally("http://www.qtdeveloperdays.com/sites/default/files/files/bcc_hotels.pdf")
@@ -367,7 +362,7 @@ Rectangle {
                     source: Theme.images.btnRestaurants
                     sourceSize.height: Theme.sizes.infoButtonSize
                     sourceSize.width: Theme.sizes.infoButtonSize
-
+                    anchors.verticalCenter: parent.verticalCenter
                     MouseArea {
                         anchors.fill: parent
                         onClicked: Qt.openUrlExternally("https://www.qtdeveloperdays.com/sites/default/files/files/BerlinAlexanderplatzRestaurants_1.pdf")
