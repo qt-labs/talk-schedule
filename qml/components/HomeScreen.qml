@@ -65,8 +65,6 @@ Rectangle {
 
     function insertLinks(text, entities)
     {
-        console.log("Tweet before: " + text)
-
         if (typeof text !== 'string')
             return "";
 
@@ -85,8 +83,6 @@ Rectangle {
                 textForEntity(links[i]) + '</a>' +
                 text.substring(links[i].indices[1])
         }
-
-        console.log("Tweet after: " + text)
 
         return text.replace(/\n/g, '<br>');
     }
