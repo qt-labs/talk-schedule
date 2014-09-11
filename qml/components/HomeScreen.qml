@@ -237,6 +237,8 @@ Rectangle {
                     anchors.right: parent.right
                     anchors.rightMargin: Theme.margins.ten
                     source: Theme.images.loading
+                    sourceSize.height: Theme.sizes.reloadButtonSize
+                    sourceSize.width: Theme.sizes.reloadButtonSize
                 }
                 MouseArea {
                     anchors.fill: reloadNews
@@ -249,13 +251,15 @@ Rectangle {
 
                 Rectangle {
                     color: Theme.colors.smokewhite
-                    height: tweetArea.height
+                    height: placeHolder.height
                     width: window.width
 
                     Image {
                         id: placeHolder
                         anchors.verticalCenter: parent.verticalCenter
                         source: Theme.images.anonymous
+                        height: Theme.sizes.twitterAvatarSize
+                        width: Theme.sizes.twitterAvatarSize
                         visible: avatar.status != Image.Ready
                     }
 
@@ -267,9 +271,9 @@ Rectangle {
 
                     Item {
                         id: tweetArea
-                        width: parent.width - avatar.width
-                        height: childrenRect.height
-                        anchors.left: avatar.right
+                        width: parent.width - placeHolder.width
+                        height: placeHolder.height
+                        anchors.left: placeHolder.right
 
                         Text {
                             id: userName
@@ -309,7 +313,7 @@ Rectangle {
                 anchors.bottom: parent.bottom
                 anchors.margins: Theme.margins.ten
                 clip: true
-                spacing: Theme.margins.ten
+                spacing: Theme.margins.fifteen
 
                 model: tweetModel.model
                 delegate: tweetDelegate

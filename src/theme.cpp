@@ -120,6 +120,8 @@ Theme::Theme(QObject *parent)
     m_sizes->insert(QLatin1String("ratingImageHeight"), QVariant(applyRatio(38)));
     m_sizes->insert(QLatin1String("ratingImageWidth"), QVariant(applyRatio(40)));
     m_sizes->insert(QLatin1String("infoButtonSize"), QVariant(applyRatio(140)));
+    m_sizes->insert(QLatin1String("reloadButtonSize"), QVariant(applyRatio(50)));
+    m_sizes->insert(QLatin1String("twitterAvatarSize"), QVariant(applyRatio(80)));
 
     m_images = new QQmlPropertyMap(this);
     m_images->insert(QLatin1String("back"), QVariant("qrc:/images/BackArrow.svg"));
