@@ -127,8 +127,8 @@ Theme::Theme(QObject *parent)
     m_images->insert(QLatin1String("favorite"), QVariant("qrc:/images/StarSelected.svg"));
     m_images->insert(QLatin1String("notFavorite"), QVariant("qrc:/images/Star.svg"));
     m_images->insert(QLatin1String("noRating"), QVariant("qrc:/images/NoRating.svg"));
-    m_images->insert(QLatin1String("loading"), QVariant("qrc:/images/icon-loading.png"));
-    m_images->insert(QLatin1String("anonymous"), QVariant("qrc:/images/anonymous.png"));
+    m_images->insert(QLatin1String("loading"), QVariant("qrc:/images/icon-loading.svg"));
+    m_images->insert(QLatin1String("anonymous"), QVariant("qrc:/images/anonymous.svg"));
     m_images->insert(QLatin1String("btnHotels"), QVariant("qrc:/images/Btn_Hotels.svg"));
     m_images->insert(QLatin1String("btnRestaurants"), QVariant("qrc:/images/Btn_Restaurants.svg"));
     m_images->insert(QLatin1String("btnVenueMap"), QVariant("qrc:/images/Btn_VenueMap.svg"));
