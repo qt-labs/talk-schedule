@@ -48,7 +48,6 @@ import TalkSchedule 1.0
 Item {
     id: conferenceHeader
     property var event
-
     Rectangle {
         id: topicRect
         anchors.fill: parent
@@ -60,61 +59,106 @@ Item {
             anchors.right: parent.right
             height: topicRect.height
             anchors.margins: Theme.margins.ten
-            MouseArea {
-                id: mouseAreaBack
+            Item {
                 Layout.preferredHeight: topicRect.height
                 Layout.preferredWidth: topicRect.height
-                enabled: stack.depth > 1
-                onClicked: stack.pop()
-                Rectangle {
+                MouseArea {
+                    id: mouseAreaBack
                     anchors.fill: parent
-                    anchors.margins: Theme.margins.five
-                    color: mouseAreaBack.pressed ? Theme.colors.smokewhite : Theme.colors.white
-                    radius: 5
-                }
-                Image {
-                    id: backButton
-                    anchors.left: parent.left
-                    anchors.verticalCenter: parent.verticalCenter
-                    anchors.leftMargin: Theme.margins.twenty
-                    opacity: stack.depth > 1 ? 1 : 0
-                    Behavior on opacity { PropertyAnimation{} }
-                    height: Theme.sizes.backHeight
-                    width: Theme.sizes.backWidth
-                    sourceSize.height: Theme.sizes.backHeight
-                    sourceSize.width: Theme.sizes.backWidth
-                    source: Theme.images.back
-                }
-                Item {
-                    id: locationButton
-                    anchors.left: parent.left
-                    anchors.verticalCenter: parent.verticalCenter
-                    opacity: stack.depth == 1 ? 1 : 0
-                    Behavior on opacity { PropertyAnimation{} }
-
+                    enabled: stack.depth > 1
+                    onClicked: stack.pop()
+                    Rectangle {
+                        anchors.fill: parent
+                        anchors.margins: Theme.margins.five
+                        color: mouseAreaBack.pressed ? Theme.colors.smokewhite : Theme.colors.white
+                        visible: stack.depth > 1
+                        radius: 5
+                    }
                     Image {
-                        id: locationImage
+                        id: backButton
                         anchors.left: parent.left
                         anchors.verticalCenter: parent.verticalCenter
-                        anchors.leftMargin: Theme.margins.ten
-                        sourceSize.height: Theme.sizes.menuHeight
-                        sourceSize.width: Theme.sizes.menuWidth
-                        source: Theme.images.location
+                        anchors.leftMargin: Theme.margins.twenty
+                        opacity: stack.depth > 1 ? 1 : 0
+                        Behavior on opacity { PropertyAnimation{} }
+                        height: Theme.sizes.backHeight
+                        width: Theme.sizes.backWidth
+                        sourceSize.height: Theme.sizes.backHeight
+                        sourceSize.width: Theme.sizes.backWidth
+                        source: Theme.images.back
+                    }
+                }
+
+                MouseArea {
+                    id: locationMenuMouseArea
+                    anchors.fill: parent
+                    enabled: stack.depth == 1
+                    onClicked: locationMenu.popup()
+
+                    Rectangle {
+                        anchors.fill: parent
+                        anchors.margins: Theme.margins.five
+                        color: locationMenuMouseArea.pressed ? Theme.colors.smokewhite : Theme.colors.white
+                        visible: stack.depth == 1
+                        radius: 5
                     }
 
-                    Text {
-                        id: locationLabel
-                        anchors.left: locationImage.right
-                        anchors.verticalCenter: parent.verticalCenter
-                        anchors.leftMargin: Theme.margins.ten
-                        text: ModelsSingleton.conferenceLocation
-                        font.pointSize: Theme.fonts.ten_pt
-                        font.capitalization: Font.AllUppercase
-                        font.weight: Font.DemiBold
-                        color: Theme.colors.gray
-                        Layout.fillWidth: false
-                        Layout.alignment: Text.AlignVCenter | Text.AlignHCenter
+                    Menu {
+                        id: locationMenu
+                        Instantiator {
+                            id: menuConferenceRepeater
+                            model: ModelsSingleton.conferencesModel.rowCount()
+                            Component.onCompleted: print(ModelsSingleton.conferencesModel.rowCount())
+                            MenuItem {
+                                text: ModelsSingleton.conferencesModel.data(index, "title")
+                                onTriggered: {
+                                    ModelsSingleton.conferenceId = ModelsSingleton.conferencesModel.data(index, "id")
+                                    ModelsSingleton.conferenceLocation = ModelsSingleton.conferencesModel.data(index, "location")
+                                    ModelsSingleton.conferenceTitle = ModelsSingleton.conferencesModel.data(index, "title")
+                                    ModelsSingleton.conferenceTwitterTag = ModelsSingleton.conferencesModel.data(index, "TwitterTag")
+                                    ModelsSingleton.rssFeed = ModelsSingleton.conferencesModel.data(index, "rssFeed")
+                                }
+                            }
+                            onObjectAdded: locationMenu.insertItem(locationMenu.items.length, object)
+                        }
 
+                        Connections {
+                            target: ModelsSingleton.conferencesModel
+                            onDataReady: menuConferenceRepeater.model = ModelsSingleton.conferencesModel.rowCount()
+                        }
+                    }
+
+                    Item {
+                        id: locationButton
+                        anchors.left: parent.left
+                        anchors.verticalCenter: parent.verticalCenter
+                        opacity: stack.depth == 1 ? 1 : 0
+                        Behavior on opacity { PropertyAnimation{} }
+
+                        Image {
+                            id: locationImage
+                            anchors.left: parent.left
+                            anchors.verticalCenter: parent.verticalCenter
+                            anchors.leftMargin: Theme.margins.ten
+                            sourceSize.height: Theme.sizes.menuHeight
+                            sourceSize.width: Theme.sizes.menuWidth
+                            source: Theme.images.location
+                        }
+
+                        Text {
+                            id: locationLabel
+                            anchors.left: locationImage.right
+                            anchors.verticalCenter: parent.verticalCenter
+                            anchors.leftMargin: Theme.margins.ten
+                            text: ModelsSingleton.conferenceLocation
+                            font.pointSize: Theme.fonts.ten_pt
+                            font.capitalization: Font.AllUppercase
+                            font.weight: Font.DemiBold
+                            color: Theme.colors.gray
+                            Layout.fillWidth: false
+                            Layout.alignment: Text.AlignVCenter | Text.AlignHCenter
+
+                        }
                     }
                 }
             }

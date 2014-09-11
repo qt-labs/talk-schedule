@@ -56,28 +56,32 @@ QtObject {
     property var currentConferenceDays: []
     property bool busy: false
     property string errorMessage
+    property int conferenceIndex: 0
+    property var conference
     property var client: EnginioClient {
         backendId: backId
         onError: {
             errorMessage = reply.errorString
             console.log("Enginio error " + reply.errorCode + ": " + reply.errorString)
         }
-        Component.onCompleted: {
-            var conferenceQuery = query({ "objectType": "objects.Conference"})
-            conferenceQuery.finished.connect(function() {
-                if (conferenceQuery.errorType !== Enginio.NoError)
-                    return
-                var conference = conferenceQuery.data.results[0]
-                ModelsSingleton.conferenceId = conference.id
-                ModelsSingleton.conferenceLocation = conference.location
-                ModelsSingleton.conferenceTitle = conference.title
-                ModelsSingleton.conferenceTwitterTag = conference.TwitterTag
-                ModelsSingleton.rssFeed = conference.rssFeed
-            })
-        }
+        Component.onCompleted: conferencesModel.query({"objectType": "objects.Conference"})
     }
 
     signal writeUserIdToFile(string userId)
+
+    property var conferencesModel: Model {
+        backendId: backId
+        fileNameTag: "ConferencesObject"
+        onDataReady: {
+            if (conferencesModel.rowCount() > 0) {
+                ModelsSingleton.conferenceId = conferencesModel.data(0, "id")
+                ModelsSingleton.conferenceLocation = conferencesModel.data(0, "location")
+                ModelsSingleton.conferenceTitle = conferencesModel.data(0, "title")
+                ModelsSingleton.conferenceTwitterTag = conferencesModel.data(0, "TwitterTag")
+                ModelsSingleton.rssFeed = conferencesModel.data(0, "rssFeed")
+            }
+        }
+    }
 
     property var day: Model {
         backendId: backId
@@ -85,7 +89,7 @@ QtObject {
         onDataReady: {
             currentConferenceDays = []
             for (var i = 0; i < day.rowCount(); i++)
-            currentConferenceDays[i] = day.data(i, "id")
+                currentConferenceDays[i] = day.data(i, "id")
             queryConferenceBreaks()
         }
     }
@@ -340,12 +344,18 @@ QtObject {
         day.query({ "objectType": "objects.Day",
                       "query": {
                           "conference": {
-                              "id": object.conferenceId, "objectType": "objects.Conference"
+                              "id": object.conferenceId,
+                              "objectType": "objects.Conference"
                           }
                       }
                   })
         trackModel.query({"objectType": "objects.Track",
-                             "query": { "conference": { "id": object.conferenceId, "objectType": "objects.Conference" } }});
-
+                             "query": {
+                                 "conference": {
+                                     "id": object.conferenceId,
+                                     "objectType": "objects.Conference"
+                                 }
+                             }
+                         });
     }
 }
