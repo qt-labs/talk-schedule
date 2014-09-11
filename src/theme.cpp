@@ -76,13 +76,13 @@ Theme::Theme(QObject *parent)
     m_text->insert(QLatin1String("talks"), tr("Presentations"));
     m_text->insert(QLatin1String("favorites"), tr("Favorites"));
     m_text->insert(QLatin1String("feedback"), tr("Send Feedback"));
-    m_text->insert(QLatin1String("upcoming"), tr("Upcoming: %1"));
+    m_text->insert(QLatin1String("upcoming"), tr("Upcoming: %1 %2"));
     m_text->insert(QLatin1String("news"), tr("News"));
     m_text->insert(QLatin1String("info"), tr("Useful Information"));
     m_text->insert(QLatin1String("writeYourCommentHere"), tr("Write your comments here"));
     m_text->insert(QLatin1String("by"), tr("by %1"));
     m_text->insert(QLatin1String("room"), tr("Room %1"));
-
+    m_text->insert(QLatin1String("room_space"), tr(" - Room %1"));
 
     m_colors = new QQmlPropertyMap(this);
     m_colors->insert(QLatin1String("white"), QVariant("#ffffff"));
@@ -111,9 +111,9 @@ Theme::Theme(QObject *parent)
     m_sizes->insert(QLatin1String("menuHeight"), QVariant(applyRatio(62)));
     m_sizes->insert(QLatin1String("menuWidth"), QVariant(applyRatio(78)));
     m_sizes->insert(QLatin1String("dayLabelHeight"), QVariant(applyRatio(70)));
-    m_sizes->insert(QLatin1String("upcomingEventHeight"), QVariant(applyRatio(75)));
+    m_sizes->insert(QLatin1String("upcomingEventHeight"), QVariant(applyRatio(90)));
     m_sizes->insert(QLatin1String("homeTitleHeight"), QVariant(applyRatio(50)));
-    m_sizes->insert(QLatin1String("upcomingEventTimeWidth"), QVariant(applyRatio(180)));
+    m_sizes->insert(QLatin1String("upcomingEventTimeWidth"), QVariant(applyRatio(200)));
     m_sizes->insert(QLatin1String("trackFieldHeight"), QVariant(applyRatio(50)));
     m_sizes->insert(QLatin1String("buttonHeight"), QVariant(applyRatio(78)));
     m_sizes->insert(QLatin1String("buttonWidth"), QVariant(applyRatio(300)));

@@ -100,12 +100,28 @@ Rectangle {
         visible: ModelsSingleton.conferenceId !== ""
         Item {
             // upcoming
+            id: upcomingItem
             width: homeScreenWindow.width
             height: homeScreenWindow.height / 3
 
+            property string visibleDate: ""
+            property string formatDate: "ddd d.MM"
+
+            SortFilterModel {
+                id: sortModelNextEvents
+                sortRole: "start"
+                filterRole: "fromNow"
+                maximumCount: 7
+                model: ModelsSingleton.eventModel
+                Component.onCompleted: {
+                    if (sortModelNextEvents.rowCount() > 0)
+                        upcomingItem.visibleDate = Qt.formatDate(sortModelNextEvents.get(0, "start"), upcomingItem.formatDate)
+                }
+            }
+
             Text {
                 id: labelUpcoming
-                text: Theme.text.upcoming.arg(ModelsSingleton.conferenceTitle)
+                text: Theme.text.upcoming.arg(ModelsSingleton.conferenceTitle).arg(upcomingItem.visibleDate)
                 width: parent.width
                 height: Theme.sizes.homeTitleHeight
                 z: 1
@@ -126,51 +142,64 @@ Rectangle {
                 anchors.right: parent.right
                 anchors.left: parent.left
                 anchors.margins: Theme.margins.ten
+                model: sortModelNextEvents
                 clip: true
-                model: SortFilterModel {
-                    id: sortModel
-                    sortRole: "start"
-                    filterRole: "fromNow"
-                    model: ModelsSingleton.eventModel
+                onVisibleChanged: {
+                    if (visible) {
+                        sortModelNextEvents.filter()
+                        upcomingItem.visibleDate = Qt.formatDate(sortModelNextEvents.get(0, "start"), upcomingItem.formatDate)
+                    }
                 }
-                onVisibleChanged: sortModel.filter()
-                spacing: Theme.margins.five
+                spacing: Theme.margins.ten
                 delegate: RowLayout {
+                    id: upcomingEventDelegate
                     width: parent.width
-                    height: Theme.sizes.upcomingEventHeight
+                    visible: Qt.formatDate(start, upcomingItem.formatDate) === upcomingItem.visibleDate
+                    height: visible ? Theme.sizes.upcomingEventHeight : 0
                     Rectangle {
                         color: tracks.backgroundColor
                         Layout.fillHeight: true
                         Layout.preferredWidth: Theme.sizes.upcomingEventTimeWidth
-
                         Text {
                             anchors.fill: parent
                             anchors.leftMargin: Theme.margins.five
-                            text: Qt.formatDate(start, "ddd") + " " + Qt.formatTime(start, "h:mm")
+                            text: tracks.name
+                            font.capitalization: Font.AllUppercase
+                            color: Theme.colors.white
                             verticalAlignment: Text.AlignVCenter
                             horizontalAlignment: Text.AlignLeft
-                            font.pointSize: Theme.fonts.seven_pt
+                            font.pointSize: Theme.fonts.six_pt
                         }
                     }
                     Rectangle {
                         Layout.fillHeight: true
                         Layout.fillWidth: true
                         color: mouseArea.pressed ? Theme.colors.smokewhite : Theme.colors.white
-
-                        Text {
+                        MouseArea {
+                            id: mouseArea
                             anchors.fill: parent
-                            anchors.leftMargin: Theme.margins.five
-                            text: "<b>" + topic + "</b><br />by " + performer + " in " + location
-                            verticalAlignment: Text.AlignVCenter
-                            elide: Text.ElideRight
-                            wrapMode: Text.Wrap
-                            MouseArea {
-                                id: mouseArea
-                                anchors.fill: parent
-                                onClicked: stack.push({
-                                                          "item" : Qt.resolvedUrl("Event.qml"),
-                                                          "properties" : {"eventId" : id}
-                                                      })
+                            onClicked: stack.push({
+                                                      "item" : Qt.resolvedUrl("Event.qml"),
+                                                      "properties" : {"eventId" : id}
+                                                  })
+                        }
+                        ColumnLayout {
+                            anchors.fill: parent
+                            anchors.leftMargin: Theme.margins.twenty
+                            Text {
+                                Layout.fillWidth: true
+                                text: topic
+                                verticalAlignment: Text.AlignVCenter
+                                elide: Text.ElideRight
+                                font.pointSize: Theme.fonts.seven_pt
+                            }
+                            Text {
+                                Layout.fillWidth: true
+                                text: Qt.formatTime(start, Qt.locale().timeFormat(Locale.ShortFormat)) + Theme.text.room_space.arg(location)
+                                verticalAlignment: Text.AlignVCenter
+                                elide: Text.ElideRight
+                                font.pointSize: Theme.fonts.seven_pt
+                                color: Theme.colors.gray
                             }
                         }
                     }

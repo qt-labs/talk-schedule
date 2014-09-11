@@ -43,7 +43,8 @@
 #include <QtCore/QDebug>
 
 SortFilterModel::SortFilterModel(QObject *parent)
-    : QSortFilterProxyModel(parent)
+    : QSortFilterProxyModel(parent),
+      m_maximumCount(0)
 {
     connect(this, SIGNAL(sourceModelChanged()), SIGNAL(modelChanged()));
     connect(this, SIGNAL(sortRoleChanged()), SLOT(manualSort()));
@@ -85,6 +86,19 @@ void SortFilterModel::setFilterRole(const QString &role)
     Q_EMIT filterRoleChanged();
 }
 
+int SortFilterModel::maximumCount() const
+{
+    return m_maximumCount;
+}
+
+void SortFilterModel::setMaximumCount(const int &newCount)
+{
+    if (newCount != m_maximumCount) {
+        m_maximumCount = newCount;
+        emit maximumCountChanged();
+    }
+}
+
 QVariant SortFilterModel::get(int row, const QString &role)
 {
     return data(index(row, 0), roleNames().key(role.toLatin1()));
@@ -103,7 +117,10 @@ QVariant SortFilterModel::indexOf(const QString &role, QVariant value)
 
 int SortFilterModel::rowCount(const QModelIndex &parent) const
 {
-    return QSortFilterProxyModel::rowCount(parent);
+    int tempRowCount = QSortFilterProxyModel::rowCount(parent);
+    if (maximumCount() > 0)
+        tempRowCount = qMin(maximumCount(), tempRowCount);
+    return tempRowCount;
 }
 
 void SortFilterModel::manualSort()
