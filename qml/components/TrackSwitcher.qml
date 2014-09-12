@@ -196,103 +196,102 @@ Item {
         }
     }
 
-    Item {
-        id: breakData
-        property real trackScrolling: 0
-        anchors.fill: rowLayout
-        Item {
-            id: breakColumn
-            anchors.top: parent.top
-            anchors.topMargin: Theme.sizes.dayLabelHeight
-            anchors.right: parent.right
-            height: Math.min(parent.height - Theme.sizes.dayLabelHeight,
-                             listView.contentHeight - Theme.margins.ten)
-            width: parent.width - Theme.sizes.trackHeaderWidth
-            Repeater {
-                id: breaks
-                model: currentDayBreaksModel
-                Rectangle {
-                    color: Theme.colors.smokewhite
-                    anchors.top: breakColumn.top
-                    x: Functions.countTrackPosition(start) - breakData.trackScrolling
-                    width: Functions.countTrackWidth(start, end) - Theme.margins.ten
-                    anchors.bottom: breakColumn.bottom
-                    Text {
-                        anchors.centerIn: parent
-                        horizontalAlignment: Text.AlignHCenter
-                        font.pointSize: Theme.fonts.seven_pt
-                        text: name +  "\n" + Qt.formatTime(start, "h:mm") + " - " + Qt.formatTime(end, "h:mm")
-                        color: Theme.colors.darkgray
+    TrackHeader {
+        id: trackHeader
+        z: 3
+        anchors.top: daysWitcher.bottom
+        anchors.topMargin: Theme.sizes.dayLabelHeight
+        anchors.left: parent.left
+        width: Theme.sizes.trackHeaderWidth
+        model: currentDayTracksModel
+        height: listView.height
+    }
+
+    Flickable {
+        id: flickable1
+        anchors.left: trackHeader.right
+        anchors.top: daysWitcher.bottom
+        height: parent.height
+        width: root.width
+        clip: true
+        contentWidth: timeColumn.width
+        flickableDirection: Flickable.HorizontalFlick
+        Column {
+            spacing: 0
+            Row {
+                id: timeColumn
+                property var timeList: []
+                height: Theme.sizes.dayLabelHeight
+                z: 2
+                Repeater {
+                    id: timeColumnList
+                    model: timeColumn.timeList
+                    delegate: Rectangle {
+                        color: Theme.colors.white
+                        width: Theme.sizes.timeColumnWidth
+                        height: timeColumn.height
+                        Text {
+                            id: repeaterText;
+                            anchors.verticalCenter: parent.verticalCenter
+                            anchors.left: parent.left
+                            font.pointSize: Theme.fonts.seven_pt
+                            text: Qt.formatTime(timeColumn.timeList[index], "h:mm")
+                        }
                     }
                 }
             }
-        }
-    }
-
-    Row {
-        id: rowLayout
-        anchors.fill: parent
-        anchors.topMargin: daysWitcher.height
-        Column{
-            // Add this empty item so track won't overlap with time line
-            Item {
-                height: Theme.sizes.dayLabelHeight
-                width: Theme.margins.ten
-            }
-            TrackHeader {
-                id: trackHeader
+            ListView {
+                id: listView
+                height: root.height - daysWitcher.height - timeColumn.height
+                width: parent.width
+                interactive: true
+                clip: true
+                boundsBehavior: Flickable.StopAtBounds
+                delegate: Track {}
                 model: currentDayTracksModel
-            }
-        }
-
-        Flickable {
-            id: flickable1
-            height: rowLayout.height
-            width: root.width
-            clip: true
-            contentWidth: timeColumn.width
-            flickableDirection: Flickable.HorizontalFlick
-            onContentXChanged: breakData.trackScrolling = flickable1.contentX
-            Column {
-                spacing: 0
-                Row {
-                    id: timeColumn
-                    property var timeList: []
-                    height: Theme.sizes.dayLabelHeight
+                Component.onCompleted: breakColumn.height = listView.contentHeight
+                Item {
+                    id: breakColumn
+                    z: 2
+                    anchors.top: parent.top
+                    anchors.bottom: parent.bottom
+                    width: parent.width
                     Repeater {
-                        id: timeColumnList
-                        model: timeColumn.timeList
-                        delegate: Item {
-                            width: Theme.sizes.timeColumnWidth
-                            height: timeColumn.height
+                        id: breaks
+                        model: currentDayBreaksModel
+                        Rectangle {
+                            color: mouseArea.pressed ? Theme.colors.lightgray : Theme.colors.smokewhite
+                            anchors.top: breakColumn.top
+                            x: Functions.countTrackPosition(start)
+                            width: Functions.countTrackWidth(start, end) - Theme.margins.ten
+                            height: Math.min(breakColumn.height, listView.contentHeight - Theme.margins.ten)
                             Text {
-                                id: repeaterText;
-                                anchors.verticalCenter: parent.verticalCenter
-                                anchors.left: parent.left
+                                width: parent.width
+                                verticalAlignment: Text.AlignVCenter
+                                height: parent.height
+                                horizontalAlignment: Text.AlignHCenter
                                 font.pointSize: Theme.fonts.seven_pt
-                                text: Qt.formatTime(timeColumn.timeList[index], "h:mm")
+                                text: name +  "\n" + Qt.formatTime(start, "h:mm") + " - " + Qt.formatTime(end, "h:mm")
+                                color: Theme.colors.darkgray
+                            }
+                            MouseArea {
+                                id: mouseArea
+                                anchors.fill: parent
+                                enabled: !!associatedEventId
+                                onClicked: stack.push({"item" : Qt.resolvedUrl("Event.qml"), "properties" : {"eventId" : associatedEventId}})
                             }
                         }
                     }
                 }
-                ListView {
-                    id: listView
-                    height: root.height - daysWitcher.height - timeColumn.height
-                    width: parent.width
-                    interactive: true
-                    clip: true
-                    boundsBehavior: Flickable.StopAtBounds
-                    delegate: Track {}
-                    model: currentDayTracksModel
-                    onContentYChanged: {
-                        if (isViewScrolling === false) {
-                            isViewScrolling = true;
-                            trackHeader.contentY = listView.contentY
-                            isViewScrolling = false;
-                        }
+                onContentYChanged: {
+                    if (isViewScrolling === false) {
+                        isViewScrolling = true;
+                        trackHeader.contentY = listView.contentY
+                        isViewScrolling = false;
                     }
                 }
             }
         }
+
     }
 }

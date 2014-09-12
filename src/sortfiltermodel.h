@@ -50,6 +50,7 @@ class SortFilterModel : public QSortFilterProxyModel
     Q_PROPERTY(QString sortRole READ sortRole WRITE setSortRole NOTIFY sortRoleChanged)
     Q_PROPERTY(QString filterRole READ filterRole WRITE setFilterRole NOTIFY filterRoleChanged)
     Q_PROPERTY(int maximumCount READ maximumCount WRITE setMaximumCount NOTIFY maximumCountChanged)
+    Q_PROPERTY(bool hide READ hide WRITE setHide NOTIFY hideChanged)
 
 public:
     explicit SortFilterModel(QObject *parent = 0);
@@ -64,6 +65,9 @@ public:
 
     int maximumCount() const;
     void setMaximumCount(const int &newCount);
+
+    bool hide() const { return m_hide; }
+    void setHide(const bool newHide);
 
     Q_INVOKABLE QVariant get(int row, const QString &role);
     Q_INVOKABLE void set(int row, const QVariant &data, const QString &role);
@@ -80,11 +84,13 @@ Q_SIGNALS:
     void sortRoleChanged();
     void filterRoleChanged();
     void maximumCountChanged();
+    void hideChanged();
 
 private:
     QString m_sortRole;
     QString m_filterRole;
     int m_maximumCount;
+    bool m_hide;
 };
 
 #endif // SORTFILTERMODEL_H

@@ -47,7 +47,7 @@ import TalkSchedule 1.0
 
 ListView {
     id: trackHeaderListView
-    height: rowLayout.height
+    height: parent.height
     width: Theme.sizes.trackHeaderWidth
 
     clip: true

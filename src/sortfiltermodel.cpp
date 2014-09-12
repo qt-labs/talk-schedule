@@ -44,7 +44,8 @@
 
 SortFilterModel::SortFilterModel(QObject *parent)
     : QSortFilterProxyModel(parent),
-      m_maximumCount(0)
+      m_maximumCount(0),
+      m_hide(false)
 {
     connect(this, SIGNAL(sourceModelChanged()), SIGNAL(modelChanged()));
     connect(this, SIGNAL(sortRoleChanged()), SLOT(manualSort()));
@@ -99,6 +100,14 @@ void SortFilterModel::setMaximumCount(const int &newCount)
     }
 }
 
+void SortFilterModel::setHide(const bool newHide)
+{
+    if (newHide != m_hide) {
+        m_hide = newHide;
+        emit hideChanged();
+    }
+}
+
 QVariant SortFilterModel::get(int row, const QString &role)
 {
     return data(index(row, 0), roleNames().key(role.toLatin1()));
@@ -144,6 +153,12 @@ bool SortFilterModel::filterAcceptsRow(int source_row, const QModelIndex &source
         currentDateTime.setMSecsSinceEpoch(currentDateTime.currentMSecsSinceEpoch() + localTimeZoneOffset*1000);
         return date >= currentDateTime;
     } else {
+        if (m_hide && sourceModel()->roleNames().values().contains("hideInSchedule")) {
+            QModelIndex index = sourceModel()->index(source_row, 0, source_parent);
+            bool willBeHidden = sourceModel()->data(index, sourceModel()->roleNames().key("hideInSchedule")).toBool();
+            if (willBeHidden)
+                return false;
+        }
         return QSortFilterProxyModel::filterAcceptsRow(source_row, source_parent);
     }
 }

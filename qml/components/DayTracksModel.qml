@@ -58,6 +58,7 @@ QtObject {
         filterRole: "track"
         filterRegExp: new RegExp(dayId)
         model: ModelsSingleton.eventModel
+        hide: true
         Component.onCompleted: {
             isEmpty = modelTracks.rowCount() === 0
             ready = Qt.binding(function() {return modelTracks.rowCount() > 0})
