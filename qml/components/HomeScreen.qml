@@ -145,7 +145,7 @@ Rectangle {
                 model: sortModelNextEvents
                 clip: true
                 onVisibleChanged: {
-                    if (visible) {
+                    if (visible && sortModelNextEvents.rowCount() > 0) {
                         sortModelNextEvents.filter()
                         upcomingItem.visibleDate = Qt.formatDate(sortModelNextEvents.get(0, "start"), upcomingItem.formatDate)
                     }
