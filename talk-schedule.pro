@@ -34,7 +34,8 @@ OTHER_FILES += \
     qml/components/HomeScreen.qml \
     qml/components/Feedback.qml \
     qml/components/DayTracksModel.qml \
-    qml/components/TweetModel.qml
+    qml/components/TweetModel.qml \
+    android/AndroidManifest.xml
 
 RESOURCES += \
     resource.qrc
@@ -49,3 +50,5 @@ DEFINES += \
     TALK_SCHEDULE_BACKEND_ID=$$TALK_SCHEDULE_BACKEND_ID
 
 winrt: WINRT_MANIFEST.capabilities += internetClientServer
+
+android: ANDROID_PACKAGE_SOURCE_DIR = $$PWD/android
