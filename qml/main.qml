@@ -47,7 +47,7 @@ import "components"
 ApplicationWindow {
     id: window
     visible: true
-    height: 800
+    height: 1080
     width: 1080
     property bool busy
 

@@ -40,7 +40,6 @@
 
 import QtQuick 2.2
 import QtQuick.Layouts 1.1
-import QtQuick.XmlListModel 2.0
 import TalkSchedule 1.0
 
 Rectangle {
@@ -56,12 +55,15 @@ Rectangle {
 
     function linkForEntity(entity)
     {
-        return (entity.url ? entity.url : entity.expanded_url)
+        return (entity.url ? entity.url :
+               (entity.screen_name ? 'https://twitter.com/' + entity.screen_name :
+                                     'https://twitter.com/search?q=%23' + entity.text))
     }
 
     function textForEntity(entity)
     {
-        return (entity.display_url ? entity.display_url : entity.expanded_url)
+        return (entity.display_url ? entity.display_url :
+               (entity.screen_name ? entity.screen_name : entity.text))
     }
 
     function insertLinks(text, entities)
@@ -72,8 +74,12 @@ Rectangle {
         if (!entities)
             return text;
 
+        if (entities.retweeted_status)
+            return "";
+
         var links = []
-        links = entities.media ? entities.urls.concat(entities.media) : entities.urls
+        entities.urls = entities.media ? entities.urls.concat(entities.media) : entities.urls
+        links = entities.urls.concat(entities.hashtags, entities.user_mentions)
 
         links.sort(function(a, b) { return b.indices[0] - a.indices[0] })
 
@@ -152,7 +158,7 @@ Rectangle {
                         upcomingItem.visibleDate = Qt.formatDate(sortModelNextEvents.get(0, "start"), upcomingItem.formatDate)
                     }
                 }
-                spacing: Theme.margins.ten
+                spacing: Theme.margins.twenty
                 delegate: RowLayout {
                     id: upcomingEventDelegate
                     width: parent.width
@@ -209,7 +215,7 @@ Rectangle {
             }
         }
         Item {
-            // news
+            // twitter news
             width: window.width
             height: (homeScreenWindow.height - homeScreenWindow.usefulItemHeight)/2
 
@@ -217,21 +223,36 @@ Rectangle {
                 id: tweetModel
             }
 
-            Text {
+            Rectangle {
                 id: labelNews
-                z: 1
-                text: Theme.text.news
                 width: parent.width
                 height: Theme.sizes.homeTitleHeight
-                font.pointSize: Theme.fonts.seven_pt
-                horizontalAlignment: Text.AlignHCenter
-                verticalAlignment: Text.AlignVCenter
-                font.capitalization: Font.AllUppercase
-                Rectangle {
-                    anchors.fill: parent
-                    z: -1
-                    color: Theme.colors.smokewhite
+                color: Theme.colors.smokewhite
+
+                Text {
+                    id: labelNewsText
+                    anchors.verticalCenter: parent.verticalCenter
+                    anchors.horizontalCenter: parent.horizontalCenter
+
+                    text: Theme.text.news
+                    font.pointSize: Theme.fonts.seven_pt
+                    font.capitalization: Font.AllUppercase
                 }
+
+                Image {
+                    source: Theme.images.twitter
+                    sourceSize.height: labelNewsText.height
+                    sourceSize.width: labelNewsText.height
+                    anchors.right: labelNewsText.left
+                    anchors.rightMargin: Theme.margins.five
+                    anchors.verticalCenter: parent.verticalCenter
+
+                    MouseArea {
+                        anchors.fill: parent
+                        onClicked: Qt.openUrlExternally(Theme.text.twitterLink)
+                    }
+                }
+
                 Image {
                     id: reloadNews
                     anchors.verticalCenter: parent.verticalCenter
@@ -251,7 +272,7 @@ Rectangle {
                 id: tweetDelegate
 
                 Rectangle {
-                    color: Theme.colors.smokewhite
+                    color: Theme.colors.white
                     height: Math.max(tweetArea.height, Theme.sizes.twitterAvatarSize)
                     width: window.width
 
@@ -271,20 +292,69 @@ Rectangle {
                         source: model.user.profile_image_url
                         sourceSize.height: Theme.sizes.twitterAvatarSize
                         sourceSize.width: Theme.sizes.twitterAvatarSize
+
+                        MouseArea {
+                            anchors.fill: parent
+                            onClicked: Qt.openUrlExternally(Theme.text.twitterLink + model.user.screen_name)
+                        }
                     }
 
                     Column {
                         id: tweetArea
-                        width: parent.width - placeHolder.width
+                        width: parent.width - placeHolder.width - Theme.margins.twenty
                         height: userName.implicitHeight + tweetContent.implicitHeight
                         anchors.left: placeHolder.right
                         anchors.leftMargin: Theme.margins.ten
                         anchors.rightMargin: Theme.margins.ten
 
-                        Text {
-                            id: userName
+                        Item {
                             width: parent.width
-                            text: Theme.text.tweet_title.arg(model.user.name).arg(model.user.screen_name)
+                            height: userName.implicitHeight
+                            Text {
+                                id: userName
+                                anchors.left: parent.left
+                                text: model.user.name
+                                font.pointSize: Theme.fonts.eight_pt
+                                color: Theme.colors.black
+                                textFormat: Text.StyledText
+                                MouseArea {
+                                    anchors.fill: parent
+                                    onClicked: Qt.openUrlExternally(Theme.text.twitterLink
+                                                                    + model.user.screen_name)
+                                }
+                            }
+
+                            Text {
+                                id: screenName
+                                anchors.left: userName.right
+                                anchors.leftMargin: Theme.margins.ten
+                                anchors.bottom: parent.bottom
+                                text: "@" + model.user.screen_name
+                                font.pointSize: Theme.fonts.seven_pt
+                                color: Theme.colors.gray
+                                textFormat: Text.StyledText
+                                MouseArea {
+                                    anchors.fill: parent
+                                    onClicked: Qt.openUrlExternally(Theme.text.twitterLink
+                                                                    + model.user.screen_name)
+                                }
+                            }
+                            Text {
+                                id: timeStamp
+                                anchors.right: parent.right
+                                anchors.rightMargin: Theme.margins.ten
+                                anchors.bottom: parent.bottom
+                                text: model.created_at
+                                font.pointSize: Theme.fonts.seven_pt
+                                color: Theme.colors.gray
+                                textFormat: Text.StyledText
+                                MouseArea {
+                                    anchors.fill: parent
+                                    onClicked: Qt.openUrlExternally(Theme.text.twitterLink
+                                                                    + model.user.screen_name
+                                                                    + "/status/" + model.id_str)
+                                }
+                            }
                         }
 
                         Text {
@@ -293,7 +363,15 @@ Rectangle {
                             text: insertLinks(model.text, model.entities)
                             wrapMode: Text.WordWrap
                             textFormat: Text.RichText
+                            font.pointSize: Theme.fonts.seven_pt
+                            color: Theme.colors.gray
                             onLinkActivated: Qt.openUrlExternally(link)
+                            MouseArea {
+                                anchors.fill: parent
+                                onClicked: Qt.openUrlExternally(Theme.text.twitterLink
+                                                                + model.user.screen_name
+                                                                + "/status/" + model.id_str)
+                            }
                         }
                     }
                 }
@@ -307,7 +385,7 @@ Rectangle {
                 anchors.bottom: parent.bottom
                 anchors.margins: Theme.margins.ten
                 clip: true
-                spacing: Theme.margins.fifteen
+                spacing: Theme.margins.twenty
                 model: tweetModel.model
                 delegate: tweetDelegate
             }
