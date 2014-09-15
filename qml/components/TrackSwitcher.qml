@@ -98,18 +98,23 @@ Rectangle {
         onDayIdChanged: ModelsSingleton.timeListModel.tracksTodayModel = currentDayTracksModel
     }
 
+    function setFirstEvent(time)
+    {
+        if (!Functions.isStartTimeAfterNow(firstEvent)) {
+            if (time < firstEvent || Functions.isStartTimeAfterNow(time))
+                firstEvent = time
+        } else {
+            if (time < firstEvent && Functions.isStartTimeAfterNow(time))
+                firstEvent = time
+        }
+    }
+
     function getTimeRange(model)
     {
         var earliestTime = model.data(0, "start")
         if (firstEvent === undefined)
             firstEvent = earliestTime
-        else if (!Functions.isStartTimeAfterNow(firstEvent)) {
-            if (earliestTime < firstEvent || Functions.isStartTimeAfterNow(earliestTime))
-                firstEvent = earliestTime
-        } else {
-            if (earliestTime < firstEvent && Functions.isStartTimeAfterNow(earliestTime))
-                firstEvent = earliestTime
-        }
+        setFirstEvent(earliestTime)
         var latestTime = model.data(0, "end") // earliestTime
         var time
 
@@ -119,24 +124,43 @@ Rectangle {
 
         // Count here what is the first hour and last hour that needs to be shown in time listView
         // for example 10.00 11.00 12.00 ... or 08.00 09.00 10.00
-        for (var i = 0; i < model.rowCount(); i++) {
+        var modelCountAfterStart = model.rowCount() - 1;
+        var halfModelCount = Math.floor(modelCountAfterStart / 2)
+        var needOneMoreItem = halfModelCount * 2 !== modelCountAfterStart
+        for (var i = 1; i < halfModelCount; i++) {
 
-            time = model.data(i, "start")
-            if (!Functions.isStartTimeAfterNow(firstEvent)) {
-                if (time < firstEvent || Functions.isStartTimeAfterNow(time))
-                    firstEvent = time
-            } else {
-                if (time < firstEvent && Functions.isStartTimeAfterNow(time))
-                    firstEvent = time
-            }
+            var time1 = model.data(i, "start")
+            setFirstEvent(time1)
+            var time2 = model.data(i+1, "start")
+            setFirstEvent(time2)
 
+            time = time1 < time2 ? time1 : time2
             timeHours = Functions.getHour(time)
             earliestHours = Functions.getHour(earliestTime)
-
             if (timeHours < earliestHours )
                 earliestTime = time
 
-            time = model.data(i, "end")
+            time1 = model.data(i, "end")
+            time2 = model.data(i+1, "end")
+            time = time1 < time2 ? time2 : time1
+            timeHours = Functions.getHour(time)
+            var timeMinutes = Functions.getMinutes(time)
+            if (timeMinutes > 0)
+                timeHours = timeHours + 1
+            latestHours = Functions.getHour(latestTime)
+            if (timeHours > latestHours)
+                latestTime = time
+        }
+
+        if (needOneMoreItem) {
+            time = model.data(model.rowCount() - 1, "start")
+            setFirstEvent(time)
+            timeHours = Functions.getHour(time)
+            earliestHours = Functions.getHour(earliestTime)
+            if (timeHours < earliestHours )
+                earliestTime = time
+
+            time = model.data(model.rowCount() - 1, "end")
             timeHours = Functions.getHour(time)
             var timeMinutes = Functions.getMinutes(time)
             if (timeMinutes > 0)
@@ -161,6 +185,7 @@ Rectangle {
             date.setMinutes(0)
             temp.push(date.toISOString())
         }
+
         return temp
     }
 
