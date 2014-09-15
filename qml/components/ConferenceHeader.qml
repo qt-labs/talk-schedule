@@ -47,6 +47,7 @@ import TalkSchedule 1.0
 
 Item {
     id: conferenceHeader
+    signal showMenu
     property var event
     Rectangle {
         id: topicRect
@@ -65,7 +66,7 @@ Item {
                 MouseArea {
                     id: mouseAreaBack
                     anchors.fill: parent
-                    enabled: stack.depth > 1
+                    enabled: !!stack.currentItem && stack.currentItem.objectName === "event"
                     onClicked: stack.pop()
                     Rectangle {
                         anchors.fill: parent
@@ -79,7 +80,7 @@ Item {
                         anchors.left: parent.left
                         anchors.verticalCenter: parent.verticalCenter
                         anchors.leftMargin: Theme.margins.twenty
-                        opacity: stack.depth > 1 ? 1 : 0
+                        opacity: (stack.depth > 1 && (!!stack.currentItem && stack.currentItem.objectName === "event")) ? 1 : 0
                         Behavior on opacity { PropertyAnimation{} }
                         height: Theme.sizes.backHeight
                         width: Theme.sizes.backWidth
@@ -89,43 +90,15 @@ Item {
                     }
                 }
 
-                MouseArea {
-                    id: locationMenuMouseArea
+                Item {
+                    id: locationArea
                     anchors.fill: parent
-                    enabled: stack.depth == 1
-                    onClicked: locationMenu.popup()
-
-                    Rectangle {
-                        anchors.fill: parent
-                        anchors.margins: Theme.margins.five
-                        color: locationMenuMouseArea.pressed ? Theme.colors.smokewhite : Theme.colors.white
-                        visible: stack.depth == 1
-                        radius: 5
-                    }
-
-                    Menu {
-                        id: locationMenu
-                        Instantiator {
-                            id: menuConferenceRepeater
-                            model: applicationClient.conferencesModel.rowCount()
-                            MenuItem {
-                                text: applicationClient.conferencesModel.data(index, "title")
-                                onTriggered: applicationClient.setCurrentConferenceIndex(index)
-                            }
-                            onObjectAdded: locationMenu.insertItem(locationMenu.items.length, object)
-                        }
-
-                        Connections {
-                            target: applicationClient.conferencesModel
-                            onDataReady: menuConferenceRepeater.model = applicationClient.conferencesModel.rowCount()
-                        }
-                    }
 
                     Item {
                         id: locationButton
                         anchors.left: parent.left
                         anchors.verticalCenter: parent.verticalCenter
-                        opacity: stack.depth == 1 ? 1 : 0
+                        opacity: (!!stack.currentItem && stack.currentItem.objectName !== "event" && Theme.currentConference !== "") ? 1 : 0
                         Behavior on opacity { PropertyAnimation{} }
 
                         Image {
@@ -170,7 +143,7 @@ Item {
                 Layout.alignment: Qt.AlignRight
                 Layout.preferredWidth: topicRect.height
                 Layout.preferredHeight: topicRect.height
-                onClicked: menu.popup()
+                onClicked: showMenu()
                 enabled: ModelsSingleton.conferenceId !== ""
                 Rectangle {
                     anchors.fill: parent
@@ -178,55 +151,9 @@ Item {
                     color: mouseAreaMenu.pressed ? Theme.colors.smokewhite : Theme.colors.white
                     radius: 5
                 }
-                Menu {
-                    id: menu
-                    MenuItem {
-                        text: Theme.text.home
-                        onTriggered: {
-                            var item = Qt.resolvedUrl("HomeScreen.qml")
-                            stack.pop(stack.find(function(item){ return item.objectName === "homeScreen" }))
-                        }
-                    }
-                    MenuItem {
-                        text: Theme.text.schedule
-                        onTriggered: {
-                            var itemT = Qt.resolvedUrl("TrackSwitcher.qml")
-                            var loadedTr = stack.find(function(itemT){ return itemT.objectName === "trackSwitcher" })
-                            if (loadedTr !== null)
-                                stack.pop(loadedTr)
-                            else
-                                stack.push(itemT)
-                        }
-                    }
-                    MenuItem {
-                        text: Theme.text.talks
-                        onTriggered: {
-                            var itemE = Qt.resolvedUrl("EventsList.qml")
-                            var loadedEv = stack.find(function(itemE){ return (itemE.isFavoriteView === false)})
-                            if (loadedEv !== null)
-                                stack.pop(loadedEv)
-                            else
-                                stack.push(itemE)
-                        }
-                    }
-                    MenuItem {
-                        text: Theme.text.favorites
-                        onTriggered: {
-                            var itemFa = Qt.resolvedUrl("EventsList.qml")
-                            var loadedFav = stack.find(function(itemFa){ return (itemFa.isFavoriteView === true)})
-                            if (loadedFav !== null) {
-                                stack.pop(loadedFav)
-                            } else {
-                                stack.push({
-                                               "item" : itemFa,
-                                               "properties" : { "isFavoriteView" : true }
-                                           })
-                            }
-                        }
-                    }
-                }
                 Image {
                     id: dropMenu
+                    visible: mouseAreaMenu.enabled
                     anchors.centerIn: parent
                     Layout.alignment: Qt.AlignRight
                     height: Theme.sizes.menuHeight

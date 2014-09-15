@@ -95,6 +95,9 @@ Theme::Theme(QObject *parent)
     m_colors->insert(QLatin1String("green"), QVariant("#328930"));
     m_colors->insert(QLatin1String("qtgreen"), QVariant("#5caa15"));
     m_colors->insert(QLatin1String("black"), QVariant("#000000"));
+    m_colors->insert(QLatin1String("blue_menu"), QVariant("#2087fc"));
+    m_colors->insert(QLatin1String("white_menu"), QVariant("#eeeeee"));
+    m_colors->insert(QLatin1String("gray_menu"), QVariant("#999999"));
 
     m_sizes = new QQmlPropertyMap(this);
     m_sizes->insert(QLatin1String("trackHeaderHeight"), QVariant(applyRatio(270)));
@@ -123,6 +126,7 @@ Theme::Theme(QObject *parent)
     m_sizes->insert(QLatin1String("infoButtonSize"), QVariant(applyRatio(160)));
     m_sizes->insert(QLatin1String("reloadButtonSize"), QVariant(applyRatio(50)));
     m_sizes->insert(QLatin1String("twitterAvatarSize"), QVariant(applyRatio(80)));
+    m_sizes->insert(QLatin1String("menuPopupWidth"), QVariant(applyRatio(550)));
 
     m_images = new QQmlPropertyMap(this);
     m_images->insert(QLatin1String("back"), QVariant("qrc:/images/BackArrow.svg"));
@@ -148,6 +152,7 @@ Theme::Theme(QObject *parent)
 
     m_margins = new QQmlPropertyMap(this);
     m_margins->insert(QLatin1String("five"), QVariant(applyRatio(5)));
+    m_margins->insert(QLatin1String("seven"), QVariant(applyRatio(7)));
     m_margins->insert(QLatin1String("ten"), QVariant(applyRatio(10)));
     m_margins->insert(QLatin1String("fifteen"), QVariant(applyRatio(15)));
     m_margins->insert(QLatin1String("twenty"), QVariant(applyRatio(20)));

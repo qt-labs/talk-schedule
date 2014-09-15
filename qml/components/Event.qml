@@ -48,6 +48,7 @@ Rectangle {
     id: eventView
     property string eventId
     signal selectFavorite(bool favorite)
+    objectName: "event"
 
     property var indexCurrentEvent: ModelsSingleton.eventModel.indexOf("id", eventId)
     property var model: ModelsSingleton.eventModel
