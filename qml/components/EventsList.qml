@@ -43,9 +43,10 @@ import TalkSchedule 1.0
 import QtQuick.Layouts 1.1
 import QtQuick.Controls 1.1
 
-Item {
+Rectangle {
     id: eventsList
     property bool isFavoriteView: false
+    color: Theme.colors.white
 
     SubTitle {
         id: subTitle

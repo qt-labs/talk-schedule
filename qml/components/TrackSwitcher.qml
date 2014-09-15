@@ -45,11 +45,12 @@ import TalkSchedule 1.0
 
 import "functions.js" as Functions
 
-Item {
+Rectangle {
     id: root
     objectName: "trackSwitcher"
     property bool isViewScrolling: false
     property var firstEvent
+    color: Theme.colors.white
 
     DaySwitcher {
         id: daysWitcher
