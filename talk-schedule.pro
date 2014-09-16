@@ -59,3 +59,5 @@ DEFINES += \
 winrt: WINRT_MANIFEST.capabilities += internetClientServer
 
 android: ANDROID_PACKAGE_SOURCE_DIR = $$PWD/android
+
+ios: QMAKE_INFO_PLIST = ios/iosInfo.plist
