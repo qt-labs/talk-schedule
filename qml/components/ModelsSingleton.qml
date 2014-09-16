@@ -45,7 +45,7 @@ import TalkSchedule 1.0
 
 QtObject {
     id: object
-    property string conferenceId
+    property string conferenceId: ""
     property string currentUserId
     property string conferenceLocation
     property string conferenceTitle
@@ -74,11 +74,11 @@ QtObject {
         fileNameTag: "ConferencesObject"
         onDataReady: {
             if (conferencesModel.rowCount() > 0) {
-                ModelsSingleton.conferenceId = conferencesModel.data(0, "id")
-                ModelsSingleton.conferenceLocation = conferencesModel.data(0, "location")
-                ModelsSingleton.conferenceTitle = conferencesModel.data(0, "title")
-                ModelsSingleton.conferenceTwitterTag = conferencesModel.data(0, "TwitterTag")
-                ModelsSingleton.rssFeed = conferencesModel.data(0, "rssFeed")
+                object.conferenceId = conferencesModel.data(0, "id")
+                object.conferenceLocation = conferencesModel.data(0, "location")
+                object.conferenceTitle = conferencesModel.data(0, "title")
+                object.conferenceTwitterTag = conferencesModel.data(0, "TwitterTag")
+                object.rssFeed = conferencesModel.data(0, "rssFeed")
             }
         }
     }
@@ -233,7 +233,6 @@ QtObject {
         queryUser.finished.connect(function() {
             if (queryUser.errorType !== EnginioReply.NoError || queryUser.data.results[0] === undefined) {
                 // User not found. Create new one
-                userIdFile.write("")
                 createUser()
             }
         })
@@ -250,7 +249,7 @@ QtObject {
                                       },
                                       "rating": rating,
                                       "feedbackText": fbtext,
-                                      "userId": ModelsSingleton.currentUserId
+                                      "userId": currentUserId
                                   })
         reply.finished.connect(function() {
             if (reply.errorType !== EnginioReply.NoError) {
@@ -331,15 +330,15 @@ QtObject {
     }
 
     onConferenceIdChanged: {
-        if (ModelsSingleton.conferenceId === "")
+        if (object.conferenceId === "")
             return
 
-        day.conferenceId = ModelsSingleton.conferenceId
-        trackModel.conferenceId = ModelsSingleton.conferenceId
-        eventModel.conferenceId = ModelsSingleton.conferenceId
-        favoriteModel.conferenceId = ModelsSingleton.conferenceId
-        breakModel.conferenceId = ModelsSingleton.conferenceId
-        timeListModel.conferenceId = ModelsSingleton.conferenceId
+        object.day.conferenceId = conferenceId
+        object.trackModel.conferenceId = conferenceId
+        object.eventModel.conferenceId = conferenceId
+        object.favoriteModel.conferenceId = conferenceId
+        object.breakModel.conferenceId = conferenceId
+        object.timeListModel.conferenceId = conferenceId
 
         day.query({ "objectType": "objects.Day",
                       "query": {
