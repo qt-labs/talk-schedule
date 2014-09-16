@@ -87,6 +87,7 @@ ApplicationWindow {
                     append({name: Theme.text.schedule, id: "schedule"  })
                     append({name: Theme.text.talks, id: "talks"  })
                     append({name: Theme.text.favorites, id: "favorites"  })
+                    append({name: Theme.text.floorPlan, id: "floorPlan"  })
                     append({name: Theme.text.switchConf, id: "switchConf"  })
                     menuRectangle.height = Theme.sizes.buttonHeight * menuModel.count
                 }
@@ -173,6 +174,15 @@ ApplicationWindow {
                                            "item" : itemFa,
                                            "properties" : { "isFavoriteView" : true }
                                        })
+                        }
+                        break
+                    case "floorPlan":
+                        var itemFl = Qt.resolvedUrl("components/Floorplan.qml")
+                        var loadedSC = stack.find(function(item){ return itemFl.objectName === "floorPlan" })
+                        if (loadedSC !== null)
+                            stack.pop(loadedSC)
+                        else {
+                            stack.push(itemFl)
                         }
                         break
                     case "switchConf":

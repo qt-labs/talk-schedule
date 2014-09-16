@@ -86,6 +86,7 @@ Theme::Theme(QObject *parent)
     m_text->insert(QLatin1String("twitterLink"), tr("https://twitter.com/"));
     m_text->insert(QLatin1String("select_conference"), "Select a conference");
     m_text->insert(QLatin1String("switchConf"), "Switch Conference");
+    m_text->insert(QLatin1String("floorPlan"), "Floorplan");
 
     m_colors = new QQmlPropertyMap(this);
     m_colors->insert(QLatin1String("white"), QVariant("#ffffff"));
@@ -138,11 +139,14 @@ Theme::Theme(QObject *parent)
     m_images->insert(QLatin1String("noRating"), QVariant("qrc:/images/NoRating.svg"));
     m_images->insert(QLatin1String("loading"), QVariant("qrc:/images/icon-loading.svg"));
     m_images->insert(QLatin1String("anonymous"), QVariant("qrc:/images/anonymous.svg"));
-    m_images->insert(QLatin1String("btnHotels"), QVariant("qrc:/images/Btn_Hotels.svg"));
-    m_images->insert(QLatin1String("btnRestaurants"), QVariant("qrc:/images/Btn_Restaurants.svg"));
-    m_images->insert(QLatin1String("btnVenueMap"), QVariant("qrc:/images/Btn_VenueMap.svg"));
     m_images->insert(QLatin1String("location"), QVariant("qrc:/images/Location.svg"));
     m_images->insert(QLatin1String("twitter"), QVariant("qrc:/images/Twitter.svg"));
+    m_images->insert(QLatin1String("btnToWebsite"), QVariant("qrc:/images/Btn_ToWebsite.svg"));
+    m_images->insert(QLatin1String("btnFloorMap"), QVariant("qrc:/images/Btn_FloorMap.svg"));
+    m_images->insert(QLatin1String("levelA"), QVariant("qrc:/images/LevelA.svg"));
+    m_images->insert(QLatin1String("levelB"), QVariant("qrc:/images/LevelB.svg"));
+    m_images->insert(QLatin1String("levelC"), QVariant("qrc:/images/LevelC.svg"));
+    m_images->insert(QLatin1String("sfoFloor"), QVariant("qrc:/images/sfo_floor.png"));
 
     m_fonts = new QQmlPropertyMap(this);
     m_fonts->insert(QLatin1String("six_pt"), QVariant(applyFontRatio(9)));

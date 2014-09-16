@@ -429,33 +429,23 @@ Rectangle {
                 anchors.horizontalCenter: parent.horizontalCenter
                 spacing: Theme.margins.thirty
                 Image {
-                    source: Theme.images.btnVenueMap
+                    source: Theme.images.btnFloorMap
                     sourceSize.height: Theme.sizes.infoButtonSize
                     sourceSize.width: Theme.sizes.infoButtonSize
                     anchors.verticalCenter: parent.verticalCenter
                     MouseArea {
                         anchors.fill: parent
-                        onClicked: Qt.openUrlExternally("http://www.qtdeveloperdays.com/sites/default/files/files/bcc_map.pdf")
+                        onClicked: stack.push(Qt.resolvedUrl("Floorplan.qml"))
                     }
                 }
                 Image {
-                    source: Theme.images.btnHotels
+                    source: Theme.images.btnToWebsite
                     sourceSize.height: Theme.sizes.infoButtonSize
                     sourceSize.width: Theme.sizes.infoButtonSize
                     anchors.verticalCenter: parent.verticalCenter
                     MouseArea {
                         anchors.fill: parent
-                        onClicked: Qt.openUrlExternally("http://www.qtdeveloperdays.com/sites/default/files/files/bcc_hotels.pdf")
-                    }
-                }
-                Image {
-                    source: Theme.images.btnRestaurants
-                    sourceSize.height: Theme.sizes.infoButtonSize
-                    sourceSize.width: Theme.sizes.infoButtonSize
-                    anchors.verticalCenter: parent.verticalCenter
-                    MouseArea {
-                        anchors.fill: parent
-                        onClicked: Qt.openUrlExternally("https://www.qtdeveloperdays.com/sites/default/files/files/BerlinAlexanderplatzRestaurants_1.pdf")
+                        onClicked: Qt.openUrlExternally(applicationClient.currentConferenceDetails.infopage)
                     }
                 }
             }

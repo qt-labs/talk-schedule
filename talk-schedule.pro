@@ -38,7 +38,8 @@ OTHER_FILES += \
     qml/components/Feedback.qml \
     qml/components/DayTracksModel.qml \
     qml/components/TweetModel.qml \
-    android/AndroidManifest.xml
+    android/AndroidManifest.xml \
+    qml/components/Floorplan.qml
 
 RESOURCES += \
     resource.qrc

@@ -66,7 +66,9 @@ Item {
                 MouseArea {
                     id: mouseAreaBack
                     anchors.fill: parent
-                    enabled: !!stack.currentItem && (stack.currentItem.objectName === "event" || stack.currentItem.objectName === "feedback")
+                    enabled: !!stack.currentItem && (stack.currentItem.objectName === "event" ||
+                                                     stack.currentItem.objectName === "feedback" ||
+                                                     stack.currentItem.objectName === "floorPlan")
                     onClicked: stack.pop()
                     Rectangle {
                         anchors.fill: parent
@@ -81,7 +83,9 @@ Item {
                         anchors.verticalCenter: parent.verticalCenter
                         anchors.leftMargin: Theme.margins.twenty
                         opacity: (stack.depth > 1 && (!!stack.currentItem &&
-                                                      (stack.currentItem.objectName === "event" || stack.currentItem.objectName === "feedback"))) ? 1 : 0
+                                                      (stack.currentItem.objectName === "event" ||
+                                                       stack.currentItem.objectName === "feedback" ||
+                                                       stack.currentItem.objectName === "floorPlan"))) ? 1 : 0
                         Behavior on opacity { PropertyAnimation{} }
                         height: Theme.sizes.backHeight
                         width: Theme.sizes.backWidth
@@ -99,7 +103,9 @@ Item {
                         id: locationButton
                         anchors.left: parent.left
                         anchors.verticalCenter: parent.verticalCenter
-                        opacity: (!!stack.currentItem && stack.currentItem.objectName !== "event" && stack.currentItem.objectName !== "feedback" &&
+                        opacity: (!!stack.currentItem && stack.currentItem.objectName !== "event" &&
+                                  stack.currentItem.objectName !== "feedback" &&
+                                  stack.currentItem.objectName !== "floorPlan" &&
                                   applicationClient.currentConferenceId !== "") ? 1 : 0
                         Behavior on opacity { PropertyAnimation{} }
 

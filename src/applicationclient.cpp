@@ -80,6 +80,7 @@ ApplicationClient::ApplicationClient()
     m_details->insert(QLatin1String("location"), QVariant(""));
     m_details->insert(QLatin1String("title"), QVariant(""));
     m_details->insert(QLatin1String("TwitterTag"), QVariant(""));
+    m_details->insert(QLatin1String("infopage"), QVariant(""));
 }
 
 void ApplicationClient::errorClient(EnginioReply *reply)
@@ -177,6 +178,7 @@ void ApplicationClient::setCurrentConferenceIndex(const int index)
     m_details->insert(QLatin1String("location"),m_conferenceModel->data(index, "location"));
     m_details->insert(QLatin1String("title"), m_conferenceModel->data(index, "title"));
     m_details->insert(QLatin1String("TwitterTag"), m_conferenceModel->data(index, "TwitterTag"));
+    m_details->insert(QLatin1String("infopage"), m_conferenceModel->data(index, "infopage"));
     emit currentConferenceDetailsChanged();
 }
 
