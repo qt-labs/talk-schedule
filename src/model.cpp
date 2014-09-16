@@ -83,14 +83,15 @@ void Model::addFavorite( const QString &data)
     QMap<QString, QVariant> temp;
     for (int i = 0; i < m_data.count(); i++) {
         temp = m_data.at(i);
-        QString key = temp.key(data);
-        if (key == "id") {
-            if (!temp["favorite"].toBool()) {
-                temp["favorite"] = true;
-                m_data.replace(i, temp);
-                Q_EMIT dataChanged(this->index(i), this->index(i));
+        if (temp.keys().contains("id")) {
+            if (data == temp["id"]) {
+                if (!temp["favorite"].toBool()) {
+                    temp["favorite"] = true;
+                    m_data.replace(i, temp);
+                    Q_EMIT dataChanged(this->index(i), this->index(i));
+                }
+                break;
             }
-            break;
         }
     }
 }
