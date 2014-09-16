@@ -65,7 +65,7 @@ static QObject *systeminfo_provider(QQmlEngine *engine, QJSEngine *scriptEngine)
 int main(int argc, char *argv[])
 {
     QGuiApplication app(argc, argv);
-    app.setApplicationName("TalkSchedule");
+    app.setApplicationName("QtDevDays");
     app.setOrganizationName("Qt.Digia");
 
     QFontDatabase::addApplicationFont(":/fonts/OpenSans-Bold.ttf");
