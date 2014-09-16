@@ -107,23 +107,17 @@ Item {
                         id: locationMenu
                         Instantiator {
                             id: menuConferenceRepeater
-                            model: ModelsSingleton.conferencesModel.rowCount()
+                            model: applicationClient.conferencesModel.rowCount()
                             MenuItem {
-                                text: ModelsSingleton.conferencesModel.data(index, "title")
-                                onTriggered: {
-                                    ModelsSingleton.conferenceId = ModelsSingleton.conferencesModel.data(index, "id")
-                                    ModelsSingleton.conferenceLocation = ModelsSingleton.conferencesModel.data(index, "location")
-                                    ModelsSingleton.conferenceTitle = ModelsSingleton.conferencesModel.data(index, "title")
-                                    ModelsSingleton.conferenceTwitterTag = ModelsSingleton.conferencesModel.data(index, "TwitterTag")
-                                    ModelsSingleton.rssFeed = ModelsSingleton.conferencesModel.data(index, "rssFeed")
-                                }
+                                text: applicationClient.conferencesModel.data(index, "title")
+                                onTriggered: applicationClient.setCurrentConferenceIndex(index)
                             }
                             onObjectAdded: locationMenu.insertItem(locationMenu.items.length, object)
                         }
 
                         Connections {
-                            target: ModelsSingleton.conferencesModel
-                            onDataReady: menuConferenceRepeater.model = ModelsSingleton.conferencesModel.rowCount()
+                            target: applicationClient.conferencesModel
+                            onDataReady: menuConferenceRepeater.model = applicationClient.conferencesModel.rowCount()
                         }
                     }
 
@@ -149,7 +143,7 @@ Item {
                             anchors.left: locationImage.right
                             anchors.verticalCenter: parent.verticalCenter
                             anchors.leftMargin: Theme.margins.ten
-                            text: ModelsSingleton.conferenceLocation
+                            text: applicationClient.currentConferenceDetails.location
                             font.pointSize: Theme.fonts.ten_pt
                             font.capitalization: Font.AllUppercase
                             font.weight: Font.DemiBold

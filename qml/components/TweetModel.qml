@@ -61,7 +61,7 @@ Item {
 
         var req = new XMLHttpRequest;
         req.open("GET", "https://api.twitter.com/1.1/search/tweets.json?" +
-                 "count=10&q=" + encodePhrase(ModelsSingleton.conferenceTwitterTag) + "-filter:retweets");
+                 "count=10&q=" + encodePhrase(applicationClient.currentConferenceDetails.TwitterTag) + "-filter:retweets");
         req.setRequestHeader("Authorization", "Bearer " + bearerToken);
         req.onreadystatechange = function() {
             status = req.readyState;

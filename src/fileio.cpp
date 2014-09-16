@@ -42,6 +42,7 @@
 #include <QTextStream>
 #include <QDir>
 #include <QtCore/QStandardPaths>
+#include <QUuid>
 #include <QDebug>
 
 FileIO::FileIO(QObject *parent) :
@@ -96,4 +97,13 @@ bool FileIO::write(const QString &data)
     file.close();
 
     return true;
+}
+
+QString FileIO::createUUID()
+{
+    QString uuid = QUuid::createUuid().toString();
+    // Remove curly brackets
+    uuid.remove(0,1);
+    uuid.remove(uuid.length() - 1,1);
+    return uuid;
 }

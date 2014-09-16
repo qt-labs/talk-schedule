@@ -45,18 +45,14 @@
 #include <QtCore/QMap>
 #include <QtCore/QList>
 #include <QtQml/QJSValue>
-//#include <QtCore/QJsonDocument>
-#include <Enginio/enginioclient.h>
-//#include <Enginio/enginioreply.h>
+#include <QtCore/QJsonObject>
 
-QT_FORWARD_DECLARE_CLASS(EnginioClient)
-QT_FORWARD_DECLARE_CLASS(EnginioReply)
+class EnginioReply;
 
 class Model : public QAbstractListModel
 {
     Q_OBJECT
 
-    Q_PROPERTY(QString backendId READ backendId WRITE setBackendId NOTIFY backendIdChanged)
     Q_PROPERTY(QString conferenceId READ conferenceId WRITE setConferenceId NOTIFY conferenceIdChanged)
     Q_PROPERTY(QString fileNameTag READ fileNameTag WRITE setFileNameTag NOTIFY fileNameTagChanged)
 
@@ -68,15 +64,12 @@ public:
     QVariant data(const QModelIndex &index, int role = Qt::DisplayRole) const;
     QHash<int, QByteArray> roleNames() const;
 
-    QString backendId() const;
-    void setBackendId(const QString &id);
     QString conferenceId() const { return m_conferenceId; }
     void setConferenceId(const QString &id);
     QString fileNameTag() const { return m_fileNameTag; }
     void setFileNameTag(const QString &newTag);
 
     Q_INVOKABLE int rowCount(const QModelIndex &parent = QModelIndex()) const;
-    Q_INVOKABLE void query(const QJSValue &query);
     Q_INVOKABLE QVariant data(int index, const QString &role) const;
     Q_INVOKABLE void addFavorite(const QString &data);
     Q_INVOKABLE void removeFavorite(const QString &data);
@@ -85,12 +78,12 @@ public:
     Q_INVOKABLE QVariant indexOf(const QString &role, QVariant value);
 
 Q_SIGNALS:
-    void backendIdChanged();
+    void clientChanged();
     void conferenceIdChanged();
     void fileNameTagChanged();
     void dataReady();
 
-private Q_SLOTS:
+public Q_SLOTS:
     void onFinished(EnginioReply *reply);
 
 private:
@@ -100,7 +93,6 @@ private:
 
     QHash<int, QByteArray> m_roleNames;
     QList<QMap<QString, QVariant> > m_data;
-    EnginioClient *m_client;
     QMap<QString, QJsonObject> currentModelObject;
     QString m_conferenceId;
     QString m_fileNameTag;

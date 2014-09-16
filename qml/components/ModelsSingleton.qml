@@ -46,45 +46,14 @@ import TalkSchedule 1.0
 QtObject {
     id: object
     property string conferenceId: ""
-    property string currentUserId
-    property string conferenceLocation
-    property string conferenceTitle
-    property string conferenceTwitterTag
-    property string rssFeed
     property var currentConferenceTracks: []
     property var currentConferenceEvents: []
     property var currentConferenceDays: []
     property bool busy: false
     property string errorMessage
     property int conferenceIndex: 0
-    property var conference
-    property var client: EnginioClient {
-        backendId: backId
-        onError: {
-            errorMessage = reply.errorString
-            console.log("Enginio error " + reply.errorCode + ": " + reply.errorString)
-        }
-        Component.onCompleted: conferencesModel.query({"objectType": "objects.Conference"})
-    }
-
-    signal writeUserIdToFile(string userId)
-
-    property var conferencesModel: Model {
-        backendId: backId
-        fileNameTag: "ConferencesObject"
-        onDataReady: {
-            if (conferencesModel.rowCount() > 0) {
-                object.conferenceId = conferencesModel.data(0, "id")
-                object.conferenceLocation = conferencesModel.data(0, "location")
-                object.conferenceTitle = conferencesModel.data(0, "title")
-                object.conferenceTwitterTag = conferencesModel.data(0, "TwitterTag")
-                object.rssFeed = conferencesModel.data(0, "rssFeed")
-            }
-        }
-    }
 
     property var day: Model {
-        backendId: backId
         fileNameTag: "DayObject"
         onDataReady: {
             currentConferenceDays = []
@@ -95,7 +64,6 @@ QtObject {
     }
 
     property var trackModel: Model {
-        backendId: backId
         fileNameTag: "TrackObject"
         onDataReady: {
             currentConferenceTracks = []
@@ -107,7 +75,6 @@ QtObject {
 
     property var eventModel: Model {
         id: eventModel
-        backendId: backId
         fileNameTag: "EventObject"
         onDataReady: queryFavorites()
         function queryFavorites()
@@ -121,37 +88,39 @@ QtObject {
 
     property var favoriteModel: Model {
         // do not save favorite
-        backendId: backId
         onDataReady: getFavoriteIds()
     }
 
     property var breakModel: Model {
         fileNameTag: "BreakObject"
-        backendId: backId
     }
 
     property var timeListModel: Model {
         // do not save time list
-        backendId: backId
         property var tracksTodayModel
         onTracksTodayModelChanged: {
             if (!!tracksTodayModel) {
                 var todaysTracks = []
                 for (var i = 0; i < tracksTodayModel.rowCount(); i++)
                     todaysTracks.push(tracksTodayModel.data(i, "id"))
-                timeListModel.query({ "objectType": "objects.Event",
+                var timeQuery = applicationClient.client.query({ "objectType": "objects.Event",
                                         "sort" : [{"sortBy": "start", "direction": "asc"}],
                                         "query": { "track.id" : { "$in" : todaysTracks } }
                                     })
+                timeQuery.finished.connect(function() {
+                    timeListModel.onFinished(timeQuery)
+                })
             }
         }
     }
 
     function queryConferenceEvents()
     {
-        eventModel.query({
+        var eventQuery = applicationClient.client.query({
                              "objectType": "objects.Event",
                              "query": { "track.id" : { "$in" : currentConferenceTracks } },
+                             "sort" : [{"sortBy": "start", "direction": "asc"}],
+                             "limit": 200,
                              "include": {
                                  "tracks": {
                                      "objectType": "objects.Track",
@@ -160,14 +129,20 @@ QtObject {
                                  }
                              }
                          })
+        eventQuery.finished.connect(function() {
+            eventModel.onFinished(eventQuery)
+        })
     }
 
     function queryConferenceBreaks()
     {
-        breakModel.query({
+        var breakQuery = applicationClient.client.query({
                              "objectType": "objects.Break",
                              "query": { "day.id" : { "$in" : currentConferenceDays } },
                          })
+        breakQuery.finished.connect(function() {
+            breakModel.onFinished(breakQuery)
+        })
     }
 
     function getFavoriteIds()
@@ -178,9 +153,8 @@ QtObject {
 
     function queryUserConferenceFavorites()
     {
-        var favQuery = favoriteModel.query({ "objectType": "objects.Favorite",
+        var favQuery = applicationClient.client.query({ "objectType": "objects.Favorite",
                                                "query": {
-                                                   "user.id": currentUserId,
                                                    "favoriteEvent.id" : { "$in" : currentConferenceEvents }
                                                },
                                                "include": {
@@ -198,58 +172,22 @@ QtObject {
                                                    }
                                                }
                                            })
-    }
-
-    function retrieveUser(userId)
-    {
-        currentUserId = userId
-        if (currentUserId.length === 0)
-            createUser()
-        else
-            getUser()
-    }
-
-    function createUser()
-    {
-        console.log("createUser")
-        var reply = client.create({"objectType":"objects.User"})
-        var userId = 0
-        reply.finished.connect(function() {
-            if (reply.errorType !== EnginioReply.NoError) {
-                console.log("Failed to create an user:\n" + JSON.stringify(reply.data, undefined, 2) + "\n\n")
-            } else {
-                console.log("Account Created.")
-                userId = reply.data.id
-                writeUserIdToFile(userId)
-                currentUserId = userId
-            }
-        })
-    }
-
-    function getUser()
-    {
-        console.log("get user")
-        var queryUser = client.query({"objectType":"objects.User", "query" : { "id" : currentUserId }})
-        queryUser.finished.connect(function() {
-            if (queryUser.errorType !== EnginioReply.NoError || queryUser.data.results[0] === undefined) {
-                // User not found. Create new one
-                createUser()
-            }
+        favQuery.finished.connect(function() {
+            favoriteModel.onFinished(favQuery)
         })
     }
 
     function saveFeedback(fbtext, eventId, rating)
     {
         console.log("saveFeedback")
-        var reply = client.create({
+        var reply = applicationClient.client.create({
                                       "objectType": "objects.Feedback",
                                       "event": {
                                           "id": eventId,
                                           "objectType": "objects.Event"
                                       },
                                       "rating": rating,
-                                      "feedbackText": fbtext,
-                                      "userId": currentUserId
+                                      "feedbackText": fbtext
                                   })
         reply.finished.connect(function() {
             if (reply.errorType !== EnginioReply.NoError) {
@@ -268,15 +206,13 @@ QtObject {
         }
         busy = true
         console.log("start saving favorite")
-        var reply = client.create({
+        var reply = applicationClient.client.create({
                                       "objectType": "objects.Favorite",
                                       "favoriteEvent": {
                                           "id": saveEventId,
                                           "objectType": "objects.Event"
-                                      },
-                                      "user": {
-                                          "id": currentUserId,
-                                          "objectType": "objects.User"}})
+                                      }
+                                  })
 
         reply.finished.connect(function() {
             if (reply.errorType !== EnginioReply.NoError)
@@ -296,15 +232,13 @@ QtObject {
         }
         busy = true
         console.log("start removing favorite. First get the favorite id which should be removed")
-        var favoriteQuery = client.query({
+        var favoriteQuery = applicationClient.client.query({
                                              "objectType": "objects.Favorite",
                                              "query":{
                                                  "favoriteEvent": {
                                                      "id": removeEventId,
                                                      "objectType": "objects.Event"},
-                                                 "user": {
-                                                     "id": currentUserId ,
-                                                     "objectType": "objects.User"}}
+                                             }
                                          })
 
         favoriteQuery.finished.connect(function() {
@@ -314,8 +248,9 @@ QtObject {
             else {
                 if (favoriteQuery.data.results.length > 0) {
                     // Now do the actual removal
-                    var reply = client.remove({ "objectType": "objects.Favorite",
-                                                  "id": favoriteQuery.data.results[0].id })
+                    var reply = applicationClient.client.remove({ "objectType": "objects.Favorite",
+                                                  "id": favoriteQuery.data.results[0].id
+                                              })
                     reply.finished.connect(function() {
                         if (favoriteQuery.errorType !== EnginioReply.NoError)
                             console.log("Failed to remove an Favorite:\n" + JSON.stringify(reply.data, undefined, 2) + "\n\n")
@@ -323,15 +258,15 @@ QtObject {
                             eventModel.removeFavorite(removeEventId)
                     })
                 }
+                console.log("favorite remove done")
             }
-            console.log("favorite remove done")
             busy = false
         })
     }
 
     onConferenceIdChanged: {
         if (object.conferenceId === "")
-            return
+        return
 
         object.day.conferenceId = conferenceId
         object.trackModel.conferenceId = conferenceId
@@ -340,21 +275,28 @@ QtObject {
         object.breakModel.conferenceId = conferenceId
         object.timeListModel.conferenceId = conferenceId
 
-        day.query({ "objectType": "objects.Day",
-                      "query": {
-                          "conference": {
-                              "id": object.conferenceId,
-                              "objectType": "objects.Conference"
-                          }
-                      }
-                  })
-        trackModel.query({"objectType": "objects.Track",
-                             "query": {
-                                 "conference": {
-                                     "id": object.conferenceId,
-                                     "objectType": "objects.Conference"
-                                 }
-                             }
-                         });
+        var dayQuery = applicationClient.client.query({ "objectType": "objects.Day",
+                                                          "query": {
+                                                              "conference": {
+                                                                  "id": object.conferenceId,
+                                                                  "objectType": "objects.Conference"
+                                                              }
+                                                          }
+                                                      })
+        dayQuery.finished.connect(function() {
+            day.onFinished(dayQuery)
+        })
+
+        var tracksQuery = applicationClient.client.query({"objectType": "objects.Track",
+                                                             "query": {
+                                                                 "conference": {
+                                                                     "id": object.conferenceId,
+                                                                     "objectType": "objects.Conference"
+                                                                 }
+                                                             }
+                                                         });
+        tracksQuery.finished.connect(function() {
+            trackModel.onFinished(tracksQuery)
+        })
     }
 }

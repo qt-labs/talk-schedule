@@ -68,6 +68,14 @@ ListView {
             dayId: id
         }
 
+        Connections {
+            target: ModelsSingleton.eventModel
+            onDataReady: {
+                dayTracksModel.modelTracks.model = ModelsSingleton.eventModel
+                dayTracksModel.modelTracks.init()
+            }
+        }
+
         height: !dayTracksModel.isEmpty ? trackHeight * ( dayTracksModel.numberCollidingEvents + 1 ): 0
         width: Theme.sizes.trackHeaderWidth
         visible: !dayTracksModel.isEmpty

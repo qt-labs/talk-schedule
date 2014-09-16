@@ -117,19 +117,31 @@ Rectangle {
 
             SortFilterModel {
                 id: sortModelNextEvents
+
+                function init()
+                {
+                    if (sortModelNextEvents.rowCount() > 0)
+                        upcomingItem.visibleDate = Qt.formatDate(sortModelNextEvents.get(0, "start"), upcomingItem.formatDate)
+                }
+
                 sortRole: "start"
                 filterRole: "fromNow"
                 maximumCount: 7
                 model: ModelsSingleton.eventModel
-                Component.onCompleted: {
-                    if (sortModelNextEvents.rowCount() > 0)
-                        upcomingItem.visibleDate = Qt.formatDate(sortModelNextEvents.get(0, "start"), upcomingItem.formatDate)
+                Component.onCompleted: init()
+            }
+
+            Connections {
+                target: ModelsSingleton.eventModel
+                onDataReady: {
+                    sortModelNextEvents.model = ModelsSingleton.eventModel
+                    sortModelNextEvents.init()
                 }
             }
 
             Text {
                 id: labelUpcoming
-                text: Theme.text.upcoming.arg(ModelsSingleton.conferenceTitle).arg(upcomingItem.visibleDate)
+                text: Theme.text.upcoming.arg(applicationClient.currentConferenceDetails.title).arg(upcomingItem.visibleDate)
                 width: parent.width
                 height: Theme.sizes.homeTitleHeight
                 z: 1

@@ -61,7 +61,7 @@ Rectangle {
         Item { Layout.fillWidth: true; width:Theme.margins.five; Layout.preferredHeight: 1 }
         Label {
             id: locationLabel
-            text: ModelsSingleton.conferenceLocation
+            text: applicationClient.currentConferenceDetails.location
             verticalAlignment: Text.AlignVCenter
             horizontalAlignment: Text.AlignHCenter
             font.pointSize: Theme.fonts.seven_pt

@@ -14,7 +14,8 @@ SOURCES += src/main.cpp \
     src/theme.cpp \
     src/model.cpp \
     src/sortfiltermodel.cpp \
-    src/fileio.cpp
+    src/fileio.cpp \
+    src/applicationclient.cpp
 
 OTHER_FILES += \
     qml/main.qml \
@@ -45,7 +46,8 @@ HEADERS += \
     src/theme.h \
     src/model.h \
     src/sortfiltermodel.h \
-    src/fileio.h
+    src/fileio.h \
+    src/applicationclient.h
 
 DEFINES += \
     TALK_SCHEDULE_BACKEND_ID=$$TALK_SCHEDULE_BACKEND_ID \

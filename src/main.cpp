@@ -48,6 +48,7 @@
 #include "model.h"
 #include "sortfiltermodel.h"
 #include "fileio.h"
+#include "applicationclient.h"
 
 #define QUOTE_(x) #x
 #define QUOTE(x) QUOTE_(x)
@@ -78,11 +79,12 @@ int main(int argc, char *argv[])
     } else {
         qWarning("Error: fail to load Open Sans font");
     }
-
     QQmlApplicationEngine engine;
-    engine.rootContext()->setContextProperty("backId", QString(BACKEND_ID));
     engine.rootContext()->setContextProperty("consumerKey", QString(CONSUMER_KEY));
     engine.rootContext()->setContextProperty("consumerSecret", QString(CONSUMER_SECRET));
+
+    ApplicationClient *client = new ApplicationClient();
+    engine.rootContext()->setContextProperty("applicationClient", client);
 
     const char *uri = "TalkSchedule";
     // @uri TalkSchedule

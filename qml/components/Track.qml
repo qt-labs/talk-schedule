@@ -58,6 +58,14 @@ Row {
         onIsReady: repeater1.model = rowsArray.length
     }
 
+    Connections {
+        target: ModelsSingleton.eventModel
+        onDataReady: {
+            dayTracksModel.modelTracks.model = ModelsSingleton.eventModel
+            dayTracksModel.modelTracks.init()
+        }
+    }
+
     Column {
         id: column
         width: parent.width

@@ -37,34 +37,69 @@
 ** $QT_END_LICENSE$
 **
 ****************************************************************************/
-#ifndef FILEIO_H
-#define FILEIO_H
+
+#ifndef APPLICATIONCLIENT_H
+#define APPLICATIONCLIENT_H
 
 #include <QObject>
+#include <QString>
+#include <QtQml/QQmlPropertyMap>
 
-class FileIO : public QObject
+class EnginioClient;
+class EnginioModel;
+class EnginioOAuth2Authentication;
+class EnginioReply;
+class FileIO;
+class Model;
+class QTimer;
+
+class ApplicationClient: public QObject
 {
     Q_OBJECT
-
+    Q_PROPERTY(EnginioClient *client READ client)
+    Q_PROPERTY(QString currentConferenceId READ currentConferenceId WRITE setCurrentConferenceId NOTIFY currentConferenceIdChanged)
+    Q_PROPERTY(Model *conferencesModel READ conferencesModel NOTIFY conferencesModelChanged())
+    Q_PROPERTY(QObject *currentConferenceDetails READ currentConferenceDetails NOTIFY currentConferenceDetailsChanged)
 public:
-    Q_PROPERTY(QString source READ source WRITE setSource NOTIFY sourceChanged)
-    explicit FileIO(QObject *parent = 0);
+    explicit ApplicationClient();
+    Model *conferencesModel() const { return m_conferenceModel; }
+    EnginioClient *client() { return m_client; }
 
-    Q_INVOKABLE QString read();
-    Q_INVOKABLE bool write(const QString &data);
-    Q_INVOKABLE QString createUUID();
+    QString currentConferenceId() const { return m_currentConferenceId; }
+    void setCurrentConferenceId(const QString &newConfId);
 
-    QString source() { return mSource; }
+    Q_INVOKABLE void setCurrentConferenceIndex(const int index);
 
-public slots:
-    void setSource(const QString &source) { mSource = source; }
+    QQmlPropertyMap *currentConferenceDetails() const { return m_details; }
+
+protected:
+    void getUserCredentials();
+    void createUser();
 
 signals:
-    void sourceChanged(const QString &source);
-    void error(const QString &msg);
+    void error(QString errorMessage);
+    void askQueryConferences();
+    void currentConferenceIdChanged();
+    void currentConferenceDetailsChanged();
+    void conferencesModelChanged();
+
+public slots:
+    void authenticationSuccess(EnginioReply *reply);
+    void errorClient(EnginioReply *reply);
+    void userCreationReply(EnginioReply *reply);
+    void queryConferenceReply(EnginioReply *reply);
+    void authenticate();
 
 private:
-    QString mSource;
+    EnginioClient *m_client;
+    Model *m_conferenceModel;
+    FileIO *m_userData;
+    QString currentUsername;
+    QString currentPassword;
+    EnginioOAuth2Authentication *authenticator;
+    QString m_currentConferenceId;
+    QQmlPropertyMap *m_details;
+    QTimer *timer;
 };
 
-#endif // FILEIO_H
+#endif // APPLICATIONCLIENT_H

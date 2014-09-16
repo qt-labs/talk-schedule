@@ -53,16 +53,21 @@ QtObject {
     property bool isEmpty: false
 
     property var modelTracks: SortFilterModel {
+
         property bool ready
+
+        function init()
+        {
+            isEmpty = modelTracks.rowCount() === 0
+            ready = Qt.binding(function() {return modelTracks.rowCount() > 0})
+        }
+
         sortRole: "start"
         filterRole: "track"
         filterRegExp: new RegExp(dayId)
         model: ModelsSingleton.eventModel
         hide: true
-        Component.onCompleted: {
-            isEmpty = modelTracks.rowCount() === 0
-            ready = Qt.binding(function() {return modelTracks.rowCount() > 0})
-        }
+        Component.onCompleted: init()
         onReadyChanged: {
             // calculate number of rows needed for the current track
             numberCollidingEvents = 0

@@ -40,7 +40,6 @@
 
 #include "model.h"
 
-#include <Enginio/enginioclient.h>
 #include <Enginio/enginioreply.h>
 #include <QtCore/QDebug>
 #include <QtCore/QJsonValue>
@@ -54,8 +53,6 @@
 Model::Model(QObject *parent)
     : QAbstractListModel(parent)
 {
-    m_client = new EnginioClient(this);
-    connect(m_client, SIGNAL(finished(EnginioReply*)), this, SLOT(onFinished(EnginioReply*)));
 }
 
 
@@ -144,24 +141,12 @@ QHash<int, QByteArray> Model::roleNames() const
     return m_roleNames;
 }
 
-QString Model::backendId() const
-{
-    return m_client ? m_client->backendId() : "";
-}
-
-void Model::setBackendId(const QString &id)
-{
-    if (m_client && m_client->backendId() == id.toLatin1())
-        return;
-
-    m_client->setBackendId(id.toLatin1());
-    Q_EMIT backendIdChanged();
-}
-
 void Model::setConferenceId(const QString &id)
 {
     if (id != m_conferenceId) {
         m_conferenceId =  id;
+        // The file name tag has been declared before
+        load();
         Q_EMIT conferenceIdChanged();
     }
 }
@@ -172,30 +157,6 @@ void Model::setFileNameTag(const QString &newTag)
         m_fileNameTag =  newTag;
         Q_EMIT fileNameTagChanged();
     }
-}
-
-void Model::query(const QJSValue &query)
-{
-    if (!query.hasProperty("objectType"))
-        return;
-
-    // Load data from file if available
-    load();
-
-    // Check for updates
-    QJsonObject queryObject;
-    queryObject["objectType"] = query.property("objectType").toString();
-
-    if (query.hasProperty("query"))
-        queryObject["query"] = QJsonObject::fromVariantMap(query.property("query").toVariant().toMap());
-
-    if (query.hasProperty("sort"))
-        queryObject["sort"] = QJsonObject::fromVariantMap(query.property("sort").toVariant().toMap());
-
-    if (query.hasProperty("include"))
-        queryObject["include"] = QJsonObject::fromVariantMap(query.property("include").toVariant().toMap());
-
-    m_client->query(queryObject);
 }
 
 QVariant Model::data(int index, const QString &role) const
@@ -269,7 +230,7 @@ bool Model::parse(const QJsonObject &object)
 {
     bool dataHasChanged = true;
 
-    dataHasChanged = fileNameTag().isEmpty() || object != currentModelObject[fileNameTag()] ;
+    dataHasChanged = fileNameTag().isEmpty() || object != currentModelObject[fileNameTag()];
 
     if (dataHasChanged) {
         beginResetModel();

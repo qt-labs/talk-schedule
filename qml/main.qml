@@ -53,14 +53,10 @@ ApplicationWindow {
 
     color: Theme.colors.white
 
-    FileIO {
-        id: userIdFile
-        Component.onCompleted: ModelsSingleton.retrieveUser(read())
-    }
-
     Connections {
-        target: ModelsSingleton
-        onWriteUserIdToFile: userIdFile.write(userId)
+        target: applicationClient
+        onCurrentConferenceIdChanged: ModelsSingleton.conferenceId = applicationClient.currentConferenceId
+        onError: ModelsSingleton.errorMessage = errorMessage
     }
 
     ConferenceHeader {
