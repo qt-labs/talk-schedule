@@ -5,6 +5,7 @@
 #-------------------------------------------------
 
 TALK_SCHEDULE_BACKEND_ID = 53eb4610e5bde51bac007bb1
+TWITTER_KEY = rxrFsRoj3CFQU35ttmUJr4xVq
 
 QT += qml quick enginio svg xmlpatterns xml
 TARGET = QtDevDays
@@ -47,7 +48,9 @@ HEADERS += \
     src/fileio.h
 
 DEFINES += \
-    TALK_SCHEDULE_BACKEND_ID=$$TALK_SCHEDULE_BACKEND_ID
+    TALK_SCHEDULE_BACKEND_ID=$$TALK_SCHEDULE_BACKEND_ID \
+    TWITTER_KEY=$$TWITTER_KEY \
+    TWITTER_SECRET=$$TWITTER_SECRET
 
 winrt: WINRT_MANIFEST.capabilities += internetClientServer
 

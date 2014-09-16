@@ -52,6 +52,8 @@
 #define QUOTE_(x) #x
 #define QUOTE(x) QUOTE_(x)
 #define BACKEND_ID QUOTE(TALK_SCHEDULE_BACKEND_ID)
+#define CONSUMER_KEY QUOTE(TWITTER_KEY)
+#define CONSUMER_SECRET QUOTE(TWITTER_SECRET)
 
 static QObject *systeminfo_provider(QQmlEngine *engine, QJSEngine *scriptEngine)
 {
@@ -79,6 +81,8 @@ int main(int argc, char *argv[])
 
     QQmlApplicationEngine engine;
     engine.rootContext()->setContextProperty("backId", QString(BACKEND_ID));
+    engine.rootContext()->setContextProperty("consumerKey", QString(CONSUMER_KEY));
+    engine.rootContext()->setContextProperty("consumerSecret", QString(CONSUMER_SECRET));
 
     const char *uri = "TalkSchedule";
     // @uri TalkSchedule

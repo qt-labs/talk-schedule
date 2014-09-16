@@ -44,8 +44,6 @@ import TalkSchedule 1.0
 Item {
     id: tweetModel
     property variant model: tweets
-    property string consumerKey : "rxrFsRoj3CFQU35ttmUJr4xVq"
-    property string consumerSecret : "xG6ViXO3lsiSltw6tKpE25slVBNRfBjMZzej9CmwW16FUtEkCW"
     property string bearerToken : ""
     property int status: XMLHttpRequest.UNSENT
     property bool isLoading: status === XMLHttpRequest.LOADING
