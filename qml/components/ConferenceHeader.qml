@@ -108,7 +108,6 @@ Item {
                         Instantiator {
                             id: menuConferenceRepeater
                             model: ModelsSingleton.conferencesModel.rowCount()
-                            Component.onCompleted: print(ModelsSingleton.conferencesModel.rowCount())
                             MenuItem {
                                 text: ModelsSingleton.conferencesModel.data(index, "title")
                                 onTriggered: {
