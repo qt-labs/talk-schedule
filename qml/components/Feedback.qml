@@ -143,7 +143,6 @@ Item {
                 height: Theme.sizes.buttonHeight
                 style: ButtonStyle {
                     background: Rectangle {
-                        radius: 5
                         border.width: 2
                         border.color: Theme.colors.qtgreen
                         color: control.pressed ? Qt.darker(Theme.colors.white, 1.1) : Theme.colors.white
@@ -152,7 +151,8 @@ Item {
                         horizontalAlignment: Text.AlignHCenter
                         verticalAlignment: Text.AlignVCenter
                         text: control.text
-                        color: Theme.colors.black
+                        color: Theme.colors.qtgreen
+                        font.capitalization: Font.AllUppercase
                         font.pointSize: Theme.fonts.six_pt
                     }
                 }
@@ -171,7 +171,6 @@ Item {
                 height: Theme.sizes.buttonHeight
                 style: ButtonStyle {
                     background: Rectangle {
-                        radius: 5
                         color: control.enabled ? (control.pressed ? Qt.darker(Theme.colors.qtgreen, 1.1) : Theme.colors.qtgreen)
                                                : Theme.colors.smokewhite
                     }
@@ -179,7 +178,8 @@ Item {
                         horizontalAlignment: Text.AlignHCenter
                         verticalAlignment: Text.AlignVCenter
                         text: control.text
-                        color: control.enabled ? Theme.colors.black : Theme.colors.gray
+                        color: control.enabled ? Theme.colors.white : Theme.colors.gray
+                        font.capitalization: Font.AllUppercase
                         font.pointSize: Theme.fonts.six_pt
                     }
                 }

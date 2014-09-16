@@ -114,7 +114,6 @@ Rectangle {
                     Layout.preferredWidth: Theme.sizes.buttonWidth
                     style: ButtonStyle {
                         background: Rectangle {
-                            radius: 5
                             border.width: 2
                             border.color: Theme.colors.qtgreen
                             color: control.pressed ? Qt.darker(Theme.colors.qtgreen, 1.1) : Theme.colors.qtgreen
@@ -123,7 +122,8 @@ Rectangle {
                             horizontalAlignment: Text.AlignHCenter
                             verticalAlignment: Text.AlignVCenter
                             text: control.text
-                            color: Theme.colors.black
+                            color: Theme.colors.white
+                            font.capitalization: Font.AllUppercase
                             font.pointSize: Theme.fonts.six_pt
                         }
                     }
