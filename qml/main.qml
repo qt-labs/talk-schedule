@@ -88,12 +88,14 @@ ApplicationWindow {
                     append({name: Theme.text.schedule, id: "schedule"  })
                     append({name: Theme.text.talks, id: "talks"  })
                     append({name: Theme.text.favorites, id: "favorites"  })
+                    append({name: Theme.text.switchConf, id: "switchConf"  })
                     menuRectangle.height = Theme.sizes.buttonHeight * menuModel.count
                 }
             }
             Repeater {
                 id: listMenu
                 anchors.fill: parent
+                anchors.margins: Theme.margins.ten
                 model: menuModel
                 function firstOrLast(index)
                 {
@@ -137,7 +139,7 @@ ApplicationWindow {
                         id: separator
                         visible: index < menuModel.count - 1
                         anchors.bottom: parent.bottom
-                        height: Theme.applyRatio(1)
+                        height: 1
                         width: parent.width
                         color: Theme.colors.gray_menu
                     }
@@ -183,6 +185,15 @@ ApplicationWindow {
                                        })
                         }
                         break
+                    case "switchConf":
+                        var item = Qt.resolvedUrl("components/ConferenceSwitcher.qml")
+                        var loadedSC = stack.find(function(item){ return item.objectName === "switchConf" })
+                        if (loadedSC !== null)
+                            stack.pop(loadedSC)
+                        else {
+                            stack.push(item)
+                        }
+                        break
                     default:
                         break
                     }
@@ -194,6 +205,7 @@ ApplicationWindow {
 
     ConferenceHeader {
         id: header
+        visible: !initConferenceSwitcher.visible
         anchors.top: parent.top
         height: Theme.sizes.conferenceHeaderHeight
         width: parent.width
@@ -204,6 +216,7 @@ ApplicationWindow {
 
     StackView {
         id: stack
+        visible: !initConferenceSwitcher.visible
         focus: true
         width: parent.width
         anchors.top: header.bottom
@@ -224,8 +237,10 @@ ApplicationWindow {
     Item {
         id: splashscreen
         anchors.fill: parent
+        visible: !initConferenceSwitcher.visible
         Image {
             id: splashlogo
+            visible: splashscreen.visible
             anchors.centerIn: parent
             source: Theme.images.logo
             sourceSize.width: Theme.sizes.logoWidth * 2
@@ -240,7 +255,38 @@ ApplicationWindow {
                                       stack.push(Qt.resolvedUrl("components/HomeScreen.qml"))
                                   }
             }
-            Component.onCompleted: animation.running = true
         }
+        onVisibleChanged: if (visible) animation.running = true
+    }
+
+    Rectangle {
+        id: initConferenceSwitcher
+        anchors.fill: parent
+        opacity: 0.01
+        visible:  ModelsSingleton.conferenceId === ""
+        Image {
+            id: logo
+            visible: parent.visible
+            opacity: parent.opacity
+            anchors.top: parent.top
+            anchors.topMargin: Theme.margins.thirty
+            anchors.horizontalCenter: parent.horizontalCenter
+            sourceSize.height: Theme.sizes.logoHeight
+            sourceSize.width: Theme.sizes.logoWidth
+            source: Theme.images.logo
+            fillMode: Image.PreserveAspectFit
+        }
+        ConferenceSwitcher {
+            anchors.top: logo.bottom
+            anchors.topMargin: Theme.margins.thirty
+            anchors.bottom: parent.bottom
+            opacity: parent.opacity
+            width: parent.width
+        }
+    }
+
+    Connections {
+        target: applicationClient
+        onConferencesModelChanged: if (initConferenceSwitcher.visible) initConferenceSwitcher.opacity = 1
     }
 }

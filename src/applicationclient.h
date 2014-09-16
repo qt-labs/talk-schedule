@@ -94,6 +94,7 @@ private:
     EnginioClient *m_client;
     Model *m_conferenceModel;
     FileIO *m_userData;
+    FileIO *m_settings;
     QString currentUsername;
     QString currentPassword;
     EnginioOAuth2Authentication *authenticator;

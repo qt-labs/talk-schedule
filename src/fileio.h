@@ -48,7 +48,7 @@ class FileIO : public QObject
 
 public:
     Q_PROPERTY(QString source READ source WRITE setSource NOTIFY sourceChanged)
-    explicit FileIO(QObject *parent = 0);
+    explicit FileIO(QObject *parent = 0, QString filename = "userId.txt");
 
     Q_INVOKABLE QString read();
     Q_INVOKABLE bool write(const QString &data);

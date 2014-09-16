@@ -84,6 +84,8 @@ Theme::Theme(QObject *parent)
     m_text->insert(QLatin1String("room"), tr("Room %1"));
     m_text->insert(QLatin1String("room_space"), tr(" - Room %1"));
     m_text->insert(QLatin1String("twitterLink"), tr("https://twitter.com/"));
+    m_text->insert(QLatin1String("select_conference"), "Select a conference");
+    m_text->insert(QLatin1String("switchConf"), "Switch conference");
 
     m_colors = new QQmlPropertyMap(this);
     m_colors->insert(QLatin1String("white"), QVariant("#ffffff"));

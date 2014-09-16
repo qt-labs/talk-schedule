@@ -32,5 +32,6 @@
         <file alias="images/Btn_VenueMap.svg">qml/components/images/Btn_VenueMap.svg</file>
         <file alias="images/Location.svg">qml/components/images/Location.svg</file>
         <file alias="images/Twitter.svg">qml/components/images/Twitter.svg</file>
+        <file>qml/components/ConferenceSwitcher.qml</file>
     </qresource>
 </RCC>

@@ -98,7 +98,7 @@ Item {
                         id: locationButton
                         anchors.left: parent.left
                         anchors.verticalCenter: parent.verticalCenter
-                        opacity: (!!stack.currentItem && stack.currentItem.objectName !== "event" && Theme.currentConference !== "") ? 1 : 0
+                        opacity: (!!stack.currentItem && stack.currentItem.objectName !== "event" && applicationClient.currentConferenceId !== "") ? 1 : 0
                         Behavior on opacity { PropertyAnimation{} }
 
                         Image {

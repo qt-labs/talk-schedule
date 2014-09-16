@@ -56,6 +56,8 @@
 
 ApplicationClient::ApplicationClient()
 {
+    m_settings = new FileIO(this, "settings.txt");
+
     timer = new QTimer(this);
     connect(timer, SIGNAL(timeout()), this, SLOT(authenticate()));
 
@@ -150,23 +152,27 @@ void ApplicationClient::authenticationSuccess(EnginioReply *reply)
 void ApplicationClient::setCurrentConferenceId(const QString &newConfId)
 {
     if (m_currentConferenceId != newConfId) {
-        m_currentConferenceId = newConfId;
-        emit currentConferenceIdChanged();
+        int indexCurrentConf = m_conferenceModel->indexOf("id", newConfId).toInt();
+        if (indexCurrentConf != -1) {
+            m_currentConferenceId = newConfId;
+            m_settings->write(m_currentConferenceId);
+            setCurrentConferenceIndex(indexCurrentConf);
+            emit currentConferenceIdChanged();
+        }
     }
 }
 
 void ApplicationClient::queryConferenceReply(EnginioReply *reply)
 {
     m_conferenceModel->onFinished(reply);
+    setCurrentConferenceId(m_settings->read());
     emit conferencesModelChanged();
-    setCurrentConferenceIndex(0);
 }
 
 void ApplicationClient::setCurrentConferenceIndex(const int index)
 {
     if (index > m_conferenceModel->rowCount() - 1)
         return;
-    setCurrentConferenceId(m_conferenceModel->data(index, "id").toString());
     m_details->insert(QLatin1String("location"),m_conferenceModel->data(index, "location"));
     m_details->insert(QLatin1String("title"), m_conferenceModel->data(index, "title"));
     m_details->insert(QLatin1String("TwitterTag"), m_conferenceModel->data(index, "TwitterTag"));
