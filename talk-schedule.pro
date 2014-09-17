@@ -5,7 +5,7 @@
 #-------------------------------------------------
 
 TALK_SCHEDULE_BACKEND_ID = 53eb4610e5bde51bac007bb1
-TWITTER_KEY = rxrFsRoj3CFQU35ttmUJr4xVq
+TWITTER_KEY = aPU6stBUmqUEhE0fy8AktbVvi
 
 QT += qml quick enginio svg xmlpatterns xml
 TARGET = QtDevDays
