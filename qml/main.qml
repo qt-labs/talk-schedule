@@ -131,7 +131,7 @@ ApplicationWindow {
                         width: parent.width
                         text: name
                         color: mouseArea.pressed ? Theme.colors.white : Theme.colors.blue_menu
-                        font.pointSize: Theme.fonts.eight_pt
+                        font.pointSize: Theme.fonts.ten_pt
                         verticalAlignment: Text.AlignVCenter
                         horizontalAlignment: Text.AlignHCenter
                     }

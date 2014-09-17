@@ -125,7 +125,7 @@ Rectangle {
                             text: control.text
                             color: Theme.colors.white
                             font.capitalization: Font.AllUppercase
-                            font.pointSize: Theme.fonts.six_pt
+                            font.pointSize: Theme.fonts.seven_pt
                         }
                     }
                     onClicked: {

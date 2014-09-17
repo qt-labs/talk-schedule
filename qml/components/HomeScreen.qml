@@ -170,7 +170,7 @@ Rectangle {
                         upcomingItem.visibleDate = Qt.formatDate(sortModelNextEvents.get(0, "start"), upcomingItem.formatDate)
                     }
                 }
-                spacing: Theme.margins.twenty
+                spacing: Theme.margins.ten
                 delegate: RowLayout {
                     id: upcomingEventDelegate
                     width: parent.width

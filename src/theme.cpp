@@ -85,7 +85,7 @@ Theme::Theme(QObject *parent)
     m_text->insert(QLatin1String("room_space"), tr(" - Room %1"));
     m_text->insert(QLatin1String("twitterLink"), tr("https://twitter.com/"));
     m_text->insert(QLatin1String("select_conference"), "Select a conference");
-    m_text->insert(QLatin1String("switchConf"), "Switch conference");
+    m_text->insert(QLatin1String("switchConf"), "Switch Conference");
 
     m_colors = new QQmlPropertyMap(this);
     m_colors->insert(QLatin1String("white"), QVariant("#ffffff"));
@@ -117,12 +117,12 @@ Theme::Theme(QObject *parent)
     m_sizes->insert(QLatin1String("menuHeight"), QVariant(applyRatio(62)));
     m_sizes->insert(QLatin1String("menuWidth"), QVariant(applyRatio(78)));
     m_sizes->insert(QLatin1String("dayLabelHeight"), QVariant(applyRatio(70)));
-    m_sizes->insert(QLatin1String("upcomingEventHeight"), QVariant(applyRatio(90)));
+    m_sizes->insert(QLatin1String("upcomingEventHeight"), QVariant(applyRatio(130)));
     m_sizes->insert(QLatin1String("homeTitleHeight"), QVariant(applyRatio(100)));
-    m_sizes->insert(QLatin1String("upcomingEventTimeWidth"), QVariant(applyRatio(200)));
+    m_sizes->insert(QLatin1String("upcomingEventTimeWidth"), QVariant(applyRatio(240)));
     m_sizes->insert(QLatin1String("trackFieldHeight"), QVariant(applyRatio(50)));
-    m_sizes->insert(QLatin1String("buttonHeight"), QVariant(applyRatio(78)));
-    m_sizes->insert(QLatin1String("buttonWidth"), QVariant(applyRatio(300)));
+    m_sizes->insert(QLatin1String("buttonHeight"), QVariant(applyRatio(130)));
+    m_sizes->insert(QLatin1String("buttonWidth"), QVariant(applyRatio(400)));
     m_sizes->insert(QLatin1String("ratingImageHeight"), QVariant(applyRatio(38)));
     m_sizes->insert(QLatin1String("ratingImageWidth"), QVariant(applyRatio(40)));
     m_sizes->insert(QLatin1String("infoButtonSize"), QVariant(applyRatio(160)));
@@ -146,11 +146,11 @@ Theme::Theme(QObject *parent)
     m_images->insert(QLatin1String("twitter"), QVariant("qrc:/images/Twitter.svg"));
 
     m_fonts = new QQmlPropertyMap(this);
-    m_fonts->insert(QLatin1String("six_pt"), QVariant(applyFontRatio(8)));
-    m_fonts->insert(QLatin1String("seven_pt"), QVariant(applyFontRatio(9)));
-    m_fonts->insert(QLatin1String("eight_pt"), QVariant(applyFontRatio(10)));
-    m_fonts->insert(QLatin1String("ten_pt"), QVariant(applyFontRatio(12)));
-    m_fonts->insert(QLatin1String("twelve_pt"), QVariant(applyFontRatio(14)));
+    m_fonts->insert(QLatin1String("six_pt"), QVariant(applyFontRatio(9)));
+    m_fonts->insert(QLatin1String("seven_pt"), QVariant(applyFontRatio(10)));
+    m_fonts->insert(QLatin1String("eight_pt"), QVariant(applyFontRatio(12)));
+    m_fonts->insert(QLatin1String("ten_pt"), QVariant(applyFontRatio(14)));
+    m_fonts->insert(QLatin1String("twelve_pt"), QVariant(applyFontRatio(16)));
 
     m_margins = new QQmlPropertyMap(this);
     m_margins->insert(QLatin1String("five"), QVariant(applyRatio(5)));

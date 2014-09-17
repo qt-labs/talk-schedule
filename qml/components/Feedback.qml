@@ -126,8 +126,9 @@ Item {
                 anchors.fill: parent
                 textMargin: Theme.margins.ten
                 wrapMode: TextEdit.Wrap
-                onFocusChanged: text = ""
+                onFocusChanged: if (focus && text === Theme.text.writeYourCommentHere) text = ""
                 textColor: text === Theme.text.writeYourCommentHere ? Theme.colors.gray : Theme.colors.black
+                font.pointSize: Theme.fonts.seven_pt
                 Component.onCompleted: text = Theme.text.writeYourCommentHere
             }
         }
@@ -139,7 +140,7 @@ Item {
                     rating = -1
                     feedbackEdit.text = Theme.text.writeYourCommentHere
                 }
-                width: window.width / 3.5
+                width: Theme.sizes.buttonWidth
                 height: Theme.sizes.buttonHeight
                 style: ButtonStyle {
                     background: Rectangle {
@@ -153,7 +154,7 @@ Item {
                         text: control.text
                         color: Theme.colors.qtgreen
                         font.capitalization: Font.AllUppercase
-                        font.pointSize: Theme.fonts.six_pt
+                        font.pointSize: Theme.fonts.seven_pt
                     }
                 }
             }
@@ -167,7 +168,7 @@ Item {
                     ModelsSingleton.saveFeedback(feedbackEdit.text, eventId, rating)
                     stack.pop()
                 }
-                width: window.width / 3.5
+                width: Theme.sizes.buttonWidth
                 height: Theme.sizes.buttonHeight
                 style: ButtonStyle {
                     background: Rectangle {
@@ -180,7 +181,7 @@ Item {
                         text: control.text
                         color: control.enabled ? Theme.colors.white : Theme.colors.gray
                         font.capitalization: Font.AllUppercase
-                        font.pointSize: Theme.fonts.six_pt
+                        font.pointSize: Theme.fonts.seven_pt
                     }
                 }
             }

@@ -87,7 +87,7 @@ Rectangle {
                     else
                         initialConferenceSelected()
                 }
-                width: window.width / 3.5
+                width: Theme.sizes.buttonWidth
                 height: Theme.sizes.buttonHeight
                 style: ButtonStyle {
                     background: Rectangle {
@@ -102,7 +102,7 @@ Rectangle {
                         verticalAlignment: Text.AlignVCenter
                         text: control.text
                         color: applicationClient.currentConferenceId === id ? Theme.colors.white : Theme.colors.qtgreen
-                        font.pointSize: Theme.fonts.six_pt
+                        font.pointSize: Theme.fonts.seven_pt
                         font.capitalization: Font.AllUppercase
                     }
                 }
