@@ -66,7 +66,7 @@ Item {
                 MouseArea {
                     id: mouseAreaBack
                     anchors.fill: parent
-                    enabled: !!stack.currentItem && stack.currentItem.objectName === "event"
+                    enabled: !!stack.currentItem && (stack.currentItem.objectName === "event" || stack.currentItem.objectName === "feedback")
                     onClicked: stack.pop()
                     Rectangle {
                         anchors.fill: parent
@@ -80,7 +80,8 @@ Item {
                         anchors.left: parent.left
                         anchors.verticalCenter: parent.verticalCenter
                         anchors.leftMargin: Theme.margins.twenty
-                        opacity: (stack.depth > 1 && (!!stack.currentItem && stack.currentItem.objectName === "event")) ? 1 : 0
+                        opacity: (stack.depth > 1 && (!!stack.currentItem &&
+                                                      (stack.currentItem.objectName === "event" || stack.currentItem.objectName === "feedback"))) ? 1 : 0
                         Behavior on opacity { PropertyAnimation{} }
                         height: Theme.sizes.backHeight
                         width: Theme.sizes.backWidth
@@ -98,7 +99,8 @@ Item {
                         id: locationButton
                         anchors.left: parent.left
                         anchors.verticalCenter: parent.verticalCenter
-                        opacity: (!!stack.currentItem && stack.currentItem.objectName !== "event" && applicationClient.currentConferenceId !== "") ? 1 : 0
+                        opacity: (!!stack.currentItem && stack.currentItem.objectName !== "event" && stack.currentItem.objectName !== "feedback" &&
+                                  applicationClient.currentConferenceId !== "") ? 1 : 0
                         Behavior on opacity { PropertyAnimation{} }
 
                         Image {
