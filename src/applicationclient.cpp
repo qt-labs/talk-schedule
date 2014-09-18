@@ -39,6 +39,7 @@
 ****************************************************************************/
 
 #include "applicationclient.h"
+#include <QApplication>
 #include <Enginio/enginioclient.h>
 #include <Enginio/enginiomodel.h>
 #include <Enginio/enginioreply.h>
@@ -177,4 +178,15 @@ void ApplicationClient::setCurrentConferenceIndex(const int index)
     m_details->insert(QLatin1String("title"), m_conferenceModel->data(index, "title"));
     m_details->insert(QLatin1String("TwitterTag"), m_conferenceModel->data(index, "TwitterTag"));
     emit currentConferenceDetailsChanged();
+}
+
+bool ApplicationClient::eventFilter(QObject *object, QEvent *event)
+{
+    if (event->type() == QEvent::ApplicationStateChange) {
+        if (QApplication::applicationState() == Qt::ApplicationActive) {
+            authenticate();
+            return true;
+        }
+    }
+    return QObject::eventFilter(object, event);
 }

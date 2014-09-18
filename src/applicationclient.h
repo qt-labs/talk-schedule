@@ -76,6 +76,8 @@ protected:
     void getUserCredentials();
     void createUser();
 
+    bool eventFilter(QObject *object, QEvent *event);
+
 signals:
     void error(QString errorMessage);
     void askQueryConferences();

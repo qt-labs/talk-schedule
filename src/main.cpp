@@ -84,6 +84,7 @@ int main(int argc, char *argv[])
     engine.rootContext()->setContextProperty("consumerSecret", QString(CONSUMER_SECRET));
 
     ApplicationClient *client = new ApplicationClient();
+    app.installEventFilter(client);
     engine.rootContext()->setContextProperty("applicationClient", client);
 
     const char *uri = "TalkSchedule";
