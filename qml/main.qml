@@ -80,7 +80,6 @@ ApplicationWindow {
             anchors.centerIn: parent
             width: Theme.sizes.menuPopupWidth
             z: 3
-            radius: Theme.margins.twenty
             ListModel {
                 id: menuModel
                 Component.onCompleted: {
@@ -111,17 +110,8 @@ ApplicationWindow {
                     z: 2
                     height: Theme.sizes.buttonHeight
                     width: parent.width
-                    color: !mouseArea.pressed ? Theme.colors.white_menu : Theme.colors.blue_menu
+                    color: !mouseArea.pressed ? Theme.colors.white : Theme.colors.gray_menu
                     y: Theme.sizes.buttonHeight * index
-                    radius: Theme.margins.twenty
-                    Rectangle {
-                        width: parent.width
-                        property int posStatus: listMenu.firstOrLast(index)
-                        height:  Theme.sizes.buttonHeight - (posStatus !== 0 ? Theme.margins.twenty : 0)
-                        y: posStatus === 1 ? Theme.margins.twenty : 0
-                        color: !mouseArea.pressed ? Theme.colors.white_menu : Theme.colors.blue_menu
-                    }
-
                     Text {
                         z: 2
                         anchors.left: parent.left
@@ -130,8 +120,8 @@ ApplicationWindow {
                         anchors.verticalCenterOffset: -separator.height
                         width: parent.width
                         text: name
-                        color: mouseArea.pressed ? Theme.colors.white : Theme.colors.blue_menu
-                        font.pointSize: Theme.fonts.ten_pt
+                        color: mouseArea.pressed ? Theme.colors.gray : Theme.colors.black
+                        font.pointSize: Theme.fonts.eight_pt
                         verticalAlignment: Text.AlignVCenter
                         horizontalAlignment: Text.AlignHCenter
                     }
@@ -139,9 +129,9 @@ ApplicationWindow {
                         id: separator
                         visible: index < menuModel.count - 1
                         anchors.bottom: parent.bottom
-                        height: 1
+                        height: 2
                         width: parent.width
-                        color: Theme.colors.gray_menu
+                        color: Theme.colors.lightgray
                     }
                     MouseArea {
                         id: mouseArea
