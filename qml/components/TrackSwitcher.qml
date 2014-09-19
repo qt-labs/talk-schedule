@@ -292,12 +292,22 @@ Rectangle {
                             width: Functions.countTrackWidth(start, end) - Theme.margins.ten
                             height: Math.min(breakColumn.height, listView.contentHeight - Theme.margins.ten)
                             Text {
+                                function info()
+                                {
+                                    var info = name +  "\n" + Qt.formatTime(start, "h:mm") + " - " + Qt.formatTime(end, "h:mm")
+                                    if (!!performer)
+                                        info = info + "\n" + Theme.text.by.arg(performer)
+                                    if (!!room)
+                                        info = info + "\n" + Theme.text.room.arg(room)
+                                    return info
+                                }
+
                                 width: parent.width
                                 verticalAlignment: Text.AlignVCenter
                                 height: parent.height
                                 horizontalAlignment: Text.AlignHCenter
                                 font.pointSize: Theme.fonts.seven_pt
-                                text: name +  "\n" + Qt.formatTime(start, "h:mm") + " - " + Qt.formatTime(end, "h:mm")
+                                text: info()
                                 color: Theme.colors.darkgray
                             }
                             MouseArea {

@@ -234,10 +234,11 @@ ApplicationWindow {
         }
     }
 
-    Item {
+    Rectangle {
         id: splashscreen
         anchors.fill: parent
         visible: !initConferenceSwitcher.visible
+        color: Theme.colors.white
         Image {
             id: splashlogo
             visible: splashscreen.visible
@@ -262,12 +263,12 @@ ApplicationWindow {
     Rectangle {
         id: initConferenceSwitcher
         anchors.fill: parent
-        opacity: 0.01
         visible:  ModelsSingleton.conferenceId === ""
+        color: Theme.colors.white
         Image {
             id: logo
+            opacity: 0.01
             visible: parent.visible
-            opacity: parent.opacity
             anchors.top: parent.top
             anchors.topMargin: Theme.margins.thirty
             anchors.horizontalCenter: parent.horizontalCenter
@@ -280,13 +281,13 @@ ApplicationWindow {
             anchors.top: logo.bottom
             anchors.topMargin: Theme.margins.thirty
             anchors.bottom: parent.bottom
-            opacity: parent.opacity
+            opacity: logo.opacity
             width: parent.width
         }
     }
 
     Connections {
         target: applicationClient
-        onConferencesModelChanged: if (initConferenceSwitcher.visible) initConferenceSwitcher.opacity = 1
+        onConferencesModelChanged: if (initConferenceSwitcher.visible) logo.opacity = 1
     }
 }
