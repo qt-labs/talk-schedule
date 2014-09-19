@@ -179,7 +179,7 @@ QtObject {
 
     function saveFeedback(fbtext, eventId, rating)
     {
-        console.log("saveFeedback")
+        //console.log("saveFeedback")
         var reply = applicationClient.client.create({
                                       "objectType": "objects.Feedback",
                                       "event": {
@@ -189,23 +189,23 @@ QtObject {
                                       "rating": rating,
                                       "feedbackText": fbtext
                                   })
-        reply.finished.connect(function() {
-            if (reply.errorType !== EnginioReply.NoError) {
-                console.log("Failed to save feedback.\n")
-            } else {
-                console.log("Successfully saved feedback.\n")
-            }
-        })
+//        reply.finished.connect(function() {
+//            if (reply.errorType !== EnginioReply.NoError) {
+//                console.log("Failed to save feedback.\n")
+//            } else {
+//                console.log("Successfully saved feedback.\n")
+//            }
+//        })
     }
 
     function saveFavorite(saveEventId)
     {
         if (busy) {
-            console.log("busy removing or saving favorite. Should we show some indicator here?")
+            //console.log("busy removing or saving favorite. Should we show some indicator here?")
             return
         }
         busy = true
-        console.log("start saving favorite")
+        //console.log("start saving favorite")
         var reply = applicationClient.client.create({
                                       "objectType": "objects.Favorite",
                                       "favoriteEvent": {
@@ -220,18 +220,18 @@ QtObject {
             else
                 eventModel.addFavorite(saveEventId)
             busy = false
-            console.log("favorite save done")
+            //console.log("favorite save done")
         })
     }
 
     function removeFavorite(removeEventId)
     {
         if (busy) {
-            console.log("busy removing or saving favorite. Should we show some indicator here?")
+            //console.log("busy removing or saving favorite. Should we show some indicator here?")
             return
         }
         busy = true
-        console.log("start removing favorite. First get the favorite id which should be removed")
+        //console.log("start removing favorite. First get the favorite id which should be removed")
         var favoriteQuery = applicationClient.client.query({
                                              "objectType": "objects.Favorite",
                                              "query":{
@@ -258,7 +258,7 @@ QtObject {
                             eventModel.removeFavorite(removeEventId)
                     })
                 }
-                console.log("favorite remove done")
+                //console.log("favorite remove done")
             }
             busy = false
         })

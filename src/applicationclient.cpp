@@ -85,14 +85,14 @@ ApplicationClient::ApplicationClient()
 
 void ApplicationClient::errorClient(EnginioReply *reply)
 {
-    qDebug() << "Error" << reply->errorString() << m_client->authenticationState();
+    //qDebug() << "Error" << reply->errorString() << m_client->authenticationState();
     emit error(reply->errorString());
     reply->deleteLater();
 }
 
 void ApplicationClient::getUserCredentials()
 {
-    qDebug() << "Get user credentials";
+    //qDebug() << "Get user credentials";
     QString cachedUserData = m_userData->read();
     QStringList splitData = cachedUserData.split(" ");
     if (splitData.length() != 2) {
@@ -106,7 +106,7 @@ void ApplicationClient::getUserCredentials()
 
 void ApplicationClient::createUser()
 {
-    qDebug() << "Create User";
+    //qDebug() << "Create User";
     currentUsername = m_userData->createUUID();
     currentPassword = m_userData->createUUID();
     QJsonObject query;
@@ -120,10 +120,10 @@ void ApplicationClient::createUser()
 void ApplicationClient::userCreationReply(EnginioReply *reply)
 {
     if (reply->errorType() != Enginio::NoError) {
-        qDebug() << "Failed to create an user" << reply->errorString();
+        //qDebug() << "Failed to create an user" << reply->errorString();
         emit error(reply->errorString());
     } else {
-        qDebug() << "User Created";
+        //qDebug() << "User Created";
         m_userData->write(QString("%1 %2").arg(currentUsername).arg(currentPassword));
         authenticate();
     }
@@ -132,7 +132,7 @@ void ApplicationClient::userCreationReply(EnginioReply *reply)
 
 void ApplicationClient::authenticate()
 {
-    qDebug() << "Authenticate" << currentUsername;
+    //qDebug() << "Authenticate" << currentUsername;
     m_client->setIdentity(0);
     authenticator->setUser(currentUsername);
     authenticator->setPassword(currentPassword);
@@ -141,7 +141,7 @@ void ApplicationClient::authenticate()
 
 void ApplicationClient::authenticationSuccess(EnginioReply *reply)
 {
-    qDebug() << "Query the conference";
+    //qDebug() << "Query the conference";
     int timeout = (reply->data().value("expires_in").toInt() - 20*60)*1000;
     timer->setSingleShot(true);
     timer->start(timeout);
