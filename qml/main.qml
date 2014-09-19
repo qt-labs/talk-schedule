@@ -62,7 +62,7 @@ ApplicationWindow {
     Item {
         id: menuPicker
         anchors.fill: parent
-        z: 2
+        z: 3
         visible: false
         MouseArea {
             anchors.fill: parent
@@ -79,7 +79,7 @@ ApplicationWindow {
             color: Theme.colors.white_menu
             anchors.centerIn: parent
             width: Theme.sizes.menuPopupWidth
-            z: 3
+            z: 4
             ListModel {
                 id: menuModel
                 Component.onCompleted: {
@@ -108,13 +108,13 @@ ApplicationWindow {
                 }
 
                 Rectangle {
-                    z: 2
+                    z: 3
                     height: Theme.sizes.buttonHeight
                     width: parent.width
                     color: !mouseArea.pressed ? Theme.colors.white : Theme.colors.gray_menu
                     y: Theme.sizes.buttonHeight * index
                     Text {
-                        z: 2
+                        z: 3
                         anchors.left: parent.left
                         anchors.leftMargin: Theme.margins.ten
                         anchors.verticalCenter: parent.verticalCenter
@@ -178,7 +178,7 @@ ApplicationWindow {
                         break
                     case "floorPlan":
                         var itemFl = Qt.resolvedUrl("components/Floorplan.qml")
-                        var loadedSC = stack.find(function(item){ return itemFl.objectName === "floorPlan" })
+                        var loadedSC = stack.find(function(itemFl){ return itemFl.objectName === "floorPlan" })
                         if (loadedSC !== null)
                             stack.pop(loadedSC)
                         else {
@@ -209,6 +209,7 @@ ApplicationWindow {
         anchors.top: parent.top
         height: Theme.sizes.conferenceHeaderHeight
         width: parent.width
+        z: 2
         opacity: stack.opacity
         Behavior on opacity { PropertyAnimation{} }
         onShowMenu: menuPicker.visible = !menuPicker.visible

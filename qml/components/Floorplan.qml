@@ -39,25 +39,92 @@
 ****************************************************************************/
 
 import QtQuick 2.2
+import QtQuick.Layouts 1.1
 import TalkSchedule 1.0
 
-Image {
-    id: floorImage
+Rectangle {
+    id: floorplan
     objectName: "floorPlan"
+    color: Theme.colors.white
+    width: window.width
+    height: window.height
 
-    source: (applicationClient.currentConferenceDetails.location === "BLN") ? Theme.images.levelA : Theme.images.sfoFloor
-    MouseArea {
-        anchors.fill: parent
-        enabled: applicationClient.currentConferenceDetails.location === "BLN"
-        onClicked: {
-            if (floorImage.source == Theme.images.levelA)
-            {
-                floorImage.source = Theme.images.levelB
+    property bool isPortrait: floorplan.width < floorplan.height
+
+    ListModel {
+        id: currentModel
+        property var conference: applicationClient.currentConferenceDetails.location
+        onConferenceChanged: {
+            currentModel.clear()
+            if (conference === "BLN") {
+                append({ imageSource: Theme.images.levelA })
+                append({ imageSource: Theme.images.levelB })
+                append({ imageSource: Theme.images.levelC })
             } else {
-                if (floorImage.source == Theme.images.levelB)
-                    floorImage.source = Theme.images.levelC
-                else
-                    floorImage.source = Theme.images.levelA
+                append({ imageSource: Theme.images.sfoFloor })
+            }
+            largeView.largeImageSource = currentModel.get(0).imageSource
+            largeView.visible = currentModel.count === 1
+        }
+    }
+
+    GridLayout {
+        id: columFloors
+        anchors.fill: parent
+        anchors.margins: Theme.margins.ten
+        columns: floorplan.isPortrait ? 1 : currentModel.count
+        rows: floorplan.isPortrait ? currentModel.count : 1
+        z: 1
+        columnSpacing: Theme.margins.ten
+        rowSpacing: Theme.margins.ten
+        Repeater {
+            id: repeater
+            model: currentModel
+            Image {
+                id: image
+                source: imageSource
+                Layout.alignment: Qt.AlignHCenter
+                sourceSize.height: floorplan.isPortrait ? columFloors.height / currentModel.count - Theme.margins.twenty : 0
+                sourceSize.width: !floorplan.isPortrait ? columFloors.width / currentModel.count - Theme.margins.twenty : 0
+                property bool small: true
+                Behavior on sourceSize.width { PropertyAnimation{} }
+                Behavior on sourceSize.height { PropertyAnimation{} }
+                MouseArea {
+                    anchors.fill: parent
+                    onClicked: {
+                        largeView.largeImageSource = imageSource
+                        largeView.visible = true
+                    }
+                }
+            }
+        }
+    }
+
+    Rectangle {
+        z: 2
+        id: largeView
+        color: Theme.colors.white
+        anchors.fill: parent
+        visible: currentModel.count === 1
+        property alias largeImageSource: floorOne.source
+        Flickable {
+            id: flickable
+            anchors.fill: parent
+            anchors.margins: Theme.margins.ten
+            contentHeight: floorOne.height
+            contentWidth: floorOne.width
+            Image {
+                id: floorOne
+                anchors.centerIn: parent
+                width: flickable.width
+                fillMode: Image.PreserveAspectFit
+            }
+            MouseArea {
+                anchors.fill: parent
+                onClicked: {
+                    if (currentModel.count > 1)
+                        largeView.visible = false
+                }
             }
         }
     }
