@@ -37,5 +37,6 @@
         <file alias="images/LevelB.svg">qml/components/images/LevelB.svg</file>
         <file alias="images/LevelC.svg">qml/components/images/LevelC.svg</file>
         <file alias="images/sfo_floor.png">qml/components/images/sfo_floor.png</file>
+        <file alias="images/Btn_Schedule.svg">qml/components/images/Btn_Schedule.svg</file>
     </qresource>
 </RCC>

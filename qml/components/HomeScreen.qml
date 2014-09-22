@@ -439,6 +439,16 @@ Rectangle {
                     }
                 }
                 Image {
+                    source: Theme.images.btnSchedule
+                    sourceSize.height: Theme.sizes.infoButtonSize
+                    sourceSize.width: Theme.sizes.infoButtonSize
+                    anchors.verticalCenter: parent.verticalCenter
+                    MouseArea {
+                        anchors.fill: parent
+                        onClicked: stack.push(Qt.resolvedUrl("TrackSwitcher.qml"))
+                    }
+                }
+                Image {
                     source: Theme.images.btnToWebsite
                     sourceSize.height: Theme.sizes.infoButtonSize
                     sourceSize.width: Theme.sizes.infoButtonSize

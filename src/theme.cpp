@@ -143,6 +143,7 @@ Theme::Theme(QObject *parent)
     m_images->insert(QLatin1String("twitter"), QVariant("qrc:/images/Twitter.svg"));
     m_images->insert(QLatin1String("btnToWebsite"), QVariant("qrc:/images/Btn_ToWebsite.svg"));
     m_images->insert(QLatin1String("btnFloorMap"), QVariant("qrc:/images/Btn_FloorMap.svg"));
+    m_images->insert(QLatin1String("btnSchedule"), QVariant("qrc:/images/Btn_Schedule.svg"));
     m_images->insert(QLatin1String("levelA"), QVariant("qrc:/images/LevelA.svg"));
     m_images->insert(QLatin1String("levelB"), QVariant("qrc:/images/LevelB.svg"));
     m_images->insert(QLatin1String("levelC"), QVariant("qrc:/images/LevelC.svg"));
