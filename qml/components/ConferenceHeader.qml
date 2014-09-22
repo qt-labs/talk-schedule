@@ -68,7 +68,8 @@ Item {
                     anchors.fill: parent
                     enabled: !!stack.currentItem && (stack.currentItem.objectName === "event" ||
                                                      stack.currentItem.objectName === "feedback" ||
-                                                     stack.currentItem.objectName === "floorPlan")
+                                                     stack.currentItem.objectName === "floorPlan" ||
+                                                     stack.currentItem.objectName === "trackSwitcher")
                     onClicked: stack.pop()
                     Rectangle {
                         anchors.fill: parent
@@ -85,7 +86,9 @@ Item {
                         opacity: (stack.depth > 1 && (!!stack.currentItem &&
                                                       (stack.currentItem.objectName === "event" ||
                                                        stack.currentItem.objectName === "feedback" ||
-                                                       stack.currentItem.objectName === "floorPlan"))) ? 1 : 0
+                                                       stack.currentItem.objectName === "floorPlan" ||
+                                                       stack.currentItem.objectName === "trackSwitcher"
+                                                       ))) ? 1 : 0
                         Behavior on opacity { PropertyAnimation{} }
                         height: Theme.sizes.backHeight
                         width: Theme.sizes.backWidth
@@ -106,6 +109,7 @@ Item {
                         opacity: (!!stack.currentItem && stack.currentItem.objectName !== "event" &&
                                   stack.currentItem.objectName !== "feedback" &&
                                   stack.currentItem.objectName !== "floorPlan" &&
+                                  stack.currentItem.objectName !== "trackSwitcher" &&
                                   applicationClient.currentConferenceId !== "") ? 1 : 0
                         Behavior on opacity { PropertyAnimation{} }
 
