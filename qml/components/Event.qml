@@ -200,9 +200,14 @@ Rectangle {
                 anchors.leftMargin: Theme.margins.ten
                 Label {
                     height: parent.height
-                    text: Qt.formatTime(model.data(indexCurrentEvent, "start"), "hh:mm") + " - " + Qt.formatTime(model.data(indexCurrentEvent, "end"), "hh:mm")
+                    text: Qt.formatDate(model.data(indexCurrentEvent, "start"), "dddd d. MMM") +
+                          "\n" +
+                          Qt.formatTime(model.data(indexCurrentEvent, "start"), "hh:mm") +
+                          " - " +
+                          Qt.formatTime(model.data(indexCurrentEvent, "end"), "hh:mm")
                     color: Theme.colors.gray
                     font.pointSize: Theme.fonts.seven_pt
+                    font.capitalization: Font.SmallCaps
                 }
                 Label {
                     text: Theme.text.room.arg(model.data(indexCurrentEvent, "location"))
