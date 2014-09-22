@@ -95,7 +95,11 @@ Rectangle {
 
     Connections {
         target: daysWitcher
-        onDayIdChanged: ModelsSingleton.timeListModel.tracksTodayModel = currentDayTracksModel
+        onDayIdChanged: {
+            ModelsSingleton.timeListModel.fileNameTag = "TimeObject." + daysWitcher.dayId
+            ModelsSingleton.timeListModel.load()
+            ModelsSingleton.timeListModel.tracksTodayModel = currentDayTracksModel
+        }
     }
 
     function setFirstEvent(time)

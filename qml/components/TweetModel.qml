@@ -66,17 +66,19 @@ Item {
         req.onreadystatechange = function() {
             status = req.readyState;
             if (status === XMLHttpRequest.DONE) {
-                var objectArray = JSON.parse(req.responseText);
-                if (objectArray.errors !== undefined)
-                    console.log("Error fetching tweets: " + objectArray.errors[0].message)
-                else {
-                    for (var key in objectArray.statuses) {
-                        var jsonObject = objectArray.statuses[key];
-                        tweets.append(jsonObject);
+                if (req.responseText !== "") { // Nothing was retrieved, network error
+                    var objectArray = JSON.parse(req.responseText);
+                    if (objectArray.errors !== undefined)
+                        console.log("Error fetching tweets: " + objectArray.errors[0].message)
+                    else {
+                        for (var key in objectArray.statuses) {
+                            var jsonObject = objectArray.statuses[key];
+                            tweets.append(jsonObject);
+                        }
                     }
+                    if (wasLoading == true)
+                        tweetModel.isLoaded()
                 }
-                if (wasLoading == true)
-                    tweetModel.isLoaded()
             }
             wasLoading = (status === XMLHttpRequest.LOADING);
         }
@@ -90,13 +92,15 @@ Item {
         authReq.setRequestHeader("Authorization", "Basic " + Qt.btoa(consumerKey + ":" + consumerSecret));
         authReq.onreadystatechange = function() {
             if (authReq.readyState === XMLHttpRequest.DONE) {
-                var jsonResponse = JSON.parse(authReq.responseText);
-                if (jsonResponse.errors !== undefined)
-                    console.log("Authentication error: " + jsonResponse.errors[0].message)
-                else
-                    bearerToken = jsonResponse.access_token;
-
-                reload()
+                if (authReq.responseText !== "") { // Nothing was retrieved, network error
+                    var jsonResponse = JSON.parse(authReq.responseText);
+                    if (jsonResponse.errors !== undefined) {
+                        console.log("Authentication error: " + jsonResponse.errors[0].message)
+                    } else {
+                        bearerToken = jsonResponse.access_token;
+                        reload()
+                    }
+                }
             }
         }
         authReq.send("grant_type=client_credentials");

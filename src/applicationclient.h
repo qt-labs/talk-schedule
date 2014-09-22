@@ -44,6 +44,7 @@
 #include <QObject>
 #include <QString>
 #include <QtQml/QQmlPropertyMap>
+#include <QJsonArray>
 
 class EnginioClient;
 class EnginioModel;
@@ -72,6 +73,9 @@ public:
 
     QQmlPropertyMap *currentConferenceDetails() const { return m_details; }
 
+    Q_INVOKABLE void cacheFeedback(QString feedback);
+    Q_INVOKABLE void cacheFavorite(QString favorite, bool isAdded);
+
 protected:
     void getUserCredentials();
     void createUser();
@@ -90,13 +94,21 @@ public slots:
     void errorClient(EnginioReply *reply);
     void userCreationReply(EnginioReply *reply);
     void queryConferenceReply(EnginioReply *reply);
+    void createFeedbackReply(EnginioReply *reply);
+    void createFavoriteReply(EnginioReply *reply);
+    void removeFavoriteReply(EnginioReply *reply);
+    void queryFavoriteReply(EnginioReply *reply);
     void authenticate();
+    void emptyFeedbackCache();
+    void emptyFavoriteCache();
 
 private:
     EnginioClient *m_client;
     Model *m_conferenceModel;
     FileIO *m_userData;
     FileIO *m_settings;
+    FileIO *m_feedbackCache;
+    FileIO *m_favoriteCache;
     QString currentUsername;
     QString currentPassword;
     EnginioOAuth2Authentication *authenticator;
@@ -104,6 +116,8 @@ private:
     QQmlPropertyMap *m_details;
     QTimer *timer;
     bool init;
+    QJsonArray feedbackArray;
+    QJsonArray favoriteArray;
 };
 
 #endif // APPLICATIONCLIENT_H

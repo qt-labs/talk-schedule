@@ -226,6 +226,51 @@ bool Model::load()
     return true;
 }
 
+bool Model::appendAndSaveFavorites(const QString &data, bool isAdded)
+{
+    if (fileNameTag().isEmpty())
+        return false;
+
+    QString path = QStandardPaths::writableLocation(QStandardPaths::DataLocation);
+    QFile file(QString("%1/%2.%3").arg(path).arg(m_fileNameTag).arg(m_conferenceId));
+    if (!file.open(QIODevice::ReadOnly)) {
+        qWarning() << "On load couldn't open file" << file.fileName();
+        return false;
+    }
+
+    QString fileContent;
+    QString line;
+    QTextStream t(&file);
+    do {
+        line = t.readLine();
+        fileContent += line;
+    } while (!line.isNull());
+
+    file.close();
+
+    QJsonObject object = QJsonDocument::fromJson(fileContent.toUtf8()).object();
+    QJsonArray array = object.value("results").toArray();
+    if (isAdded) {
+        QJsonObject newFav;
+        QJsonObject fav;
+        fav["id"] = data;
+        fav["objectType"] = QString::fromUtf8("objects.Event");
+        newFav["favoriteEvent"] = fav;
+        newFav["events_id"] = data;
+        array.append(newFav);
+    } else {
+        for (int i = 0; i < array.count(); i++) {
+            QJsonObject tempObject = array.at(i).toObject();
+            if (tempObject.value("favoriteEvent").toObject().value("id") == data) {
+                array.removeAt(i);
+                break;
+            }
+        }
+    }
+    object["results"] = array;
+    return save(object);
+}
+
 bool Model::parse(const QJsonObject &object)
 {
     bool dataHasChanged = true;

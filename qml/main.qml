@@ -258,6 +258,7 @@ ApplicationWindow {
                                       stack.forceActiveFocus()
                                   }
             }
+            Component.onCompleted: if (visible) animation.running = true
         }
         onVisibleChanged: if (visible) animation.running = true
     }

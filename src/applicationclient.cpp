@@ -44,12 +44,15 @@
 #include <Enginio/enginiomodel.h>
 #include <Enginio/enginioreply.h>
 #include <Enginio/enginiooauth2authentication.h>
+#include <QJsonArray>
+#include <QJsonDocument>
 #include <QJsonObject>
 #include "fileio.h"
 #include "model.h"
 #include <QStringList>
 #include <QDebug>
 #include <QTimer>
+#include <QIODevice>
 
 #define QUOTE_(x) #x
 #define QUOTE(x) QUOTE_(x)
@@ -59,6 +62,8 @@ ApplicationClient::ApplicationClient()
     : init(true)
 {
     m_settings = new FileIO(this, "settings.txt");
+    m_feedbackCache = new FileIO(this, "feedback.txt");
+    m_favoriteCache = new FileIO(this, "favorite.txt");
 
     timer = new QTimer(this);
     connect(timer, SIGNAL(timeout()), this, SLOT(authenticate()));
@@ -69,19 +74,24 @@ ApplicationClient::ApplicationClient()
     const QByteArray backId = QByteArray(BACKEND_ID);
     m_client->setBackendId(backId);
 
-    m_conferenceModel = new Model(this);
-    m_conferenceModel->setFileNameTag("ConferencesObject");
-
-    connect(m_client, SIGNAL(sessionAuthenticated(EnginioReply*)), this, SLOT(authenticationSuccess(EnginioReply*)));
-    connect(m_client, SIGNAL(sessionAuthenticationError(EnginioReply*)), this, SLOT(errorClient(EnginioReply*)));
-    connect(m_client, SIGNAL(error(EnginioReply*)), this, SLOT(errorClient(EnginioReply*)));
-    getUserCredentials();
-
     m_details = new QQmlPropertyMap(this);
     m_details->insert(QLatin1String("location"), QVariant(""));
     m_details->insert(QLatin1String("title"), QVariant(""));
     m_details->insert(QLatin1String("TwitterTag"), QVariant(""));
     m_details->insert(QLatin1String("infopage"), QVariant(""));
+
+    m_conferenceModel = new Model(this);
+    m_conferenceModel->setFileNameTag("ConferencesObject");
+    QString cachedConferenceId = m_settings->read();
+    if (!cachedConferenceId.isEmpty()) {
+        m_conferenceModel->load();
+        setCurrentConferenceId(cachedConferenceId);
+    }
+
+    connect(m_client, SIGNAL(sessionAuthenticated(EnginioReply*)), this, SLOT(authenticationSuccess(EnginioReply*)));
+    connect(m_client, SIGNAL(sessionAuthenticationError(EnginioReply*)), this, SLOT(errorClient(EnginioReply*)));
+    connect(m_client, SIGNAL(error(EnginioReply*)), this, SLOT(errorClient(EnginioReply*)));
+    getUserCredentials();
 }
 
 void ApplicationClient::errorClient(EnginioReply *reply)
@@ -143,6 +153,9 @@ void ApplicationClient::authenticate()
 void ApplicationClient::authenticationSuccess(EnginioReply *reply)
 {
     //qDebug() << "Query the conference";
+    emptyFavoriteCache();
+    emptyFeedbackCache();
+
     int timeout = (reply->data().value("expires_in").toInt() - 20*60)*1000;
     timer->setSingleShot(true);
     timer->start(timeout);
@@ -200,4 +213,140 @@ bool ApplicationClient::eventFilter(QObject *object, QEvent *event)
     }
 #endif
     return QObject::eventFilter(object, event);
+}
+
+void ApplicationClient::cacheFeedback(QString feedback)
+{
+    QString content = m_feedbackCache->read();
+    feedbackArray = QJsonDocument::fromJson(content.toUtf8()).array();
+    feedbackArray.append(QJsonValue::fromVariant(feedback.toUtf8()));
+    QJsonDocument doc(feedbackArray);
+    m_feedbackCache->write(QString::fromUtf8(doc.toJson()));
+}
+
+void ApplicationClient::emptyFeedbackCache()
+{
+    QString content = m_feedbackCache->read();
+    if (content.isEmpty())
+        return;
+    feedbackArray = QJsonDocument::fromJson(content.toUtf8()).array();
+    if (!feedbackArray.isEmpty()) {
+        QString object = feedbackArray.at(0).toString();
+        QJsonObject query = QJsonDocument::fromJson(object.toUtf8()).object();
+        query["objectType"] = QString::fromUtf8("objects.Feedback");
+        const EnginioReply *replyFeedback = m_client->create(query);
+        connect(replyFeedback, SIGNAL(finished(EnginioReply*)), this, SLOT(createFeedbackReply(EnginioReply*)));
+    }
+}
+
+void ApplicationClient::createFeedbackReply(EnginioReply *reply)
+{
+    if (reply->errorType() == Enginio::NoError) {
+        feedbackArray.takeAt(0);
+        QJsonDocument doc(feedbackArray);
+        m_feedbackCache->write(QString::fromUtf8(doc.toJson()));
+        emptyFeedbackCache();
+    }
+    reply->deleteLater();
+}
+
+void ApplicationClient::cacheFavorite(QString eventId, bool isAdded)
+{
+    QString content = m_favoriteCache->read();
+    favoriteArray = QJsonDocument::fromJson(content.toUtf8()).array();
+    bool hasBeenFound = false;
+    for (int i = 0; i < favoriteArray.count(); i++) {
+        QJsonObject favObject = favoriteArray.at(i).toObject();
+        if (favObject.value("eventId").toString() == eventId) {
+            bool status = favObject.value("isAdded").toBool();
+            if (status == isAdded) { // no change. should not happen though
+                return;
+            } else {
+                favoriteArray.removeAt(i);
+                hasBeenFound = true;
+            }
+        }
+    }
+    if (!hasBeenFound) {
+        QJsonObject objectToAdd;
+        objectToAdd["eventId"] = eventId;
+        objectToAdd["isAdded"] = isAdded;
+        favoriteArray.append(objectToAdd);
+    }
+    QJsonDocument doc(favoriteArray);
+    m_favoriteCache->write(QString::fromUtf8(doc.toJson()));
+}
+
+void ApplicationClient::emptyFavoriteCache()
+{
+    QString content = m_favoriteCache->read();
+    if (content.isEmpty())
+        return;
+
+    favoriteArray = QJsonDocument::fromJson(content.toUtf8()).array();
+    if (!favoriteArray.isEmpty()) {
+        QJsonObject object = favoriteArray.at(0).toObject();
+
+        QJsonObject queryFav;
+        queryFav["objectType"] = QString::fromUtf8("objects.Favorite");
+        QJsonObject favEvent;
+        favEvent["id"] = object.value("eventId").toString();
+        favEvent["objectType"] = QString::fromUtf8("objects.Event");
+        QJsonObject favEventObject;
+        favEventObject["favoriteEvent"] = favEvent;
+
+        bool isAdded = object.value("isAdded").toBool();
+
+        if (isAdded) {
+            queryFav["favoriteEvent"] = favEvent;
+            const EnginioReply *replyCreateFavorite = m_client->create(queryFav);
+            connect(replyCreateFavorite, SIGNAL(finished(EnginioReply*)), this, SLOT(createFavoriteReply(EnginioReply*)));
+        } else {
+            queryFav["query"] = favEventObject;
+            const EnginioReply *replyQueryFavorite = m_client->query(queryFav);
+            connect(replyQueryFavorite, SIGNAL(finished(EnginioReply*)), this, SLOT(queryFavoriteReply(EnginioReply*)));
+        }
+    }
+}
+
+void ApplicationClient::queryFavoriteReply(EnginioReply *reply)
+{
+    if (reply->errorType() == Enginio::NoError) {
+        QJsonArray array = reply->data().value("results").toArray();
+        if (array.count() == 0) {
+            favoriteArray.takeAt(0);
+            QJsonDocument doc(favoriteArray);
+            m_favoriteCache->write(QString::fromUtf8(doc.toJson()));
+            emptyFavoriteCache();
+            return;
+        }
+        QJsonObject queryFav;
+        queryFav["objectType"] = QString::fromUtf8("objects.Favorite");
+        queryFav["id"] = array.at(0).toObject().value("id").toString();
+        const EnginioReply *replyDeleteFavorite = m_client->remove(queryFav);
+        connect(replyDeleteFavorite, SIGNAL(finished(EnginioReply*)), this, SLOT(removeFavoriteReply(EnginioReply*)));
+    }
+    reply->deleteLater();
+}
+
+void ApplicationClient::createFavoriteReply(EnginioReply *reply)
+{
+    if (reply->errorType() == Enginio::NoError) {
+        favoriteArray.takeAt(0);
+        QJsonDocument doc(favoriteArray);
+        m_favoriteCache->write(QString::fromUtf8(doc.toJson()));
+        emptyFavoriteCache();
+    }
+    reply->deleteLater();
+}
+
+void ApplicationClient::removeFavoriteReply(EnginioReply *reply)
+{
+    if (reply->errorType() == Enginio::NoError) {
+        favoriteArray.takeAt(0);
+        QJsonDocument doc(favoriteArray);
+        m_favoriteCache->write(QString::fromUtf8(doc.toJson()));
+        emptyFavoriteCache();
+    }
+    reply->deleteLater();
 }

@@ -45,7 +45,7 @@ import TalkSchedule 1.0
 
 QtObject {
     id: object
-    property string conferenceId: ""
+    property string conferenceId: applicationClient.currentConferenceId
     property var currentConferenceTracks: []
     property var currentConferenceEvents: []
     property var currentConferenceDays: []
@@ -87,7 +87,7 @@ QtObject {
     }
 
     property var favoriteModel: Model {
-        // do not save favorite
+        fileNameTag: "FavoriteObject"
         onDataReady: getFavoriteIds()
     }
 
@@ -154,24 +154,17 @@ QtObject {
     function queryUserConferenceFavorites()
     {
         var favQuery = applicationClient.client.query({ "objectType": "objects.Favorite",
-                                               "query": {
-                                                   "favoriteEvent.id" : { "$in" : currentConferenceEvents }
-                                               },
-                                               "include": {
-                                                   "events": {
-                                                       "objectType": "objects.Event",
-                                                       "query": {"id": "$.favoriteEvent.id"},
-                                                       "result": "selectOne",
-                                                       "include": {
-                                                           "tracks": {
-                                                               "objectType": "objects.Track",
-                                                               "query": {"id": "$.track.id"},
-                                                               "result": "selectOne"
-                                                           }
-                                                       }
-                                                   }
-                                               }
-                                           })
+                                                          "query": {
+                                                              "favoriteEvent.id" : { "$in" : currentConferenceEvents }
+                                                          },
+                                                          "include": {
+                                                              "events": {
+                                                                  "objectType": "objects.Event",
+                                                                  "query": {"id": "$.favoriteEvent.id"},
+                                                                  "result": "selectOne",
+                                                              }
+                                                          }
+                                                      })
         favQuery.finished.connect(function() {
             favoriteModel.onFinished(favQuery)
         })
@@ -180,22 +173,25 @@ QtObject {
     function saveFeedback(fbtext, eventId, rating)
     {
         //console.log("saveFeedback")
-        var reply = applicationClient.client.create({
-                                      "objectType": "objects.Feedback",
-                                      "event": {
-                                          "id": eventId,
-                                          "objectType": "objects.Event"
-                                      },
-                                      "rating": rating,
-                                      "feedbackText": fbtext
-                                  })
-//        reply.finished.connect(function() {
-//            if (reply.errorType !== EnginioReply.NoError) {
-//                console.log("Failed to save feedback.\n")
-//            } else {
-//                console.log("Successfully saved feedback.\n")
-//            }
-//        })
+        var feedback = {
+            "objectType": "objects.Feedback",
+            "event": {
+                "id": eventId,
+                "objectType": "objects.Event"
+            },
+            "rating": rating,
+            "feedbackText": fbtext
+        }
+        var reply = applicationClient.client.create(feedback)
+        reply.finished.connect(function() {
+            if (reply.errorType !== EnginioReply.NoError) {
+                console.log("Failed to save feedback.\n")
+                if (reply.errorType === EnginioReply.NetworkError)
+                    applicationClient.cacheFeedback(JSON.stringify(feedback))
+            } else {
+                console.log("Successfully saved feedback.\n")
+            }
+        })
     }
 
     function saveFavorite(saveEventId)
@@ -206,19 +202,27 @@ QtObject {
         }
         busy = true
         //console.log("start saving favorite")
-        var reply = applicationClient.client.create({
-                                      "objectType": "objects.Favorite",
-                                      "favoriteEvent": {
-                                          "id": saveEventId,
-                                          "objectType": "objects.Event"
-                                      }
-                                  })
+        var favorite = {
+            "objectType": "objects.Favorite",
+            "favoriteEvent": {
+                "id": saveEventId,
+                "objectType": "objects.Event"
+            }
+        }
+        var reply = applicationClient.client.create(favorite)
+        var addFavorite = true
+
+        eventModel.addFavorite(saveEventId)
+        // save to file so favorite data can be retrieves at startup
+        favoriteModel.appendAndSaveFavorites(saveEventId, addFavorite)
+        favoriteModel.addRow({"events_id":saveEventId})
 
         reply.finished.connect(function() {
-            if (reply.errorType !== EnginioReply.NoError)
+            if (reply.errorType !== EnginioReply.NoError) {
                 console.log("Failed to create an Favorite:\n" + JSON.stringify(reply.data, undefined, 2) + "\n\n")
-            else
-                eventModel.addFavorite(saveEventId)
+                if (reply.errorType === EnginioReply.NetworkError)
+                    applicationClient.cacheFavorite(saveEventId, addFavorite)
+            }
             busy = false
             //console.log("favorite save done")
         })
@@ -241,9 +245,15 @@ QtObject {
                                              }
                                          })
 
+        eventModel.removeFavorite(removeEventId)
+        var removeFavorite = false
+        favoriteModel.appendAndSaveFavorites(removeEventId, removeFavorite)
+        favoriteModel.removeRow(favoriteModel.indexOf("events_id", removeEventId))
         favoriteQuery.finished.connect(function() {
             if (favoriteQuery.errorType !== EnginioReply.NoError) {
                 console.log("Failed to query an Favorite:\n" + JSON.stringify(favoriteQuery.data, undefined, 2) + "\n\n")
+                if (favoriteQuery.errorType === EnginioReply.NetworkError)
+                    applicationClient.cacheFavorite(removeEventId, removeFavorite)
             }
             else {
                 if (favoriteQuery.data.results.length > 0) {
@@ -252,10 +262,11 @@ QtObject {
                                                   "id": favoriteQuery.data.results[0].id
                                               })
                     reply.finished.connect(function() {
-                        if (favoriteQuery.errorType !== EnginioReply.NoError)
+                        if (favoriteQuery.errorType !== EnginioReply.NoError) {
                             console.log("Failed to remove an Favorite:\n" + JSON.stringify(reply.data, undefined, 2) + "\n\n")
-                        else
-                            eventModel.removeFavorite(removeEventId)
+                            if (favoriteQuery.errorType === EnginioReply.NetworkError)
+                                applicationClient.cacheFavorite(removeEventId, removeFavorite)
+                        }
                     })
                 }
                 //console.log("favorite remove done")

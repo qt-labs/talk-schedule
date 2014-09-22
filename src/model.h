@@ -77,6 +77,9 @@ public:
     Q_INVOKABLE void removeRow(int index);
     Q_INVOKABLE QVariant indexOf(const QString &role, QVariant value);
 
+    Q_INVOKABLE bool load();
+    Q_INVOKABLE bool appendAndSaveFavorites(const QString &data, bool isAdded);
+
 Q_SIGNALS:
     void clientChanged();
     void conferenceIdChanged();
@@ -88,7 +91,6 @@ public Q_SLOTS:
 
 private:
     bool save(const QJsonObject &object);
-    bool load();
     bool parse(const QJsonObject &object);
 
     QHash<int, QByteArray> m_roleNames;
