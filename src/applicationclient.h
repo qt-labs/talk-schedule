@@ -103,6 +103,7 @@ private:
     QString m_currentConferenceId;
     QQmlPropertyMap *m_details;
     QTimer *timer;
+    bool init;
 };
 
 #endif // APPLICATIONCLIENT_H

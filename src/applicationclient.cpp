@@ -56,6 +56,7 @@
 #define BACKEND_ID QUOTE(TALK_SCHEDULE_BACKEND_ID)
 
 ApplicationClient::ApplicationClient()
+    : init(true)
 {
     m_settings = new FileIO(this, "settings.txt");
 
@@ -145,10 +146,13 @@ void ApplicationClient::authenticationSuccess(EnginioReply *reply)
     int timeout = (reply->data().value("expires_in").toInt() - 20*60)*1000;
     timer->setSingleShot(true);
     timer->start(timeout);
-    QJsonObject query;
-    query["objectType"] = QString::fromUtf8("objects.Conference");
-    const EnginioReply *replyConf = m_client->query(query);
-    connect(replyConf, SIGNAL(finished(EnginioReply*)), this, SLOT(queryConferenceReply(EnginioReply*)));
+    if (init) { // Query the conference only once
+        QJsonObject query;
+        query["objectType"] = QString::fromUtf8("objects.Conference");
+        const EnginioReply *replyConf = m_client->query(query);
+        connect(replyConf, SIGNAL(finished(EnginioReply*)), this, SLOT(queryConferenceReply(EnginioReply*)));
+        init = false;
+    }
 }
 
 void ApplicationClient::setCurrentConferenceId(const QString &newConfId)
@@ -167,6 +171,9 @@ void ApplicationClient::setCurrentConferenceId(const QString &newConfId)
 void ApplicationClient::queryConferenceReply(EnginioReply *reply)
 {
     m_conferenceModel->onFinished(reply);
+    // If no conference were retrieved, allow conference query on next authentication
+    if (m_conferenceModel->rowCount() == 0)
+        init = true;
     setCurrentConferenceId(m_settings->read());
     emit conferencesModelChanged();
 }
@@ -184,11 +191,13 @@ void ApplicationClient::setCurrentConferenceIndex(const int index)
 
 bool ApplicationClient::eventFilter(QObject *object, QEvent *event)
 {
+#if defined(Q_OS_ANDROID) || defined(Q_OS_IOS) || defined(Q_OS_WINPHONE)
     if (event->type() == QEvent::ApplicationStateChange) {
         if (QApplication::applicationState() == Qt::ApplicationActive) {
             authenticate();
             return true;
         }
     }
+#endif
     return QObject::eventFilter(object, event);
 }
