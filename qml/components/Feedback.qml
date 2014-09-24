@@ -139,6 +139,7 @@ Item {
                 onClicked: {
                     rating = -1
                     feedbackEdit.text = Theme.text.writeYourCommentHere
+                    stack.forceActiveFocus()
                 }
                 width: Theme.sizes.buttonWidth
                 height: Theme.sizes.buttonHeight
@@ -168,6 +169,7 @@ Item {
                     Qt.inputMethod.commit()
                     ModelsSingleton.saveFeedback(feedbackEdit.text, eventId, rating)
                     stack.pop()
+                    stack.forceActiveFocus()
                 }
                 width: Theme.sizes.buttonWidth
                 height: Theme.sizes.buttonHeight
