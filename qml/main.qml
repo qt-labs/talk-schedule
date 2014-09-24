@@ -255,6 +255,7 @@ ApplicationWindow {
                 onRunningChanged: if (!running) {
                                       splashscreen.opacity = 0
                                       stack.push(Qt.resolvedUrl("components/HomeScreen.qml"))
+                                      stack.forceActiveFocus()
                                   }
             }
         }

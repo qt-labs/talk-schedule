@@ -118,7 +118,7 @@ Theme::Theme(QObject *parent)
     m_sizes->insert(QLatin1String("menuWidth"), QVariant(applyRatio(78)));
     m_sizes->insert(QLatin1String("dayLabelHeight"), QVariant(applyRatio(70)));
     m_sizes->insert(QLatin1String("upcomingEventHeight"), QVariant(applyRatio(130)));
-    m_sizes->insert(QLatin1String("homeTitleHeight"), QVariant(applyRatio(100)));
+    m_sizes->insert(QLatin1String("homeTitleHeight"), QVariant(applyRatio(70)));
     m_sizes->insert(QLatin1String("upcomingEventTimeWidth"), QVariant(applyRatio(240)));
     m_sizes->insert(QLatin1String("trackFieldHeight"), QVariant(applyRatio(50)));
     m_sizes->insert(QLatin1String("buttonHeight"), QVariant(applyRatio(130)));
