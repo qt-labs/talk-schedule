@@ -165,6 +165,7 @@ Item {
                 onClicked: {
                     text = "sending..."
                     Qt.inputMethod.hide()
+                    Qt.inputMethod.commit()
                     ModelsSingleton.saveFeedback(feedbackEdit.text, eventId, rating)
                     stack.pop()
                 }
