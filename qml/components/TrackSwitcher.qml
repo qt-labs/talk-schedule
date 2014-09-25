@@ -115,6 +115,7 @@ Rectangle {
 
     function getTimeRange(model)
     {
+        var isEndTime = true
         var earliestTime = model.data(0, "start")
         if (firstEvent === undefined)
             firstEvent = earliestTime
@@ -124,7 +125,7 @@ Rectangle {
 
         var timeHours
         var earliestHours = Functions.getHour(earliestTime)
-        var latestHours = Functions.getHour(latestTime)
+        var latestHours = Functions.getHour(latestTime, isEndTime)
 
         // Count here what is the first hour and last hour that needs to be shown in time listView
         // for example 10.00 11.00 12.00 ... or 08.00 09.00 10.00
@@ -147,11 +148,8 @@ Rectangle {
             time1 = model.data(i, "end")
             time2 = model.data(i+1, "end")
             time = time1 < time2 ? time2 : time1
-            timeHours = Functions.getHour(time)
-            var timeMinutes = Functions.getMinutes(time)
-            if (timeMinutes > 0)
-                timeHours = timeHours + 1
-            latestHours = Functions.getHour(latestTime)
+            timeHours = Functions.getHour(time, isEndTime)
+            latestHours = Functions.getHour(latestTime, isEndTime)
             if (timeHours > latestHours)
                 latestTime = time
         }
@@ -165,20 +163,14 @@ Rectangle {
                 earliestTime = time
 
             time = model.data(model.rowCount() - 1, "end")
-            timeHours = Functions.getHour(time)
-            var timeMinutes = Functions.getMinutes(time)
-            if (timeMinutes > 0)
-                timeHours = timeHours + 1
-            latestHours = Functions.getHour(latestTime)
+            timeHours = Functions.getHour(time, isEndTime)
+            latestHours = Functions.getHour(latestTime, isEndTime)
             if (timeHours > latestHours)
                 latestTime = time
         }
 
         var temp = []
-        var timeCount = Functions.getHour(latestTime) - Functions.getHour(earliestTime)
-        timeMinutes = Functions.getMinutes(latestTime)
-        if (timeMinutes > 0)
-            timeCount = timeCount + 1
+        var timeCount = Functions.getHour(latestTime, isEndTime) - Functions.getHour(earliestTime)
         var hours = Functions.getHour(earliestTime)
 
         for (var j = 0; j <= timeCount; j++) {
