@@ -79,6 +79,7 @@ public:
 
     Q_INVOKABLE bool load();
     Q_INVOKABLE bool appendAndSaveFavorites(const QString &data, bool isAdded);
+    Q_INVOKABLE void reset();
 
 Q_SIGNALS:
     void clientChanged();

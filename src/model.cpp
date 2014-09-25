@@ -64,13 +64,16 @@ int Model::rowCount(const QModelIndex &parent) const
 
 QVariant Model::data(const QModelIndex &index, int role) const
 {
-    QVariant variant = m_data.at(index.row()).value(m_roleNames.value(role));
-    // Hack to make it possible to filter by reference
-    if (variant.type() == QVariant::Map && m_roleNames.value(role) == "day") {
-        return variant.toMap().value("id");
-    }
-    if (variant.type() == QVariant::Map && m_roleNames.value(role) == "track") {
-        return variant.toMap().value("id");
+    QVariant variant;
+    if (m_data.count() > 0) {
+        variant = m_data.at(index.row()).value(m_roleNames.value(role));
+        // Hack to make it possible to filter by reference
+        if (variant.type() == QVariant::Map && m_roleNames.value(role) == "day") {
+            return variant.toMap().value("id");
+        }
+        if (variant.type() == QVariant::Map && m_roleNames.value(role) == "track") {
+            return variant.toMap().value("id");
+        }
     }
     return variant;
 }
@@ -278,32 +281,36 @@ bool Model::parse(const QJsonObject &object)
     dataHasChanged = fileNameTag().isEmpty() || object != currentModelObject[fileNameTag()];
 
     if (dataHasChanged) {
-        beginResetModel();
-        m_data.clear();
-        m_roleNames.clear();
-        endResetModel();
+        reset();
 
         QJsonArray array = object.value("results").toArray();
         if (array.count() > 0) {
             // Go through the keys in array to find out all the key values
             // If all values has no content in cloud, that key might sometimes be missing
             // so you cannot take keys from arbitrary place from array
-            int previousCount = 0;
-            int arrayIndex = 0;
-            for (int i = 0; i < array.count(); i++) {
-                QStringList tempKeys = array.at(i).toVariant().toMap().keys();
-                if (previousCount < tempKeys.count() ){
-                    previousCount = tempKeys.count();
-                    arrayIndex = i;
-                }
+            QStringList tempKeys = array.at(0).toVariant().toMap().keys();
+            for (int i = 1; i < array.count(); i++) {
+                tempKeys += array.at(i).toVariant().toMap().keys();
+                tempKeys.removeDuplicates();
             }
-            QStringList keys = array.at(arrayIndex).toVariant().toMap().keys();
+            tempKeys.sort();
+            QStringList keys = tempKeys; //array.at(arrayIndex).toVariant().toMap().keys();
+            keys.removeOne("hideInSchedule");
+            keys.removeOne("room");
+            keys.removeOne("performer");
+            keys.removeOne("associatedEventId");
             for (int index = 0; index < keys.count(); ++index)
                 m_roleNames.insert(Qt::UserRole + index, keys.at(index).toLatin1());
 
             // Hack, insert favorites as those will be created in application
             m_roleNames.insert(2002, "favorite");
-            beginInsertRows(QModelIndex(), m_data.count(), m_data.count() + array.count() - 1);
+            // Hack, insert some roles that may be empty in some cases
+            m_roleNames.insert(2003, "hideInSchedule");
+            m_roleNames.insert(2004, "room");
+            m_roleNames.insert(2005, "performer");
+            m_roleNames.insert(2006, "associatedEventId");
+
+            beginInsertRows(QModelIndex(), 0, array.count() - 1);
             foreach (QJsonValue value, array) {
                 QJsonObject temp;
                 if (value.isObject()) {
@@ -334,7 +341,6 @@ bool Model::parse(const QJsonObject &object)
                         m_data.append(value.toVariant().toMap());
                     }
                 } else {
-
                     m_data.append(value.toVariant().toMap());
                 }
             }
@@ -343,4 +349,14 @@ bool Model::parse(const QJsonObject &object)
     }
     Q_EMIT dataReady();
     return dataHasChanged;
+}
+
+void Model::reset()
+{
+    if (m_data.count() > 0) {
+        beginRemoveRows(QModelIndex(), 0, m_data.count() - 1);
+        m_data.clear();
+        m_roleNames.clear();
+        endRemoveRows();
+    }
 }

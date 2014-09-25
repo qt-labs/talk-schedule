@@ -94,14 +94,6 @@ Rectangle {
         return text.replace(/\n/g, '<br>');
     }
 
-
-    Text {
-        visible: ModelsSingleton.conferenceId === ""
-        text: "Error: " + ModelsSingleton.errorMessage
-        anchors.centerIn: parent
-        font.pointSize: Theme.fonts.eight_pt
-    }
-
     Column {
         spacing: 0
         visible: ModelsSingleton.conferenceId !== ""
@@ -120,8 +112,11 @@ Rectangle {
 
                 function init()
                 {
+                    emptyUpcoming.visible = false
                     if (sortModelNextEvents.rowCount() > 0)
                         upcomingItem.visibleDate = Qt.formatDate(sortModelNextEvents.get(0, "start"), upcomingItem.formatDate)
+                    if (sortModelNextEvents.rowCount() === 0)
+                        emptyUpcoming.visible = true
                 }
 
                 sortRole: "start"
@@ -165,10 +160,20 @@ Rectangle {
                 model: sortModelNextEvents
                 clip: true
                 onVisibleChanged: {
+                    emptyUpcoming.visible = false
                     if (visible && sortModelNextEvents.rowCount() > 0) {
                         sortModelNextEvents.filter()
                         upcomingItem.visibleDate = Qt.formatDate(sortModelNextEvents.get(0, "start"), upcomingItem.formatDate)
                     }
+                    if (sortModelNextEvents.rowCount() === 0)
+                        emptyUpcoming.visible = true
+                }
+                Text {
+                    id: emptyUpcoming
+                    visible: false
+                    text: Theme.text.endedEvent
+                    anchors.centerIn: parent
+                    font.pointSize: Theme.fonts.eight_pt
                 }
                 spacing: Theme.margins.ten
                 delegate: RowLayout {
