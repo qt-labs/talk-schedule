@@ -61,6 +61,7 @@ class ApplicationClient: public QObject
     Q_PROPERTY(QString currentConferenceId READ currentConferenceId WRITE setCurrentConferenceId NOTIFY currentConferenceIdChanged)
     Q_PROPERTY(Model *conferencesModel READ conferencesModel NOTIFY conferencesModelChanged())
     Q_PROPERTY(QObject *currentConferenceDetails READ currentConferenceDetails NOTIFY currentConferenceDetailsChanged)
+    Q_PROPERTY(bool noNetworkNoInitialisation READ noNetworkNoInitialisation NOTIFY noNetworkNoInitialisationChanged)
 public:
     explicit ApplicationClient();
     Model *conferencesModel() const { return m_conferenceModel; }
@@ -68,6 +69,8 @@ public:
 
     QString currentConferenceId() const { return m_currentConferenceId; }
     void setCurrentConferenceId(const QString &newConfId);
+
+    bool noNetworkNoInitialisation() const { return m_noNetworkNoInitialisation; }
 
     Q_INVOKABLE void setCurrentConferenceIndex(const int index);
 
@@ -88,6 +91,7 @@ signals:
     void currentConferenceIdChanged();
     void currentConferenceDetailsChanged();
     void conferencesModelChanged();
+    void noNetworkNoInitialisationChanged();
 
 public slots:
     void authenticationSuccess(EnginioReply *reply);
@@ -118,6 +122,7 @@ private:
     bool init;
     QJsonArray feedbackArray;
     QJsonArray favoriteArray;
+    bool m_noNetworkNoInitialisation;
 };
 
 #endif // APPLICATIONCLIENT_H

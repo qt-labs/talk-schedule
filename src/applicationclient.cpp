@@ -59,7 +59,8 @@
 #define BACKEND_ID QUOTE(TALK_SCHEDULE_BACKEND_ID)
 
 ApplicationClient::ApplicationClient()
-    : init(true)
+    : init(true),
+      m_noNetworkNoInitialisation(false)
 {
     m_settings = new FileIO(this, "settings.txt");
     m_feedbackCache = new FileIO(this, "feedback.txt");
@@ -132,6 +133,10 @@ void ApplicationClient::userCreationReply(EnginioReply *reply)
 {
     if (reply->errorType() != Enginio::NoError) {
         //qDebug() << "Failed to create an user" << reply->errorString();
+        if (reply->errorType() == Enginio::NetworkError) {
+            m_noNetworkNoInitialisation = true;
+            emit noNetworkNoInitialisationChanged();
+        }
         emit error(reply->errorString());
     } else {
         //qDebug() << "User Created";

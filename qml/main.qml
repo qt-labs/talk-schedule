@@ -268,6 +268,13 @@ ApplicationWindow {
         anchors.fill: parent
         visible:  ModelsSingleton.conferenceId === ""
         color: Theme.colors.white
+        Text {
+            anchors.centerIn: parent
+            visible: applicationClient.noNetworkNoInitialisation
+            font.pointSize: Theme.fonts.seven_pt
+            text: Theme.text.networkErrorInit
+        }
+
         Image {
             id: logo
             opacity: 0.01

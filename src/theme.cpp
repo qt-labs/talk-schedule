@@ -87,6 +87,7 @@ Theme::Theme(QObject *parent)
     m_text->insert(QLatin1String("select_conference"), tr("Select a conference"));
     m_text->insert(QLatin1String("switchConf"), tr("Switch Conference"));
     m_text->insert(QLatin1String("floorPlan"), tr("Floor Plan"));
+    m_text->insert(QLatin1String("networkErrorInit"), tr("Network Error: check your device's network connection"));
 
     m_colors = new QQmlPropertyMap(this);
     m_colors->insert(QLatin1String("white"), QVariant("#ffffff"));
