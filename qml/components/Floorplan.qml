@@ -83,6 +83,7 @@ Rectangle {
             Image {
                 id: image
                 source: imageSource
+                asynchronous: true
                 Layout.alignment: Qt.AlignHCenter
                 sourceSize.height: floorplan.isPortrait ? columFloors.height / currentModel.count - Theme.margins.twenty : 0
                 sourceSize.width: !floorplan.isPortrait ? columFloors.width / currentModel.count - Theme.margins.twenty : 0
