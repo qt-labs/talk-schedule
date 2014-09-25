@@ -280,6 +280,13 @@ Rectangle {
                 }
             }
 
+            Text {
+                anchors.centerIn: parent
+                visible: tweetModel.errorMessage !== ""
+                text: tweetModel.errorMessage
+            }
+
+
             Component {
                 id: tweetDelegate
 

@@ -48,6 +48,7 @@ Item {
     property int status: XMLHttpRequest.UNSENT
     property bool isLoading: status === XMLHttpRequest.LOADING
     property bool wasLoading: false
+    property string errorMessage: ""
 
     ListModel {
         id: tweets
@@ -68,9 +69,10 @@ Item {
             if (status === XMLHttpRequest.DONE) {
                 if (req.responseText !== "") { // Nothing was retrieved, network error
                     var objectArray = JSON.parse(req.responseText);
-                    if (objectArray.errors !== undefined)
+                    if (objectArray.errors !== undefined) {
                         console.log("Error fetching tweets: " + objectArray.errors[0].message)
-                    else {
+                        errorMessage = jsonResponse.errors[0].message
+                    } else {
                         for (var key in objectArray.statuses) {
                             var jsonObject = objectArray.statuses[key];
                             tweets.append(jsonObject);
@@ -78,6 +80,8 @@ Item {
                     }
                     if (wasLoading == true)
                         tweetModel.isLoaded()
+                } else {
+                    errorMessage = Theme.text.networkErrorInit
                 }
             }
             wasLoading = (status === XMLHttpRequest.LOADING);
@@ -96,10 +100,13 @@ Item {
                     var jsonResponse = JSON.parse(authReq.responseText);
                     if (jsonResponse.errors !== undefined) {
                         console.log("Authentication error: " + jsonResponse.errors[0].message)
+                        errorMessage = jsonResponse.errors[0].message
                     } else {
                         bearerToken = jsonResponse.access_token;
                         reload()
                     }
+                } else {
+                    errorMessage = Theme.text.networkErrorInit
                 }
             }
         }
