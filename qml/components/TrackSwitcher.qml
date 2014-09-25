@@ -128,7 +128,7 @@ Rectangle {
 
         // Count here what is the first hour and last hour that needs to be shown in time listView
         // for example 10.00 11.00 12.00 ... or 08.00 09.00 10.00
-        var modelCountAfterStart = model.rowCount() - 1;
+        var modelCountAfterStart = Math.max(model.rowCount() - 1, 1);
         var halfModelCount = Math.floor(modelCountAfterStart / 2)
         var needOneMoreItem = halfModelCount * 2 !== modelCountAfterStart
         for (var i = 1; i < halfModelCount; i++) {
