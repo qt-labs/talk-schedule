@@ -123,7 +123,7 @@ void Model::addRow(const QJsonObject &data)
 
 void Model::removeRow(int index)
 {
-    if (m_data.count() > index) {
+    if (m_data.count() > index && index >= 0) {
         beginRemoveRows(QModelIndex(), index, index);
         m_data.removeAt(index);
         endRemoveRows();
