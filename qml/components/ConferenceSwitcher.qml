@@ -79,13 +79,16 @@ Rectangle {
                 text: title
                 anchors.centerIn: parent
                 onClicked: {
-                    applicationClient.currentConferenceId = id
                     var item = Qt.resolvedUrl("HomeScreen.qml")
                     var loadedHS = stack.find(function(item){ return item.objectName === "homeScreen" })
-                    if (loadedHS !== null)
+                    if (loadedHS !== null) {
                         stack.pop(loadedHS)
-                    else
+                        if (applicationClient.currentConferenceId !== id)
+                            applicationClient.currentConferenceId = id
+                    } else {
+                        applicationClient.currentConferenceId = id
                         initialConferenceSelected()
+                    }
                 }
                 width: Theme.sizes.buttonWidth
                 height: Theme.sizes.buttonHeight

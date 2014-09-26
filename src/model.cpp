@@ -281,34 +281,37 @@ bool Model::parse(const QJsonObject &object)
     dataHasChanged = fileNameTag().isEmpty() || object != currentModelObject[fileNameTag()];
 
     if (dataHasChanged) {
+        bool roleNamesNotPopulated = m_roleNames.count() == 0;
         reset();
 
         QJsonArray array = object.value("results").toArray();
         if (array.count() > 0) {
-            // Go through the keys in array to find out all the key values
-            // If all values has no content in cloud, that key might sometimes be missing
-            // so you cannot take keys from arbitrary place from array
-            QStringList tempKeys = array.at(0).toVariant().toMap().keys();
-            for (int i = 1; i < array.count(); i++) {
-                tempKeys += array.at(i).toVariant().toMap().keys();
-                tempKeys.removeDuplicates();
-            }
-            tempKeys.sort();
-            QStringList keys = tempKeys; //array.at(arrayIndex).toVariant().toMap().keys();
-            keys.removeOne("hideInSchedule");
-            keys.removeOne("room");
-            keys.removeOne("performer");
-            keys.removeOne("associatedEventId");
-            for (int index = 0; index < keys.count(); ++index)
-                m_roleNames.insert(Qt::UserRole + index, keys.at(index).toLatin1());
+            if (roleNamesNotPopulated) {
+                // Go through the keys in array to find out all the key values
+                // If all values has no content in cloud, that key might sometimes be missing
+                // so you cannot take keys from arbitrary place from array
+                QStringList tempKeys = array.at(0).toVariant().toMap().keys();
+                for (int i = 1; i < array.count(); i++) {
+                    tempKeys += array.at(i).toVariant().toMap().keys();
+                    tempKeys.removeDuplicates();
+                }
+                tempKeys.sort();
+                QStringList keys = tempKeys; //array.at(arrayIndex).toVariant().toMap().keys();
+                keys.removeOne("hideInSchedule");
+                keys.removeOne("room");
+                keys.removeOne("performer");
+                keys.removeOne("associatedEventId");
+                for (int index = 0; index < keys.count(); ++index)
+                    m_roleNames.insert(Qt::UserRole + index, keys.at(index).toLatin1());
 
-            // Hack, insert favorites as those will be created in application
-            m_roleNames.insert(2002, "favorite");
-            // Hack, insert some roles that may be empty in some cases
-            m_roleNames.insert(2003, "hideInSchedule");
-            m_roleNames.insert(2004, "room");
-            m_roleNames.insert(2005, "performer");
-            m_roleNames.insert(2006, "associatedEventId");
+                // Hack, insert favorites as those will be created in application
+                m_roleNames.insert(2002, "favorite");
+                // Hack, insert some roles that may be empty in some cases
+                m_roleNames.insert(2003, "hideInSchedule");
+                m_roleNames.insert(2004, "room");
+                m_roleNames.insert(2005, "performer");
+                m_roleNames.insert(2006, "associatedEventId");
+            }
 
             beginInsertRows(QModelIndex(), 0, array.count() - 1);
             foreach (QJsonValue value, array) {
@@ -319,21 +322,23 @@ bool Model::parse(const QJsonObject &object)
                     QVariant var = value.toVariant().toMap().value("events");
                     if (var.isValid()) {
 
-                        QJsonObject obj = value.toObject();
-                        int ind= 0;
-                        for (QJsonObject::const_iterator i = obj.constBegin(); i != obj.constEnd(); ++i) {
+                        if (roleNamesNotPopulated) {
+                            QJsonObject obj = value.toObject();
+                            int ind= 0;
+                            for (QJsonObject::const_iterator i = obj.constBegin(); i != obj.constEnd(); ++i) {
 
-                            if (i.key() == "events") {
-                                QJsonObject eventObject = i.value().toObject();
-                                for (QJsonObject::const_iterator i2 = eventObject.constBegin(); i2 != eventObject.constEnd();
-                                     ++i2) {
-                                    QString key = "events_"+i2.key();
-                                    temp[key] = i2.value();
-                                    m_roleNames.insert(Qt::UserRole + 400+ind, key.toLatin1());
-                                    ind++;
+                                if (i.key() == "events") {
+                                    QJsonObject eventObject = i.value().toObject();
+                                    for (QJsonObject::const_iterator i2 = eventObject.constBegin(); i2 != eventObject.constEnd();
+                                         ++i2) {
+                                        QString key = "events_"+i2.key();
+                                        temp[key] = i2.value();
+                                        m_roleNames.insert(Qt::UserRole + 400+ind, key.toLatin1());
+                                        ind++;
+                                    }
                                 }
+                                ind++;
                             }
-                            ind++;
                         }
 
                         m_data.append(temp.toVariantMap());
@@ -356,7 +361,6 @@ void Model::reset()
     if (m_data.count() > 0) {
         beginRemoveRows(QModelIndex(), 0, m_data.count() - 1);
         m_data.clear();
-        m_roleNames.clear();
         endRemoveRows();
     }
 }
