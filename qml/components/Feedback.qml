@@ -121,13 +121,13 @@ Item {
         Rectangle {
             height: window.height / 3
             width: parent.width
-            TextArea {
+            TextEdit {
                 id: feedbackEdit
                 anchors.fill: parent
                 textMargin: Theme.margins.ten
                 wrapMode: TextEdit.Wrap
                 onFocusChanged: if (focus && text === Theme.text.writeYourCommentHere) text = ""
-                textColor: text === Theme.text.writeYourCommentHere ? Theme.colors.gray : Theme.colors.black
+                color: text === Theme.text.writeYourCommentHere ? Theme.colors.gray : Theme.colors.black
                 font.pointSize: Theme.fonts.seven_pt
                 Component.onCompleted: text = Theme.text.writeYourCommentHere
             }
