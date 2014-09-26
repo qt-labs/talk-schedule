@@ -195,23 +195,33 @@ Rectangle {
             var tempTimeBreaks = []
             if (ModelsSingleton.timeListModel.rowCount() > 0)
                 tempTimeEvents = getTimeRange(ModelsSingleton.timeListModel)
-            temp = tempTimeEvents
             if (currentDayBreaksModel.rowCount() > 0)
                 tempTimeBreaks = getTimeRange(currentDayBreaksModel)
-            var firstEventTime = Functions.getHour(tempTimeEvents[0])
-            var lastEventTime = Functions.getHour(tempTimeEvents[tempTimeEvents.length - 1], true)
-            var earlierTime = []
-            var afterTime = []
-            for (var i = 0; i < tempTimeBreaks.length; i++) {
-                var breakTimeStart = Functions.getHour(tempTimeBreaks[i])
-                var breakTimeEnd = Functions.getHour(tempTimeBreaks[i], true)
-                if (breakTimeStart < firstEventTime)
-                    earlierTime.push(tempTimeBreaks[i])
-                if (breakTimeEnd > lastEventTime)
-                    afterTime.push(tempTimeBreaks[i])
+
+            if (tempTimeBreaks.length > 0) {
+                var firstEventTime = Functions.getHour(tempTimeEvents[0])
+                var lastEventTime = Functions.getHour(tempTimeEvents[tempTimeEvents.length - 1], true)
+                var firstBreakTime = Functions.getHour(tempTimeBreaks[0])
+                var lastBreakTime = Functions.getHour(tempTimeBreaks[tempTimeBreaks.length - 1], true)
+
+                var earliestTime = firstEventTime < firstBreakTime ? tempTimeEvents[0] : tempTimeBreaks[0]
+                var latestTime = lastEventTime < lastBreakTime ? tempTimeBreaks[tempTimeBreaks.length - 1] : tempTimeEvents[tempTimeEvents.length - 1]
+
+                var timeCount = Functions.getHour(latestTime, true) - Functions.getHour(earliestTime)
+                var hours = Functions.getHour(earliestTime)
+
+                for (var j = 0; j <= timeCount; j++) {
+                    var date = new Date
+                    date.setHours(hours + j)
+                    // HACK, ISOString ignores timezone offset, so add it to date
+                    date.setHours(date.getHours()+ date.getHours() - date.getUTCHours())
+                    date.setMinutes(0)
+                    temp.push(date.toISOString())
+                }
+            } else {
+                temp = tempTimeEvents
             }
-            temp = earlierTime.concat(temp)
-            temp = temp.concat(afterTime)
+
             timeColumn.timeList = temp
             if (!!firstEvent)
                 flickable1.contentX = Functions.countTrackPosition(firstEvent)
