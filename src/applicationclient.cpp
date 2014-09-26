@@ -119,7 +119,11 @@ void ApplicationClient::getUserCredentials()
 void ApplicationClient::createUser()
 {
     //qDebug() << "Create User";
+#ifdef QT_DEBUG
+    currentUsername = "debug-" + m_userData->createUUID();
+#else
     currentUsername = m_userData->createUUID();
+#endif
     currentPassword = m_userData->createUUID();
     QJsonObject query;
     query["objectType"] = QString::fromUtf8("users");
