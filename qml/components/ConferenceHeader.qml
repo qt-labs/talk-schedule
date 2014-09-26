@@ -67,9 +67,7 @@ Item {
                     id: mouseAreaBack
                     anchors.fill: parent
                     enabled: !!stack.currentItem && (stack.currentItem.objectName === "event" ||
-                                                     stack.currentItem.objectName === "feedback" ||
-                                                     stack.currentItem.objectName === "floorPlan" ||
-                                                     stack.currentItem.objectName === "trackSwitcher")
+                                                     stack.currentItem.objectName === "feedback")
                     onClicked: stack.pop()
                     Rectangle {
                         anchors.fill: parent
@@ -85,9 +83,7 @@ Item {
                         anchors.leftMargin: Theme.margins.twenty
                         opacity: (stack.depth > 1 && (!!stack.currentItem &&
                                                       (stack.currentItem.objectName === "event" ||
-                                                       stack.currentItem.objectName === "feedback" ||
-                                                       stack.currentItem.objectName === "floorPlan" ||
-                                                       stack.currentItem.objectName === "trackSwitcher"
+                                                       stack.currentItem.objectName === "feedback"
                                                        ))) ? 1 : 0
                         Behavior on opacity { PropertyAnimation{} }
                         height: Theme.sizes.backHeight
@@ -108,8 +104,6 @@ Item {
                         anchors.verticalCenter: parent.verticalCenter
                         opacity: (!!stack.currentItem && stack.currentItem.objectName !== "event" &&
                                   stack.currentItem.objectName !== "feedback" &&
-                                  stack.currentItem.objectName !== "floorPlan" &&
-                                  stack.currentItem.objectName !== "trackSwitcher" &&
                                   applicationClient.currentConferenceId !== "") ? 1 : 0
                         Behavior on opacity { PropertyAnimation{} }
 
@@ -136,6 +130,15 @@ Item {
                             Layout.fillWidth: false
                             Layout.alignment: Text.AlignVCenter | Text.AlignHCenter
 
+                        }
+                    }
+
+                    MouseArea {
+                        anchors.fill: parent
+                        enabled: !!stack.currentItem && (stack.currentItem.objectName !== "event" &&
+                                                        stack.currentItem.objectName !== "feedback")
+                        onClicked: {
+                            stack.pop(stack.find(function(item){ return item.objectName === "homeScreen" }))
                         }
                     }
                 }
