@@ -149,6 +149,31 @@ Rectangle {
                     z: -1
                     color: Theme.colors.smokewhite
                 }
+                Image {
+                    id: reloadUpcoming
+                    anchors.verticalCenter: parent.verticalCenter
+                    anchors.right: parent.right
+                    anchors.rightMargin: Theme.margins.fifteen
+                    source: Theme.images.loading
+                    sourceSize.height: Theme.sizes.reloadButtonSize
+                    sourceSize.width: Theme.sizes.reloadButtonSize
+                    MouseArea {
+                        anchors.fill: parent
+                        onClicked: {
+                            rotationUpcoming.running = true
+                            homeScreenListView.reloadUpcoming()
+                        }
+                    }
+                    RotationAnimation {
+                        id: rotationUpcoming
+                        target: reloadUpcoming
+                        property: "rotation"
+                        running: false
+                        duration: 800
+                        from: 0
+                        to: 360
+                    }
+                }
             }
             ListView {
                 id: homeScreenListView
@@ -159,7 +184,7 @@ Rectangle {
                 anchors.margins: Theme.margins.ten
                 model: sortModelNextEvents
                 clip: true
-                onVisibleChanged: {
+                function reloadUpcoming() {
                     emptyUpcoming.visible = false
                     if (visible && sortModelNextEvents.rowCount() > 0) {
                         sortModelNextEvents.filter()
@@ -168,6 +193,8 @@ Rectangle {
                     if (sortModelNextEvents.rowCount() === 0)
                         emptyUpcoming.visible = true
                 }
+
+                onVisibleChanged: homeScreenListView.reloadUpcoming()
                 Text {
                     id: emptyUpcoming
                     visible: false
@@ -278,10 +305,22 @@ Rectangle {
                     source: Theme.images.loading
                     sourceSize.height: Theme.sizes.reloadButtonSize
                     sourceSize.width: Theme.sizes.reloadButtonSize
+                    RotationAnimation {
+                        id: rotationNews
+                        target: reloadNews
+                        property: "rotation"
+                        running: false
+                        duration: 800
+                        from: 0
+                        to: 360
+                    }
                 }
                 MouseArea {
                     anchors.fill: reloadNews
-                    onClicked: tweetModel.reload()
+                    onClicked: {
+                        rotationNews.running = true
+                        tweetModel.reload()
+                    }
                 }
             }
 
