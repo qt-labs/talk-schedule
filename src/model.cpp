@@ -65,7 +65,7 @@ int Model::rowCount(const QModelIndex &parent) const
 QVariant Model::data(const QModelIndex &index, int role) const
 {
     QVariant variant;
-    if (m_data.count() > 0) {
+    if (m_data.count() > 0 && index.row() > -1) {
         variant = m_data.at(index.row()).value(m_roleNames.value(role));
         // Hack to make it possible to filter by reference
         if (variant.type() == QVariant::Map && m_roleNames.value(role) == "day") {
@@ -164,7 +164,11 @@ void Model::setFileNameTag(const QString &newTag)
 
 QVariant Model::data(int index, const QString &role) const
 {
-    return data(this->index(index, 0), m_roleNames.key(role.toLatin1()));
+    if (index > -1)
+        return data(this->index(index, 0), m_roleNames.key(role.toLatin1()));
+    else
+        return QVariant();
+
 }
 
 void Model::onFinished(EnginioReply *reply)
