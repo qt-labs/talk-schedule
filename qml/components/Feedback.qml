@@ -167,7 +167,8 @@ Item {
                     text = "sending..."
                     Qt.inputMethod.hide()
                     Qt.inputMethod.commit()
-                    ModelsSingleton.saveFeedback(feedbackEdit.text, eventId, rating)
+                    var feedbackText = feedbackEdit.text !== Theme.text.writeYourCommentHere ? feedbackEdit.text : ""
+                    ModelsSingleton.saveFeedback(feedbackText, eventId, rating)
                     stack.pop()
                     stack.forceActiveFocus()
                 }
