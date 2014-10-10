@@ -407,7 +407,7 @@ Rectangle {
                                 anchors.right: parent.right
                                 anchors.rightMargin: Theme.margins.ten
                                 anchors.bottom: parent.bottom
-                                text: model.created_at
+                                text: getElapsedTime()
                                 font.pointSize: Theme.fonts.seven_pt
                                 color: Theme.colors.gray
                                 textFormat: Text.StyledText
@@ -416,6 +416,29 @@ Rectangle {
                                     onClicked: Qt.openUrlExternally(Theme.text.twitterLink
                                                                     + model.user.screen_name
                                                                     + "/status/" + model.id_str)
+                                }
+                                function getElapsedTime()
+                                {
+                                    var createdAt = model.created_at.replace(" +0000", "") // UTC
+                                    var createdDate = new Date(createdAt)
+                                    var now = new Date() // Local
+                                    var localOffset = now.getTimezoneOffset() * 60 * 1000
+                                    var diff = Math.floor((now - createdDate + localOffset) / 1000); // seconds
+                                    if (diff <= 10)
+                                        return "Now"
+                                    if (diff <= 90)
+                                        return "1m"
+                                    if (diff <= 3540)
+                                        return Math.round(diff / 60) + "m"
+                                    if (diff <= 5400)
+                                        return "1h"
+                                    if (diff <= 87000)
+                                        return Math.round(diff / 3600) + "h"
+                                    if (diff <= 130000)
+                                        return "1 day"
+                                    if (diff < 540000)
+                                       return Math.round(diff / 86400) + " days"
+                                    return Qt.formatDate(createdDate, "d MMM");
                                 }
                             }
                         }
