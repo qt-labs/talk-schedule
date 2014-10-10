@@ -71,7 +71,7 @@ Item {
                     var objectArray = JSON.parse(req.responseText);
                     if (objectArray.errors !== undefined) {
                         console.log("Error fetching tweets: " + objectArray.errors[0].message)
-                        errorMessage = jsonResponse.errors[0].message
+                        errorMessage = objectArray.errors[0].message
                     } else {
                         for (var key in objectArray.statuses) {
                             var jsonObject = objectArray.statuses[key];
