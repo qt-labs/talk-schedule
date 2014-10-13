@@ -50,7 +50,7 @@ Rectangle {
 
     SubTitle {
         id: subTitle
-        titleText: isFavoriteView ? Theme.text.favorites : Theme.text.talks
+        titleText: isFavoriteView ? Theme.text.favorites.arg(applicationClient.currentConferenceDetails.title) : Theme.text.talks.arg(applicationClient.currentConferenceDetails.title)
     }
 
     ListView {

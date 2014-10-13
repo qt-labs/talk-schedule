@@ -85,10 +85,10 @@ ApplicationWindow {
             ListModel {
                 id: menuModel
                 Component.onCompleted: {
-                    append({name: Theme.text.home, id: "home" })
+                    append({name: Theme.text.home.arg(applicationClient.currentConferenceDetails.title), id: "home" })
                     append({name: Theme.text.schedule, id: "schedule"  })
-                    append({name: Theme.text.talks, id: "talks"  })
-                    append({name: Theme.text.favorites, id: "favorites"  })
+                    append({name: Theme.text.talks.arg(""), id: "talks"  })
+                    append({name: Theme.text.favorites.arg(""), id: "favorites"  })
                     append({name: Theme.text.floorPlan, id: "floorPlan"  })
                     append({name: Theme.text.switchConf, id: "switchConf"  })
                     menuRectangle.height = Theme.sizes.buttonHeight * menuModel.count

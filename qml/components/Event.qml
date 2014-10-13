@@ -64,7 +64,7 @@ Rectangle {
 
     SubTitle {
         id: subTitle
-        titleText: Theme.text.talks
+        titleText: Theme.text.talks.arg(applicationClient.currentConferenceDetails.title)
     }
 
     Flickable {

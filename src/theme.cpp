@@ -71,10 +71,10 @@ Theme::Theme(QObject *parent)
     }
 
     m_text = new QQmlPropertyMap(this);
-    m_text->insert(QLatin1String("home"), tr("Home"));
+    m_text->insert(QLatin1String("home"), tr("%1 Home"));
     m_text->insert(QLatin1String("schedule"), tr("Schedule"));
-    m_text->insert(QLatin1String("talks"), tr("Presentations"));
-    m_text->insert(QLatin1String("favorites"), tr("Favorites"));
+    m_text->insert(QLatin1String("talks"), tr("%1 Presentations"));
+    m_text->insert(QLatin1String("favorites"), tr("%1 Favorites"));
     m_text->insert(QLatin1String("feedback"), tr("Send Feedback"));
     m_text->insert(QLatin1String("upcoming"), tr("Upcoming: %1 %2"));
     m_text->insert(QLatin1String("news"), tr("Tweets"));
