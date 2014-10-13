@@ -214,6 +214,10 @@ Rectangle {
                     height: parent.height
                     color: Theme.colors.darkgray
                     font.pointSize: Theme.fonts.seven_pt
+                    MouseArea {
+                        anchors.fill: parent
+                        onClicked: window.showFloor()
+                    }
                 }
                 Item {
                     Layout.alignment: Qt.AlignRight

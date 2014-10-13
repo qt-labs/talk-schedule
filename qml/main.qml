@@ -50,6 +50,8 @@ ApplicationWindow {
     height: 1080
     width: 1080
     property bool busy
+    signal showFloor
+    onShowFloor: listMenu.pushView("floorPlan")
 
     color: Theme.colors.white
 
