@@ -78,7 +78,6 @@ Theme::Theme(QObject *parent)
     m_text->insert(QLatin1String("feedback"), tr("Send Feedback"));
     m_text->insert(QLatin1String("upcoming"), tr("Upcoming: %1 %2"));
     m_text->insert(QLatin1String("news"), tr("Tweets"));
-    m_text->insert(QLatin1String("info"), tr("Useful Information"));
     m_text->insert(QLatin1String("writeYourCommentHere"), tr("Write your comments here"));
     m_text->insert(QLatin1String("by"), tr("by %1"));
     m_text->insert(QLatin1String("room"), tr("Room %1"));
@@ -143,9 +142,6 @@ Theme::Theme(QObject *parent)
     m_images->insert(QLatin1String("anonymous"), QVariant("qrc:/images/anonymous.svg"));
     m_images->insert(QLatin1String("location"), QVariant("qrc:/images/Location.svg"));
     m_images->insert(QLatin1String("twitter"), QVariant("qrc:/images/Twitter.svg"));
-    m_images->insert(QLatin1String("btnToWebsite"), QVariant("qrc:/images/Btn_ToWebsite.svg"));
-    m_images->insert(QLatin1String("btnFloorMap"), QVariant("qrc:/images/Btn_FloorMap.svg"));
-    m_images->insert(QLatin1String("btnSchedule"), QVariant("qrc:/images/Btn_Schedule.svg"));
     m_images->insert(QLatin1String("levelA"), QVariant("qrc:/images/LevelA.svg"));
     m_images->insert(QLatin1String("levelB"), QVariant("qrc:/images/LevelB.svg"));
     m_images->insert(QLatin1String("levelC"), QVariant("qrc:/images/LevelC.svg"));

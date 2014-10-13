@@ -47,7 +47,6 @@ Rectangle {
     height: window.height - header.height
     width: window.width
     objectName: "homeScreen"
-    property int usefulItemHeight: Theme.sizes.infoButtonSize + Theme.sizes.homeTitleHeight + Theme.margins.twenty
 
     property var idx
     property var ids
@@ -102,7 +101,7 @@ Rectangle {
             // upcoming
             id: upcomingItem
             width: homeScreenWindow.width
-            height: (homeScreenWindow.height - homeScreenWindow.usefulItemHeight)/2
+            height: homeScreenWindow.height / 2
 
             property string visibleDate: ""
             property string formatDate: "ddd d.MM"
@@ -261,7 +260,7 @@ Rectangle {
         Item {
             // twitter news
             width: window.width
-            height: (homeScreenWindow.height - homeScreenWindow.usefulItemHeight)/2
+            height: homeScreenWindow.height / 2
 
             TweetModel {
                 id: tweetModel
@@ -477,64 +476,6 @@ Rectangle {
                 spacing: Theme.margins.twenty
                 model: tweetModel.model
                 delegate: tweetDelegate
-            }
-        }
-        Item {
-            // useful info
-            id: usefulItem
-            width: window.width
-            height: homeScreenWindow.usefulItemHeight
-            Text {
-                id: labelInfo
-                z: 1
-                text: Theme.text.info
-                width: parent.width
-                height: Theme.sizes.homeTitleHeight
-                font.pointSize: Theme.fonts.seven_pt
-                horizontalAlignment: Text.AlignHCenter
-                verticalAlignment: Text.AlignVCenter
-                font.capitalization: Font.AllUppercase
-                Rectangle {
-                    anchors.fill: parent
-                    z: -1
-                    color: Theme.colors.smokewhite
-                }
-            }
-            Row {
-                anchors.top: labelInfo.bottom
-                anchors.bottom: usefulItem.bottom
-                anchors.horizontalCenter: parent.horizontalCenter
-                spacing: Theme.margins.thirty
-                Image {
-                    source: Theme.images.btnFloorMap
-                    sourceSize.height: Theme.sizes.infoButtonSize
-                    sourceSize.width: Theme.sizes.infoButtonSize
-                    anchors.verticalCenter: parent.verticalCenter
-                    MouseArea {
-                        anchors.fill: parent
-                        onClicked: stack.push(Qt.resolvedUrl("Floorplan.qml"))
-                    }
-                }
-                Image {
-                    source: Theme.images.btnSchedule
-                    sourceSize.height: Theme.sizes.infoButtonSize
-                    sourceSize.width: Theme.sizes.infoButtonSize
-                    anchors.verticalCenter: parent.verticalCenter
-                    MouseArea {
-                        anchors.fill: parent
-                        onClicked: stack.push(Qt.resolvedUrl("TrackSwitcher.qml"))
-                    }
-                }
-                Image {
-                    source: Theme.images.btnToWebsite
-                    sourceSize.height: Theme.sizes.infoButtonSize
-                    sourceSize.width: Theme.sizes.infoButtonSize
-                    anchors.verticalCenter: parent.verticalCenter
-                    MouseArea {
-                        anchors.fill: parent
-                        onClicked: Qt.openUrlExternally(applicationClient.currentConferenceDetails.infopage)
-                    }
-                }
             }
         }
     }

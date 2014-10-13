@@ -31,12 +31,9 @@
         <file alias="images/icon-loading.svg">qml/components/images/icon-loading.svg</file>
         <file alias="images/Location.svg">qml/components/images/Location.svg</file>
         <file alias="images/Twitter.svg">qml/components/images/Twitter.svg</file>
-        <file alias="images/Btn_ToWebsite.svg">qml/components/images/Btn_ToWebsite.svg</file>
-        <file alias="images/Btn_FloorMap.svg">qml/components/images/Btn_FloorMap.svg</file>
         <file alias="images/LevelA.svg">qml/components/images/LevelA.svg</file>
         <file alias="images/LevelB.svg">qml/components/images/LevelB.svg</file>
         <file alias="images/LevelC.svg">qml/components/images/LevelC.svg</file>
         <file alias="images/sfo_floor.png">qml/components/images/sfo_floor.png</file>
-        <file alias="images/Btn_Schedule.svg">qml/components/images/Btn_Schedule.svg</file>
     </qresource>
 </RCC>
