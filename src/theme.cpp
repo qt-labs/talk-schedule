@@ -88,6 +88,7 @@ Theme::Theme(QObject *parent)
     m_text->insert(QLatin1String("floorPlan"), tr("Floor Plan"));
     m_text->insert(QLatin1String("networkErrorInit"), tr("Network Error: check your device's network connection"));
     m_text->insert(QLatin1String("endedEvent"), tr("The conference has now ended"));
+    m_text->insert(QLatin1String("toWebsite"), tr("Website (external)"));
 
     m_colors = new QQmlPropertyMap(this);
     m_colors->insert(QLatin1String("white"), QVariant("#ffffff"));
@@ -130,6 +131,7 @@ Theme::Theme(QObject *parent)
     m_sizes->insert(QLatin1String("reloadButtonSize"), QVariant(applyRatio(50)));
     m_sizes->insert(QLatin1String("twitterAvatarSize"), QVariant(applyRatio(80)));
     m_sizes->insert(QLatin1String("menuPopupWidth"), QVariant(applyRatio(550)));
+    m_sizes->insert(QLatin1String("menuItemHeight"), QVariant(applyRatio(110)));
 
     m_images = new QQmlPropertyMap(this);
     m_images->insert(QLatin1String("back"), QVariant("qrc:/images/BackArrow.svg"));

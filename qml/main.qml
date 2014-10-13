@@ -91,7 +91,8 @@ ApplicationWindow {
                     append({name: Theme.text.favorites.arg(""), id: "favorites"  })
                     append({name: Theme.text.floorPlan, id: "floorPlan"  })
                     append({name: Theme.text.switchConf, id: "switchConf"  })
-                    menuRectangle.height = Theme.sizes.buttonHeight * menuModel.count
+                    append({name: Theme.text.toWebsite, id: "toWebsite"  })
+                    menuRectangle.height = Theme.sizes.menuItemHeight * menuModel.count
                 }
             }
             Repeater {
@@ -111,10 +112,10 @@ ApplicationWindow {
 
                 Rectangle {
                     z: 3
-                    height: Theme.sizes.buttonHeight
+                    height: Theme.sizes.menuItemHeight
                     width: parent.width
                     color: !mouseArea.pressed ? Theme.colors.white : Theme.colors.gray_menu
-                    y: Theme.sizes.buttonHeight * index
+                    y: Theme.sizes.menuItemHeight * index
                     Text {
                         z: 3
                         anchors.left: parent.left
@@ -195,6 +196,9 @@ ApplicationWindow {
                         else {
                             stack.push(item)
                         }
+                        break
+                    case "toWebsite":
+                        Qt.openUrlExternally(applicationClient.currentConferenceDetails.infopage)
                         break
                     default:
                         break
