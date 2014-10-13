@@ -134,9 +134,9 @@ Rectangle {
         var needOneMoreItem = halfModelCount * 2 !== modelCountAfterStart
         for (var i = 1; i < halfModelCount; i++) {
 
-            var time1 = model.data(i, "start")
+            var time1 = model.data(i*2 - 1, "start")
             setFirstEvent(time1)
-            var time2 = model.data(i+1, "start")
+            var time2 = model.data(i*2, "start")
             setFirstEvent(time2)
 
             time = time1 < time2 ? time1 : time2
@@ -145,8 +145,8 @@ Rectangle {
             if (timeHours < earliestHours )
                 earliestTime = time
 
-            time1 = model.data(i, "end")
-            time2 = model.data(i+1, "end")
+            time1 = model.data(i*2 - 1, "end")
+            time2 = model.data(i*2, "end")
             time = time1 < time2 ? time2 : time1
             timeHours = Functions.getHour(time, isEndTime)
             latestHours = Functions.getHour(latestTime, isEndTime)
