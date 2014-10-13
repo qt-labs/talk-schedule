@@ -423,22 +423,25 @@ Rectangle {
                                     var createdDate = new Date(createdAt)
                                     var now = new Date() // Local
                                     var localOffset = now.getTimezoneOffset() * 60 * 1000
-                                    var diff = Math.floor((now - createdDate + localOffset) / 1000); // seconds
+                                    var diff = Math.floor((now.getTime() - createdDate.getTime() + localOffset) / 1000); // seconds
+
                                     if (diff <= 10)
                                         return "Now"
                                     if (diff <= 90)
                                         return "1m"
                                     if (diff <= 3540)
                                         return Math.round(diff / 60) + "m"
-                                    if (diff <= 5400)
+                                    if (diff <= 5400) // 1,5h
                                         return "1h"
-                                    if (diff <= 87000)
+                                    if (diff <= 84600) // 23,5h
                                         return Math.round(diff / 3600) + "h"
-                                    if (diff <= 130000)
+                                    if (diff <= 129600) // 36h
                                         return "1 day"
-                                    if (diff < 540000)
+                                    if (diff <= 561600) // 6,5 days
                                        return Math.round(diff / 86400) + " days"
-                                    return Qt.formatDate(createdDate, "d MMM");
+                                    var createdDateFormated = new Date()
+                                    createdDateFormated.setTime(now.getTime() - diff *1000) // createdAt in local format
+                                    return Qt.formatDate(createdDateFormated, "d MMM");
                                 }
                             }
                         }
