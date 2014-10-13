@@ -62,84 +62,46 @@ Item {
             anchors.margins: Theme.margins.ten
             Item {
                 Layout.preferredHeight: topicRect.height
-                Layout.preferredWidth: topicRect.height
+                Layout.fillWidth: true
                 MouseArea {
                     id: mouseAreaBack
                     anchors.fill: parent
-                    enabled: !!stack.currentItem && (stack.currentItem.objectName === "event" ||
-                                                     stack.currentItem.objectName === "feedback")
-                    onClicked: stack.pop()
+                    property bool isBackImageOnly: !!stack.currentItem && (stack.currentItem.objectName === "event" ||
+                                                      stack.currentItem.objectName === "feedback" ||
+                                                      stack.currentItem.objectName === "floorPlan") && stack.depth > 2
+                    enabled: stack.depth > 1
+                    onClicked: {
+                        if (mouseAreaBack.isBackImageOnly)
+                            stack.pop()
+                        else
+                            stack.pop(stack.find(function(item){ return item.objectName === "homeScreen" }))
+                    }
                     Rectangle {
                         anchors.fill: parent
                         anchors.margins: Theme.margins.five
                         color: mouseAreaBack.pressed ? Theme.colors.smokewhite : Theme.colors.white
-                        visible: stack.depth > 1
                         radius: 5
                     }
                     Image {
                         id: backButton
+                        visible: stack.depth > 1
                         anchors.left: parent.left
                         anchors.verticalCenter: parent.verticalCenter
                         anchors.leftMargin: Theme.margins.twenty
-                        opacity: (stack.depth > 1 && (!!stack.currentItem &&
-                                                      (stack.currentItem.objectName === "event" ||
-                                                       stack.currentItem.objectName === "feedback"
-                                                       ))) ? 1 : 0
-                        Behavior on opacity { PropertyAnimation{} }
                         height: Theme.sizes.backHeight
                         width: Theme.sizes.backWidth
                         sourceSize.height: Theme.sizes.backHeight
                         sourceSize.width: Theme.sizes.backWidth
                         source: Theme.images.back
                     }
-                }
-
-                Item {
-                    id: locationArea
-                    anchors.fill: parent
-
-                    Item {
-                        id: locationButton
-                        anchors.left: parent.left
+                    Text {
+                        anchors.left: backButton.right
+                        anchors.leftMargin: Theme.margins.ten
                         anchors.verticalCenter: parent.verticalCenter
-                        opacity: (!!stack.currentItem && stack.currentItem.objectName !== "event" &&
-                                  stack.currentItem.objectName !== "feedback" &&
-                                  applicationClient.currentConferenceId !== "") ? 1 : 0
-                        Behavior on opacity { PropertyAnimation{} }
-
-                        Image {
-                            id: locationImage
-                            anchors.left: parent.left
-                            anchors.verticalCenter: parent.verticalCenter
-                            anchors.leftMargin: Theme.margins.ten
-                            sourceSize.height: Theme.sizes.menuHeight
-                            sourceSize.width: Theme.sizes.menuWidth
-                            source: Theme.images.location
-                        }
-
-                        Text {
-                            id: locationLabel
-                            anchors.left: locationImage.right
-                            anchors.verticalCenter: parent.verticalCenter
-                            anchors.leftMargin: Theme.margins.ten
-                            text: applicationClient.currentConferenceDetails.location
-                            font.pointSize: Theme.fonts.ten_pt
-                            font.capitalization: Font.AllUppercase
-                            font.weight: Font.DemiBold
-                            color: Theme.colors.gray
-                            Layout.fillWidth: false
-                            Layout.alignment: Text.AlignVCenter | Text.AlignHCenter
-
-                        }
-                    }
-
-                    MouseArea {
-                        anchors.fill: parent
-                        enabled: !!stack.currentItem && (stack.currentItem.objectName !== "event" &&
-                                                        stack.currentItem.objectName !== "feedback")
-                        onClicked: {
-                            stack.pop(stack.find(function(item){ return item.objectName === "homeScreen" }))
-                        }
+                        text: Theme.text.home.arg("")
+                        color: Theme.colors.gray
+                        font.pointSize: Theme.fonts.eight_pt
+                        visible: stack.depth > 1 && !mouseAreaBack.isBackImageOnly
                     }
                 }
             }
@@ -156,7 +118,7 @@ Item {
             MouseArea {
                 id: mouseAreaMenu
                 Layout.alignment: Qt.AlignRight
-                Layout.preferredWidth: topicRect.height
+                Layout.fillWidth: true
                 Layout.preferredHeight: topicRect.height
                 onClicked: showMenu()
                 enabled: ModelsSingleton.conferenceId !== ""
@@ -169,8 +131,9 @@ Item {
                 Image {
                     id: dropMenu
                     visible: mouseAreaMenu.enabled
-                    anchors.centerIn: parent
-                    Layout.alignment: Qt.AlignRight
+                    anchors.verticalCenter: parent.verticalCenter
+                    anchors.right: parent.right
+                    anchors.rightMargin: Theme.margins.twenty
                     height: Theme.sizes.menuHeight
                     width: Theme.sizes.menuWidth
                     source: Theme.images.menu

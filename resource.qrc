@@ -29,7 +29,6 @@
         <file alias="images/NoRating.svg">qml/components/images/NoRating.svg</file>
         <file alias="images/anonymous.svg">qml/components/images/anonymous.svg</file>
         <file alias="images/icon-loading.svg">qml/components/images/icon-loading.svg</file>
-        <file alias="images/Location.svg">qml/components/images/Location.svg</file>
         <file alias="images/Twitter.svg">qml/components/images/Twitter.svg</file>
         <file alias="images/LevelA.svg">qml/components/images/LevelA.svg</file>
         <file alias="images/LevelB.svg">qml/components/images/LevelB.svg</file>

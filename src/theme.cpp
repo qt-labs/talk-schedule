@@ -146,7 +146,6 @@ Theme::Theme(QObject *parent)
     m_images->insert(QLatin1String("noRating"), QVariant("qrc:/images/NoRating.svg"));
     m_images->insert(QLatin1String("loading"), QVariant("qrc:/images/icon-loading.svg"));
     m_images->insert(QLatin1String("anonymous"), QVariant("qrc:/images/anonymous.svg"));
-    m_images->insert(QLatin1String("location"), QVariant("qrc:/images/Location.svg"));
     m_images->insert(QLatin1String("twitter"), QVariant("qrc:/images/Twitter.svg"));
     m_images->insert(QLatin1String("levelA"), QVariant("qrc:/images/LevelA.svg"));
     m_images->insert(QLatin1String("levelB"), QVariant("qrc:/images/LevelB.svg"));
