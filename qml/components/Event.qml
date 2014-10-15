@@ -64,7 +64,7 @@ Rectangle {
 
     SubTitle {
         id: subTitle
-        titleText: Theme.text.talks.arg(applicationClient.currentConferenceDetails.title)
+        titleText: Theme.text.details
     }
 
     Flickable {
@@ -85,60 +85,52 @@ Rectangle {
         Column {
             id: columnLayout
             width: parent.width
-            spacing: Theme.margins.ten
+            spacing: Theme.margins.twenty
             Text {
                 text: model.data(indexCurrentEvent, "topic")
                 color: Theme.colors.black
                 width: columnLayout.width
-                font.pointSize: Theme.fonts.twelve_pt
+                font.pointSize: Theme.fonts.ten_pt
                 maximumLineCount: 2
                 wrapMode: Text.Wrap
                 elide: Text.ElideRight
             }
-            RowLayout {
-                id: feedbackBar
-                width: columnLayout.width
-                Label {
-                    id: eventPerformers
-                    text: model.data(indexCurrentEvent, "performer")
-                    font.pointSize: Theme.fonts.seven_pt
-                    color: Theme.colors.gray
-                }
-                Item {
-                    Layout.fillWidth: true
-                    Layout.fillHeight: true
-                }
-                Button {
-                    id: buttonFeedback
-                    text: Theme.text.feedback
-                    Layout.preferredHeight: Theme.sizes.buttonHeight
-                    Layout.preferredWidth: Theme.sizes.buttonWidth
-                    style: ButtonStyle {
-                        background: Rectangle {
-                            border.width: 2
-                            border.color: Theme.colors.qtgreen
-                            color: control.pressed ? Qt.darker(Theme.colors.qtgreen, 1.1) : Theme.colors.qtgreen
-                        }
-                        label: Text {
-                            horizontalAlignment: Text.AlignHCenter
-                            verticalAlignment: Text.AlignVCenter
-                            text: control.text
-                            color: Theme.colors.white
-                            font.capitalization: Font.AllUppercase
-                            font.pointSize: Theme.fonts.seven_pt
-                        }
+            Label {
+                id: eventPerformers
+                text: model.data(indexCurrentEvent, "performer")
+                font.pointSize: Theme.fonts.eight_pt
+                color: Theme.colors.gray
+            }
+            Button {
+                id: buttonFeedback
+                text: Theme.text.feedback
+                height: Theme.sizes.buttonHeightFeedback
+                width: Theme.sizes.buttonWidthFeedback
+                style: ButtonStyle {
+                    background: Rectangle {
+                        border.width: 2
+                        border.color: Theme.colors.qtgreen
+                        color: control.pressed ? Qt.darker(Theme.colors.qtgreen, 1.1) : Theme.colors.qtgreen
                     }
-                    onClicked: {
-                        var itemFe = Qt.resolvedUrl("Feedback.qml")
-                        stack.push({
-                                       "item" : itemFe,
-                                       "properties" : {
-                                           "eventId" : eventId,
-                                           "eventPerformer": model.data(indexCurrentEvent, "performer"),
-                                           "eventTopic": model.data(indexCurrentEvent, "topic")
-                                       }
-                                   })
+                    label: Text {
+                        horizontalAlignment: Text.AlignHCenter
+                        verticalAlignment: Text.AlignVCenter
+                        text: control.text
+                        color: Theme.colors.white
+                        font.capitalization: Font.AllUppercase
+                        font.pointSize: Theme.fonts.seven_pt
                     }
+                }
+                onClicked: {
+                    var itemFe = Qt.resolvedUrl("Feedback.qml")
+                    stack.push({
+                                   "item" : itemFe,
+                                   "properties" : {
+                                       "eventId" : eventId,
+                                       "eventPerformer": model.data(indexCurrentEvent, "performer"),
+                                       "eventTopic": model.data(indexCurrentEvent, "topic")
+                                   }
+                               })
                 }
             }
             Item {
@@ -149,7 +141,7 @@ Rectangle {
             Label {
                 id: eventIntro
                 text: model.data(indexCurrentEvent, "intro")
-                font.pointSize: Theme.fonts.seven_pt
+                font.pointSize: Theme.fonts.eight_pt
                 width: parent.width
                 wrapMode: Text.WordWrap
                 elide: Text.ElideRight
@@ -172,32 +164,37 @@ Rectangle {
         id: statusBar
         anchors.bottom: eventView.bottom
         width: eventView.width
-        height: Theme.sizes.trackHeaderHeight
+        height: Theme.sizes.trackHeaderHeight_Event
         spacing: Theme.margins.ten
+        baselineOffset: Theme.sizes.trackHeaderHeight_Event*4/9
         Rectangle {
             id: trackSquare
-            Layout.preferredHeight: Theme.sizes.trackHeaderHeight
+            Layout.fillHeight: true
             Layout.preferredWidth: Theme.sizes.trackHeaderWidth
             color: track.backgroundColor
+            baselineOffset: parent.baselineOffset
             Text {
-                anchors.fill: parent
-                anchors.margins: Theme.margins.ten
+                id: trackName
+                anchors.left: parent.left
+                anchors.leftMargin: Theme.margins.ten
                 text: track.name
                 color: track.fontColor
-                font.pointSize: Theme.fonts.six_pt
+                font.pointSize: Theme.fonts.seven_pt
                 horizontalAlignment: Text.AlignLeft
-                verticalAlignment: Text.AlignVCenter
+                anchors.baseline: parent.baseline
                 font.capitalization: Font.AllUppercase
             }
         }
         Rectangle {
             Layout.fillWidth: true
+            Layout.fillHeight: true
             color: Theme.colors.smokewhite
-            height: statusBar.height
+            baselineOffset: parent.baselineOffset
             RowLayout {
                 id: statusBar2
                 anchors.fill: parent
                 anchors.leftMargin: Theme.margins.ten
+                baselineOffset: parent.baselineOffset
                 Label {
                     height: parent.height
                     text: Qt.formatDate(model.data(indexCurrentEvent, "start"), "dddd d. MMM") +
@@ -207,14 +204,17 @@ Rectangle {
                           Qt.formatTime(model.data(indexCurrentEvent, "end"), "hh:mm")
                     color: Theme.colors.gray
                     font.pointSize: Theme.fonts.seven_pt
-                    font.capitalization: Font.SmallCaps
+                    font.capitalization: Font.AllUppercase
+                    anchors.baseline: parent.baseline
                 }
                 Label {
+                    anchors.baseline: parent.baseline
                     text: Theme.text.room.arg(model.data(indexCurrentEvent, "location"))
                     height: parent.height
-                    color: Theme.colors.darkgray
-                    font.pointSize: Theme.fonts.seven_pt
+                    color: mouseRoom.pressed ? Theme.colors.green : Theme.colors.qtgreen
+                    font.pointSize: Theme.fonts.eight_pt
                     MouseArea {
+                        id: mouseRoom
                         anchors.fill: parent
                         onClicked: window.showFloor()
                     }

@@ -74,6 +74,7 @@ Theme::Theme(QObject *parent)
     m_text->insert(QLatin1String("home"), tr("%1 Home"));
     m_text->insert(QLatin1String("schedule"), tr("Schedule"));
     m_text->insert(QLatin1String("talks"), tr("%1 Presentations"));
+    m_text->insert(QLatin1String("details"), tr("Presentation Details"));
     m_text->insert(QLatin1String("favorites"), tr("%1 Favorites"));
     m_text->insert(QLatin1String("feedback"), tr("Send Feedback"));
     m_text->insert(QLatin1String("upcoming"), tr("Upcoming: %1 %2"));
@@ -106,6 +107,7 @@ Theme::Theme(QObject *parent)
     m_sizes = new QQmlPropertyMap(this);
     m_sizes->insert(QLatin1String("trackHeaderHeight"), QVariant(applyRatio(270)));
     m_sizes->insert(QLatin1String("trackHeaderWidth"), QVariant(applyRatio(tempTrackHeaderWidth)));
+    m_sizes->insert(QLatin1String("trackHeaderHeight_Event"), QVariant(applyRatio(135)));
     m_sizes->insert(QLatin1String("timeColumnWidth"), QVariant(applyRatio(tempTimeColumnWidth)));
     m_sizes->insert(QLatin1String("conferenceHeaderHeight"), QVariant(applyRatio(158)));
     m_sizes->insert(QLatin1String("dayWidth"), QVariant(applyRatio(150)));
@@ -125,6 +127,8 @@ Theme::Theme(QObject *parent)
     m_sizes->insert(QLatin1String("trackFieldHeight"), QVariant(applyRatio(50)));
     m_sizes->insert(QLatin1String("buttonHeight"), QVariant(applyRatio(130)));
     m_sizes->insert(QLatin1String("buttonWidth"), QVariant(applyRatio(400)));
+    m_sizes->insert(QLatin1String("buttonHeightFeedback"), QVariant(applyRatio(110)));
+    m_sizes->insert(QLatin1String("buttonWidthFeedback"), QVariant(applyRatio(330)));
     m_sizes->insert(QLatin1String("ratingImageHeight"), QVariant(applyRatio(38)));
     m_sizes->insert(QLatin1String("ratingImageWidth"), QVariant(applyRatio(40)));
     m_sizes->insert(QLatin1String("infoButtonSize"), QVariant(applyRatio(160)));
