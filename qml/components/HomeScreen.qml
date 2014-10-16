@@ -439,12 +439,8 @@ Rectangle {
                                         return Math.round(diff / 60) + "m"
                                     if (diff <= 5400) // 1,5h
                                         return "1h"
-                                    if (diff <= 84600) // 23,5h
+                                    if (diff <= 88200) // 24,5h
                                         return Math.round(diff / 3600) + "h"
-                                    if (diff <= 129600) // 36h
-                                        return "1 day"
-                                    if (diff <= 561600) // 6,5 days
-                                       return Math.round(diff / 86400) + " days"
                                     var createdDateFormated = new Date()
                                     createdDateFormated.setTime(now.getTime() - diff *1000) // createdAt in local format
                                     return Qt.formatDate(createdDateFormated, "d MMM");
