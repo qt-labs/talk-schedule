@@ -60,11 +60,14 @@ Item {
     }
 
     Column {
+        id: columnFeedback
         anchors.top: subTitle.bottom
         anchors.left: parent.left
         anchors.right: parent.right
         anchors.margins: Theme.margins.twenty
         spacing: Theme.margins.fifteen
+        property bool hasReview: (feedbackEdit.text !== Theme.text.writeYourCommentHere && feedbackEdit.text !== "")
+                                 || rating > -1
         Text {
             text: eventTopic
             color: Theme.colors.black
@@ -117,20 +120,20 @@ Item {
                 color: Theme.colors.gray
             }
         }
-
-        Rectangle {
+        TextArea {
+            id: feedbackEdit
             height: window.height / 3
             width: parent.width
-            TextEdit {
-                id: feedbackEdit
-                anchors.fill: parent
-                textMargin: Theme.margins.ten
-                wrapMode: TextEdit.Wrap
-                onFocusChanged: if (focus && text === Theme.text.writeYourCommentHere) text = ""
-                color: text === Theme.text.writeYourCommentHere ? Theme.colors.gray : Theme.colors.black
-                font.pointSize: Theme.fonts.seven_pt
-                Component.onCompleted: text = Theme.text.writeYourCommentHere
-            }
+            frameVisible: true
+            textMargin: Theme.margins.ten
+            inputMethodHints: Qt.platform.os === "ios" ? Qt.ImhNoPredictiveText : Qt.ImhNone
+            wrapMode: TextEdit.Wrap
+            onFocusChanged: if (focus && text === Theme.text.writeYourCommentHere) text = ""
+            textColor: text === Theme.text.writeYourCommentHere ? Theme.colors.gray : Theme.colors.black
+            font.pointSize: Theme.fonts.seven_pt
+            Component.onCompleted: text = Theme.text.writeYourCommentHere
+            selectByMouse: true
+            clip: true
         }
         Row {
             spacing: Theme.margins.twenty
@@ -161,8 +164,7 @@ Item {
             }
             Button {
                 text: "Send"
-                enabled: (feedbackEdit.text !== Theme.text.writeYourCommentHere && feedbackEdit.text !== "")
-                         || rating > -1
+                enabled: columnFeedback.hasReview
                 onClicked: {
                     text = "sending..."
                     Qt.inputMethod.hide()
