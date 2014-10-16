@@ -211,6 +211,7 @@ Rectangle {
                     width: parent.width
                     visible: Qt.formatDate(start, upcomingItem.formatDate) === upcomingItem.visibleDate
                     height: visible ? Theme.sizes.upcomingEventHeight : 0
+                    spacing: 0
                     Rectangle {
                         color: tracks.backgroundColor
                         Layout.fillHeight: true
@@ -240,23 +241,36 @@ Rectangle {
                                                   })
                         }
                         ColumnLayout {
+                            id: columnUpcoming
                             anchors.fill: parent
-                            anchors.leftMargin: Theme.margins.twenty
-                            Text {
+                            anchors.leftMargin: Theme.margins.thirty
+                            spacing: 0
+                            Item {
                                 Layout.fillWidth: true
-                                text: topic
-                                verticalAlignment: Text.AlignVCenter
-                                elide: Text.ElideRight
-                                font.pointSize: Theme.fonts.eight_pt
+                                Layout.fillHeight: true
+                                baselineOffset: height
+                                Text {
+                                    text: topic
+                                    width: parent.width
+                                    horizontalAlignment: Qt.AlignLeft
+                                    elide: Text.ElideRight
+                                    font.pointSize: Theme.fonts.eight_pt
+                                    anchors.baseline: parent.baseline
+                                }
                             }
-                            Text {
+                            Item {
                                 Layout.fillWidth: true
-                                text: Qt.formatTime(start, Qt.locale().timeFormat(Locale.ShortFormat)) + Theme.text.room_space.arg(location)
-                                verticalAlignment: Text.AlignVCenter
-                                elide: Text.ElideRight
-                                font.pointSize: Theme.fonts.eight_pt
-
-                                color: Theme.colors.gray
+                                Layout.fillHeight: true
+                                baselineOffset: height
+                                Text {
+                                    text: Qt.formatTime(start, Qt.locale().timeFormat(Locale.ShortFormat)) + Theme.text.room_space.arg(location)
+                                    width: parent.width
+                                    horizontalAlignment: Qt.AlignLeft
+                                    elide: Text.ElideRight
+                                    font.pointSize: Theme.fonts.eight_pt
+                                    color: Theme.colors.gray
+                                    anchors.baseline: parent.baseline
+                                }
                             }
                         }
                     }
@@ -369,11 +383,11 @@ Rectangle {
 
                     Column {
                         id: tweetArea
-                        width: parent.width - placeHolder.width - Theme.margins.twenty
+                        width: parent.width - placeHolder.width - Theme.margins.thirty * 2
                         height: userName.implicitHeight + tweetContent.implicitHeight
                         anchors.left: placeHolder.right
-                        anchors.leftMargin: Theme.margins.ten
-                        anchors.rightMargin: Theme.margins.ten
+                        anchors.leftMargin: Theme.margins.thirty
+                        anchors.rightMargin: Theme.margins.thirty
 
                         Item {
                             width: parent.width
@@ -411,12 +425,12 @@ Rectangle {
                             Text {
                                 id: timeStamp
                                 anchors.right: parent.right
-                                anchors.rightMargin: Theme.margins.ten
                                 anchors.bottom: parent.bottom
                                 text: getElapsedTime()
                                 font.pointSize: Theme.fonts.eight_pt
                                 color: Theme.colors.gray
                                 textFormat: Text.StyledText
+                                horizontalAlignment: Qt.AlignRight
                                 MouseArea {
                                     anchors.fill: parent
                                     onClicked: Qt.openUrlExternally(Theme.text.twitterLink
