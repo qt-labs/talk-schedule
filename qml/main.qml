@@ -95,6 +95,11 @@ ApplicationWindow {
                     menuRectangle.height = Theme.sizes.menuItemHeight * menuModel.count
                 }
             }
+            Connections {
+                target: applicationClient
+                onCurrentConferenceIdChanged: menuModel.setProperty(0, "name", Theme.text.home.arg(applicationClient.currentConferenceDetails.title))
+            }
+
             Repeater {
                 id: listMenu
                 anchors.fill: parent
