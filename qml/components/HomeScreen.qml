@@ -155,7 +155,7 @@ Rectangle {
                     id: reloadUpcoming
                     anchors.verticalCenter: parent.verticalCenter
                     anchors.right: parent.right
-                    anchors.rightMargin: Theme.margins.fifteen
+                    anchors.rightMargin: Theme.margins.thirty
                     source: Theme.images.loading
                     sourceSize.height: Theme.sizes.reloadButtonSize
                     sourceSize.width: Theme.sizes.reloadButtonSize
@@ -306,7 +306,7 @@ Rectangle {
                     id: reloadNews
                     anchors.verticalCenter: parent.verticalCenter
                     anchors.right: parent.right
-                    anchors.rightMargin: Theme.margins.fifteen
+                    anchors.rightMargin: Theme.margins.thirty
                     source: Theme.images.loading
                     sourceSize.height: Theme.sizes.reloadButtonSize
                     sourceSize.width: Theme.sizes.reloadButtonSize
