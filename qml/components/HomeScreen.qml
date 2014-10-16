@@ -78,15 +78,17 @@ Rectangle {
 
         var links = []
         entities.urls = entities.media ? entities.urls.concat(entities.media) : entities.urls
-        links = entities.urls.concat(entities.hashtags, entities.user_mentions)
+        // do we want hashtags and users to be also blue?
+        //        links = entities.urls.concat(entities.hashtags, entities.user_mentions)
+        links = entities.urls
 
         links.sort(function(a, b) { return b.indices[0] - a.indices[0] })
 
         for (var i = 0; i < links.length; i++) {
             var offset = links[i].url ? 0 : 1
             text = text.substring(0, links[i].indices[0] + offset) +
-                '<a href=\"' + linkForEntity(links[i]) + '\">' +
-                textForEntity(links[i]) + '</a>' +
+                '<font color="' + Theme.colors.blue + '">' +
+                textForEntity(links[i]) + '</font>' +
                 text.substring(links[i].indices[1])
         }
 
@@ -455,10 +457,9 @@ Rectangle {
                             width: parent.width
                             text: insertLinks(model.text, model.entities)
                             wrapMode: Text.WordWrap
-                            textFormat: Text.RichText
                             font.pointSize: Theme.fonts.eight_pt
-                            color: Theme.colors.gray
-                            onLinkActivated: Qt.openUrlExternally(link)
+                            textFormat: Text.StyledText
+                            color: Theme.colors.black
                             MouseArea {
                                 anchors.fill: parent
                                 onClicked: Qt.openUrlExternally(Theme.text.twitterLink
