@@ -134,6 +134,7 @@ Rectangle {
             }
 
             Text {
+                // upcoming events title
                 id: labelUpcoming
                 text: Theme.text.upcoming.arg(applicationClient.currentConferenceDetails.title).arg(upcomingItem.visibleDate)
                 width: parent.width
@@ -175,6 +176,7 @@ Rectangle {
                 }
             }
             ListView {
+                // upcoming events list
                 id: homeScreenListView
                 anchors.top: labelUpcoming.bottom
                 anchors.bottom: parent.bottom
@@ -219,7 +221,8 @@ Rectangle {
                             color: Theme.colors.white
                             verticalAlignment: Text.AlignVCenter
                             horizontalAlignment: Text.AlignLeft
-                            font.pointSize: Theme.fonts.six_pt
+                            font.pointSize: Theme.fonts.eight_pt
+
                         }
                     }
                     Rectangle {
@@ -242,14 +245,15 @@ Rectangle {
                                 text: topic
                                 verticalAlignment: Text.AlignVCenter
                                 elide: Text.ElideRight
-                                font.pointSize: Theme.fonts.seven_pt
+                                font.pointSize: Theme.fonts.eight_pt
                             }
                             Text {
                                 Layout.fillWidth: true
                                 text: Qt.formatTime(start, Qt.locale().timeFormat(Locale.ShortFormat)) + Theme.text.room_space.arg(location)
                                 verticalAlignment: Text.AlignVCenter
                                 elide: Text.ElideRight
-                                font.pointSize: Theme.fonts.seven_pt
+                                font.pointSize: Theme.fonts.eight_pt
+
                                 color: Theme.colors.gray
                             }
                         }
@@ -392,7 +396,8 @@ Rectangle {
                                 anchors.leftMargin: Theme.margins.ten
                                 anchors.bottom: parent.bottom
                                 text: "@" + model.user.screen_name
-                                font.pointSize: Theme.fonts.seven_pt
+                                font.pointSize: Theme.fonts.eight_pt
+
                                 color: Theme.colors.gray
                                 textFormat: Text.StyledText
                                 MouseArea {
@@ -407,7 +412,7 @@ Rectangle {
                                 anchors.rightMargin: Theme.margins.ten
                                 anchors.bottom: parent.bottom
                                 text: getElapsedTime()
-                                font.pointSize: Theme.fonts.seven_pt
+                                font.pointSize: Theme.fonts.eight_pt
                                 color: Theme.colors.gray
                                 textFormat: Text.StyledText
                                 MouseArea {
@@ -451,7 +456,7 @@ Rectangle {
                             text: insertLinks(model.text, model.entities)
                             wrapMode: Text.WordWrap
                             textFormat: Text.RichText
-                            font.pointSize: Theme.fonts.seven_pt
+                            font.pointSize: Theme.fonts.eight_pt
                             color: Theme.colors.gray
                             onLinkActivated: Qt.openUrlExternally(link)
                             MouseArea {
