@@ -82,7 +82,7 @@ Theme::Theme(QObject *parent)
     m_text->insert(QLatin1String("writeYourCommentHere"), tr("Write your comments here"));
     m_text->insert(QLatin1String("by"), tr("by %1"));
     m_text->insert(QLatin1String("room"), tr("Room %1"));
-    m_text->insert(QLatin1String("room_space"), tr(" - Room %1"));
+    m_text->insert(QLatin1String("room_space"), tr(" | Room %1"));
     m_text->insert(QLatin1String("twitterLink"), tr("https://twitter.com/"));
     m_text->insert(QLatin1String("select_conference"), tr("Select a conference"));
     m_text->insert(QLatin1String("switchConf"), tr("Switch Conference"));
