@@ -74,7 +74,7 @@ Rectangle {
         anchors.left: subTitle.left
         anchors.right: subTitle.right
         anchors.topMargin: Theme.margins.twenty
-        anchors.bottomMargin: Theme.margins.five
+        anchors.bottomMargin: Theme.margins.twenty
         anchors.leftMargin: Theme.margins.ten
         anchors.rightMargin: Theme.margins.ten
         interactive: true
