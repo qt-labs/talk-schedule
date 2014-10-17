@@ -239,6 +239,7 @@ ApplicationWindow {
         Keys.onReleased: {
             if (event.key === Qt.Key_Back) {
                 if (stack.depth > 1) {
+                    menuPicker.visible = false
                     event.accepted = true
                     stack.pop()
                 }
