@@ -96,7 +96,7 @@ Rectangle {
                     background: Rectangle {
                         border.width: 2
                         property var backgroundColor: applicationClient.currentConferenceId === id ? Theme.colors.qtgreen : Theme.colors.white
-                        property var borderColor: applicationClient.currentConferenceId === id ? Qt.lighter(Theme.colors.qtgreen, 1.3) : Theme.colors.qtgreen
+                        property var borderColor: Theme.colors.qtgreen
                         color: control.pressed ? Qt.darker(backgroundColor, 1.1) : backgroundColor
                         border.color: control.pressed ? Qt.darker(borderColor, 1.3) : borderColor
                     }
