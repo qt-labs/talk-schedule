@@ -57,10 +57,10 @@ Rectangle {
     ListView {
         interactive: false
         anchors.top: subTitle.bottom
-        anchors.topMargin: Theme.margins.twenty
+        anchors.topMargin: Theme.margins.forty
         height: parent.height - subTitle.height
         width: parent.width
-        spacing: Theme.margins.ten
+        spacing: Theme.margins.forty
         model: SortFilterModel {
             id: sortModel
             sortRole: "title"

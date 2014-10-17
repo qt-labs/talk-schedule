@@ -166,6 +166,7 @@ Theme::Theme(QObject *parent)
     m_margins->insert(QLatin1String("fifteen"), QVariant(applyRatio(15)));
     m_margins->insert(QLatin1String("twenty"), QVariant(applyRatio(20)));
     m_margins->insert(QLatin1String("thirty"), QVariant(applyRatio(30)));
+    m_margins->insert(QLatin1String("forty"), QVariant(applyRatio(40)));
 }
 
 int Theme::applyFontRatio(const int value)
