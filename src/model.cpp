@@ -362,9 +362,7 @@ bool Model::parse(const QJsonObject &object)
 
 void Model::reset()
 {
-    if (m_data.count() > 0) {
-        beginRemoveRows(QModelIndex(), 0, m_data.count() - 1);
-        m_data.clear();
-        endRemoveRows();
-    }
+    beginResetModel();
+    m_data.clear();
+    endResetModel();
 }
