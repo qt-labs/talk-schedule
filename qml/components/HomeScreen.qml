@@ -160,7 +160,9 @@ Rectangle {
                     sourceSize.height: Theme.sizes.reloadButtonSize
                     sourceSize.width: Theme.sizes.reloadButtonSize
                     MouseArea {
-                        anchors.fill: parent
+                        anchors.centerIn: parent
+                        width: Theme.sizes.homeTitleHeight
+                        height: Theme.sizes.homeTitleHeight
                         onClicked: {
                             rotationUpcoming.running = true
                             homeScreenListView.reloadUpcoming()
@@ -335,7 +337,9 @@ Rectangle {
                     }
                 }
                 MouseArea {
-                    anchors.fill: reloadNews
+                    anchors.centerIn: reloadNews
+                    width: Theme.sizes.homeTitleHeight
+                    height: Theme.sizes.homeTitleHeight
                     onClicked: {
                         rotationNews.running = true
                         tweetModel.reload()
