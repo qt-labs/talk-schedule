@@ -113,11 +113,17 @@ Rectangle {
 
                 function init()
                 {
-                    emptyUpcoming.visible = false
-                    if (sortModelNextEvents.rowCount() > 0)
+                    emptyUpcoming.visible = true
+                    emptyUpcoming.text = Theme.text.loading
+                    if (sortModelNextEvents.rowCount() > 0) {
                         upcomingItem.visibleDate = Qt.formatDate(sortModelNextEvents.get(0, "start"), upcomingItem.formatDate)
-                    if (sortModelNextEvents.rowCount() === 0)
-                        emptyUpcoming.visible = true
+                        emptyUpcoming.visible = false
+                    } else {
+                        if (ModelsSingleton.eventModel.rowCount() > 0)
+                            emptyUpcoming.text = Theme.text.endedEvent
+                        else
+                            emptyUpcoming.text = Theme.text.noCachedData
+                    }
                 }
 
                 sortRole: "start"
@@ -131,8 +137,12 @@ Rectangle {
                 target: ModelsSingleton.eventModel
                 onDataReady: {
                     sortModelNextEvents.model = ModelsSingleton.eventModel
-                    sortModelNextEvents.init()
+                    homeScreenListView.reloadUpcoming()
                 }
+               onConferenceIdChanged: {
+                   emptyUpcoming.visible = true
+                   emptyUpcoming.text = Theme.text.loading
+               }
             }
 
             Text {
@@ -190,20 +200,25 @@ Rectangle {
                 model: sortModelNextEvents
                 clip: true
                 function reloadUpcoming() {
-                    emptyUpcoming.visible = false
+                    emptyUpcoming.visible = true
+                    emptyUpcoming.text = Theme.text.loading
                     if (visible && sortModelNextEvents.rowCount() > 0) {
                         sortModelNextEvents.filter()
                         upcomingItem.visibleDate = Qt.formatDate(sortModelNextEvents.get(0, "start"), upcomingItem.formatDate)
                     }
-                    if (sortModelNextEvents.rowCount() === 0)
-                        emptyUpcoming.visible = true
+                    if (sortModelNextEvents.rowCount() > 0)
+                        emptyUpcoming.visible = false
+
+                    if (ModelsSingleton.eventModel.rowCount() === 0)
+                        emptyUpcoming.text = Theme.text.noCachedData
+                    else
+                        emptyUpcoming.text = Theme.text.endedEvent
                 }
 
                 onVisibleChanged: homeScreenListView.reloadUpcoming()
                 Text {
                     id: emptyUpcoming
-                    visible: false
-                    text: Theme.text.endedEvent
+                    text: Theme.text.loading
                     anchors.centerIn: parent
                     font.pointSize: Theme.fonts.eight_pt
                 }
@@ -211,7 +226,7 @@ Rectangle {
                 delegate: RowLayout {
                     id: upcomingEventDelegate
                     width: parent.width
-                    visible: Qt.formatDate(start, upcomingItem.formatDate) === upcomingItem.visibleDate
+                    visible: !emptyUpcoming.visible && Qt.formatDate(start, upcomingItem.formatDate) === upcomingItem.visibleDate
                     height: visible ? Theme.sizes.upcomingEventHeight : 0
                     spacing: 0
                     Rectangle {

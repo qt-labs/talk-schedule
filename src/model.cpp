@@ -147,6 +147,8 @@ QHash<int, QByteArray> Model::roleNames() const
 void Model::setConferenceId(const QString &id)
 {
     if (id != m_conferenceId) {
+        // RESET model on conference change
+        reset();
         m_conferenceId =  id;
         // The file name tag has been declared before
         load();
@@ -177,6 +179,8 @@ void Model::onFinished(EnginioReply *reply)
         bool dataHasChanged = parse(reply->data());
         if (dataHasChanged)
             save(reply->data());
+    } else {
+        Q_EMIT dataReady();
     }
     reply->deleteLater();
 }
@@ -282,7 +286,7 @@ bool Model::parse(const QJsonObject &object)
 {
     bool dataHasChanged = true;
 
-    dataHasChanged = fileNameTag().isEmpty() || object != currentModelObject[fileNameTag()];
+    dataHasChanged = fileNameTag().isEmpty() || object != currentModelObject[fileNameTag()] || (m_data.count() == 0 && !object.isEmpty() );
 
     if (dataHasChanged) {
         bool roleNamesNotPopulated = m_roleNames.count() == 0;
