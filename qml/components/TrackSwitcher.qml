@@ -239,6 +239,20 @@ Rectangle {
         height: listView.height
     }
 
+    Text {
+        id: emptySchedule
+        text: Theme.text.noCachedData
+        anchors.left: root.left
+        anchors.top: daysWitcher.bottom
+        anchors.topMargin: Theme.sizes.dayLabelHeight
+        anchors.right: root.right
+        height: parent.height
+        verticalAlignment: Text.AlignTop
+        horizontalAlignment: Text.AlignHCenter
+        font.pointSize: Theme.fonts.ten_pt
+        visible: timeColumn.timeList.length === 0
+    }
+
     Flickable {
         id: flickable1
         anchors.left: trackHeader.right

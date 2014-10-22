@@ -90,6 +90,7 @@ Theme::Theme(QObject *parent)
     m_text->insert(QLatin1String("networkErrorInit"), tr("Network Error: check your device's network connection"));
     m_text->insert(QLatin1String("endedEvent"), tr("The conference has now ended"));
     m_text->insert(QLatin1String("toWebsite"), tr("Website (external)"));
+    m_text->insert(QLatin1String("noCachedData"), tr("No Cached Data"));
 
     m_colors = new QQmlPropertyMap(this);
     m_colors->insert(QLatin1String("white"), QVariant("#ffffff"));
