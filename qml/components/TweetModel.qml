@@ -58,6 +58,7 @@ Item {
     signal isLoaded
 
     function reload() {
+        errorMessage = ""
         tweets.clear()
 
         var req = new XMLHttpRequest;
@@ -71,7 +72,10 @@ Item {
                     var objectArray = JSON.parse(req.responseText);
                     if (objectArray.errors !== undefined) {
                         console.log("Error fetching tweets: " + objectArray.errors[0].message)
-                        errorMessage = objectArray.errors[0].message
+                        if (objectArray.errors[0].code === 215) // Bad authentication data
+                            authenticate()
+                        else
+                            errorMessage = objectArray.errors[0].message
                     } else {
                         for (var key in objectArray.statuses) {
                             var jsonObject = objectArray.statuses[key];
@@ -89,7 +93,11 @@ Item {
         req.send();
     }
 
-    Component.onCompleted: {
+    Component.onCompleted: authenticate()
+
+    function authenticate()
+    {
+        errorMessage = ""
         var authReq = new XMLHttpRequest;
         authReq.open("POST", "https://api.twitter.com/oauth2/token");
         authReq.setRequestHeader("Content-Type", "application/x-www-form-urlencoded;charset=UTF-8");
