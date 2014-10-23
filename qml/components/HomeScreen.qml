@@ -200,6 +200,8 @@ Rectangle {
                 model: sortModelNextEvents
                 clip: true
                 function reloadUpcoming() {
+                    // Attempt to authenticate if not already
+                    applicationClient.checkIfAuthenticated()
                     emptyUpcoming.visible = true
                     emptyUpcoming.text = Theme.text.loading
                     if (visible && sortModelNextEvents.rowCount() > 0) {

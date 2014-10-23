@@ -78,6 +78,7 @@ public:
 
     Q_INVOKABLE void cacheFeedback(QString feedback);
     Q_INVOKABLE void cacheFavorite(QString favorite, bool isAdded);
+    Q_INVOKABLE void checkIfAuthenticated();
 
 protected:
     void getUserCredentials();
@@ -87,15 +88,16 @@ protected:
 
 signals:
     void error(QString errorMessage);
-    void askQueryConferences();
     void currentConferenceIdChanged();
     void currentConferenceDetailsChanged();
     void conferencesModelChanged();
     void noNetworkNoInitialisationChanged();
+    void authenticationSuccessful();
 
 public slots:
     void authenticationSuccess(EnginioReply *reply);
     void errorClient(EnginioReply *reply);
+    void errorAuthentication(EnginioReply *reply);
     void userCreationReply(EnginioReply *reply);
     void queryConferenceReply(EnginioReply *reply);
     void createFeedbackReply(EnginioReply *reply);

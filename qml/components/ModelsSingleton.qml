@@ -275,7 +275,8 @@ QtObject {
         })
     }
 
-    onConferenceIdChanged: {
+    function reloadModels()
+    {
         if (object.conferenceId === "")
         return
 
@@ -310,4 +311,6 @@ QtObject {
             trackModel.onFinished(tracksQuery)
         })
     }
+
+    onConferenceIdChanged: reloadModels()
 }

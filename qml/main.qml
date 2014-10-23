@@ -278,13 +278,39 @@ ApplicationWindow {
     Rectangle {
         id: initConferenceSwitcher
         anchors.fill: parent
-        visible:  ModelsSingleton.conferenceId === ""
+        visible:  ModelsSingleton.conferenceId === "" || applicationClient.noNetworkNoInitialisation
         color: Theme.colors.white
         Text {
             anchors.centerIn: parent
             visible: applicationClient.noNetworkNoInitialisation
             font.pointSize: Theme.fonts.seven_pt
             text: Theme.text.networkErrorInit
+            Image {
+                id: reload
+                anchors.top: parent.bottom
+                anchors.horizontalCenter: parent.horizontalCenter
+                source: Theme.images.loading
+                sourceSize.height: Theme.sizes.reloadButtonSize
+                sourceSize.width: Theme.sizes.reloadButtonSize
+                MouseArea {
+                    anchors.centerIn: parent
+                    width: Theme.sizes.homeTitleHeight
+                    height: Theme.sizes.homeTitleHeight
+                    onClicked: {
+                        rotationReload.running = true
+                        applicationClient.checkIfAuthenticated()
+                    }
+                }
+                RotationAnimation {
+                    id: rotationReload
+                    target: reload
+                    property: "rotation"
+                    running: false
+                    duration: 800
+                    from: 0
+                    to: 360
+                }
+            }
         }
 
         Image {
@@ -311,5 +337,6 @@ ApplicationWindow {
     Connections {
         target: applicationClient
         onConferencesModelChanged: if (initConferenceSwitcher.visible) logo.opacity = 1
+        onAuthenticationSuccessful: if (ModelsSingleton.eventModel.rowCount() === 0) ModelsSingleton.reloadModels()
     }
 }

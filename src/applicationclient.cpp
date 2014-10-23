@@ -90,9 +90,22 @@ ApplicationClient::ApplicationClient()
     }
 
     connect(m_client, SIGNAL(sessionAuthenticated(EnginioReply*)), this, SLOT(authenticationSuccess(EnginioReply*)));
-    connect(m_client, SIGNAL(sessionAuthenticationError(EnginioReply*)), this, SLOT(errorClient(EnginioReply*)));
+    connect(m_client, SIGNAL(sessionAuthenticationError(EnginioReply*)), this, SLOT(errorAuthentication(EnginioReply*)));
     connect(m_client, SIGNAL(error(EnginioReply*)), this, SLOT(errorClient(EnginioReply*)));
     getUserCredentials();
+}
+
+void ApplicationClient::checkIfAuthenticated()
+{
+    // qDebug() << "checkIfAuthenticated, current state:" << m_client->authenticationState();
+    if (m_client->authenticationState() == Enginio::NotAuthenticated ||
+            m_client->authenticationState() == Enginio::AuthenticationFailure ||
+            m_conferenceModel->rowCount() == 0) {
+        if (m_noNetworkNoInitialisation)
+            getUserCredentials();
+        else
+            authenticate();
+    }
 }
 
 void ApplicationClient::errorClient(EnginioReply *reply)
@@ -100,6 +113,13 @@ void ApplicationClient::errorClient(EnginioReply *reply)
     //qDebug() << "Error" << reply->errorString() << m_client->authenticationState();
     emit error(reply->errorString());
     reply->deleteLater();
+}
+
+void ApplicationClient::errorAuthentication(EnginioReply *reply)
+{
+    Q_UNUSED(reply);
+    //qDebug() << "Clear identity on authentication error";
+    m_client->setIdentity(0);
 }
 
 void ApplicationClient::getUserCredentials()
@@ -144,6 +164,8 @@ void ApplicationClient::userCreationReply(EnginioReply *reply)
         emit error(reply->errorString());
     } else {
         //qDebug() << "User Created";
+        m_noNetworkNoInitialisation = false;
+        emit noNetworkNoInitialisationChanged();
         m_userData->write(QString("%1 %2").arg(currentUsername).arg(currentPassword));
         authenticate();
     }
@@ -166,14 +188,20 @@ void ApplicationClient::authenticationSuccess(EnginioReply *reply)
     emptyFeedbackCache();
 
     int timeout = (reply->data().value("expires_in").toInt() - 20*60)*1000;
-    timer->setSingleShot(true);
-    timer->start(timeout);
-    if (init) { // Query the conference only once
-        QJsonObject query;
-        query["objectType"] = QString::fromUtf8("objects.Conference");
-        const EnginioReply *replyConf = m_client->query(query);
-        connect(replyConf, SIGNAL(finished(EnginioReply*)), this, SLOT(queryConferenceReply(EnginioReply*)));
-        init = false;
+    if (timeout > 0) {
+        timer->stop();
+        timer->setSingleShot(true);
+        timer->start(timeout);
+        if (init) { // Query the conference only once
+            QJsonObject query;
+            query["objectType"] = QString::fromUtf8("objects.Conference");
+            const EnginioReply *replyConf = m_client->query(query);
+            connect(replyConf, SIGNAL(finished(EnginioReply*)), this, SLOT(queryConferenceReply(EnginioReply*)));
+            init = false;
+        } else {
+            // To trigger reload of other models
+            emit authenticationSuccessful();
+        }
     }
 }
 
