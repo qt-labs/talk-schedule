@@ -95,7 +95,7 @@ ApplicationClient::ApplicationClient()
     getUserCredentials();
 }
 
-void ApplicationClient::checkIfAuthenticated()
+void ApplicationClient::checkIfAuthenticated(bool forceUpdate)
 {
     // qDebug() << "checkIfAuthenticated, current state:" << m_client->authenticationState();
     if (m_client->authenticationState() == Enginio::NotAuthenticated ||
@@ -105,6 +105,8 @@ void ApplicationClient::checkIfAuthenticated()
             getUserCredentials();
         else
             authenticate();
+    } else if (m_client->authenticationState() == Enginio::Authenticated && forceUpdate) {
+        emit authenticationSuccessful();
     }
 }
 

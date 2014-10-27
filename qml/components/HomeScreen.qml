@@ -175,7 +175,8 @@ Rectangle {
                         height: Theme.sizes.homeTitleHeight
                         onClicked: {
                             rotationUpcoming.running = true
-                            homeScreenListView.reloadUpcoming()
+                            var forceUpdate = ModelsSingleton.eventModel.rowCount() === 0
+                            homeScreenListView.reloadUpcoming(forceUpdate)
                         }
                     }
                     RotationAnimation {
@@ -199,9 +200,11 @@ Rectangle {
                 anchors.margins: Theme.margins.ten
                 model: sortModelNextEvents
                 clip: true
-                function reloadUpcoming() {
+                function reloadUpcoming(forceUpdate) {
                     // Attempt to authenticate if not already
-                    applicationClient.checkIfAuthenticated()
+                    if (forceUpdate === undefined)
+                        forceUpdate = false
+                    applicationClient.checkIfAuthenticated(forceUpdate)
                     emptyUpcoming.visible = true
                     emptyUpcoming.text = Theme.text.loading
                     if (visible && sortModelNextEvents.rowCount() > 0) {

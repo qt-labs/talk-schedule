@@ -78,7 +78,7 @@ public:
 
     Q_INVOKABLE void cacheFeedback(QString feedback);
     Q_INVOKABLE void cacheFavorite(QString favorite, bool isAdded);
-    Q_INVOKABLE void checkIfAuthenticated();
+    Q_INVOKABLE void checkIfAuthenticated(bool forceUpdate);
 
 protected:
     void getUserCredentials();
