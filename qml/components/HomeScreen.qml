@@ -246,7 +246,7 @@ Rectangle {
                             color: Theme.colors.white
                             verticalAlignment: Text.AlignVCenter
                             horizontalAlignment: Text.AlignLeft
-                            font.pointSize: Theme.fonts.eight_pt
+                            font.pointSize: Theme.fonts.seven_pt
 
                         }
                     }
