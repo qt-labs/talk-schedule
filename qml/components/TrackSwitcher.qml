@@ -312,9 +312,25 @@ Rectangle {
                             width: Functions.countTrackWidth(start, end) - Theme.margins.ten
                             height: Math.min(breakColumn.height, listView.contentHeight - Theme.margins.ten)
                             Text {
+                                id: testWidth
+                                visible: false
+                                text: Qt.formatTime(start, "h:mm") + " - " + Qt.formatTime(end, "h:mm")
+                                width: parent.width
+                                verticalAlignment: Text.AlignVCenter
+                                height: parent.height
+                                horizontalAlignment: Text.AlignHCenter
+                                font.pointSize: Theme.fonts.seven_pt
+                                function isTooWide() {
+                                    return testWidth.implicitWidth > testWidth.width
+                                }
+                            }
+
+                            Text {
                                 function info()
                                 {
-                                    var info = name +  "\n" + Qt.formatTime(start, "h:mm") + " - " + Qt.formatTime(end, "h:mm")
+                                    var info = name
+                                    if (!testWidth.isTooWide())
+                                        info = info + "\n" + Qt.formatTime(start, "h:mm") + " - " + Qt.formatTime(end, "h:mm")
                                     if (!!performer)
                                         info = info + "\n" + Theme.text.by.arg(performer)
                                     if (!!room)
